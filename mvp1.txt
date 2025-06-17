@@ -1,0 +1,32 @@
+MVP1 - Create/Track Workouts!:
+
+Breakdown of user stories / functionalities
+
+A user should be able to:
+1. Pick or create split that they will follow
+2. Track workout based off split or enter it in on the go
+3. View their workout history
+4. View an exercise library
+5. View a split library
+
+More Detailed Breakdown of User Stories/Functionalities
+
+1. Pick or create split that they will follow:
+    1.1 Create template splits where a user can "save" into their collection of splits
+        1.1.1 PPL (done) / UL (not done); the other templates can be done as I go
+    1.2 Through a screen, have the user create splits based off exercises in the exercise library (done)
+    1.3 Have the user be able to stop/change the split @ any time (not done)
+
+2. Track workout based off split or enter it in on the go
+    2.1 After user saves a split, be able to use that split's workouts and log (done)
+    2.2 If user doesn't have split or doesn't want to follow for that day, be able
+        to create new workout and just track from there (not done)
+    2.3 A user can edit their workout day by adding or removing exercises (not done)
+
+3. View their workout history (done)
+
+4. View an exercise library (done)
+    4.1 View all exercises on a home exercise library screen (done)
+
+5. View a split library (done)
+
