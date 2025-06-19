@@ -40,20 +40,25 @@ export default function TrainingSplits(){
     return(
         <SafeAreaView style={styles.screen}>
             <GravitusHeader showBackButton={true}/>
+            <Text style={styles.mainTitle}>Training Splits</Text>
             <ScrollView contentContainerStyle={styles.scrollContent}>
+                
                 <Text style={styles.subtitle}>Current Split</Text>
                 <FloatingCard width="90%" height={60} onPress={()=>router.push(`/(trainingSplits)/${currentSplit?.createdFromTemplateId}`)}>
                     <View style={styles.floatingView}>
-                        <Text style={styles.text}>{currentSplit?.id}</Text>
+                        {/* <Text style={styles.text}>{currentSplit?.id}</Text> */}
                         <Text style={styles.text}>{currentSplit?.name}</Text>
                     </View>
                 </FloatingCard>
-                <Text style={styles.subtitle}>Explore Template Splits</Text>
+
+                <Text style={styles.subtitle}>Create Your Own!</Text>
                 <FloatingCard width="90%" height={60} onPress={()=>router.push('/(trainingSplits)/create')}>
                     <View style={styles.floatingView}>
                         <Text style={styles.text}>Create Your Own</Text>
                     </View>
                 </FloatingCard>
+
+                <Text style={styles.subtitle}>Explore Template Splits</Text>
                 {splits.map((split) => (
                     <FloatingCard key={split.id} height={60} width="90%" onPress={()=>router.push(`/(trainingSplits)/${split.id}`)}>
                         <View style={styles.floatingView}>
@@ -75,8 +80,16 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         alignItems: 'center',
-        paddingVertical: 14,
     },
+    mainTitle: {
+        fontSize: 30,
+        fontWeight: '600',
+        color: 'white',
+        alignSelf: 'center',
+        textAlign: 'center',
+        flexWrap: 'wrap',
+        margin: 12
+      },
     floatingView: {
         flex: 1,
         alignSelf: 'center',

@@ -5,9 +5,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { ExerciseLog } from "@/types/firestoreTypes";
 import { getLoggedWorkouts, getSplitBySplitId } from "@/lib/firestoreFunctions";
+import SearchBar from "@/components/searchBar";
+import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 export default function HistoryScreen() {
 
+    const router = useRouter(); 
+
+    const [searchText, setSearchText] = useState('');
     const [loggedWorkouts, setLoggedWorkouts] = useState<ExerciseLog[] | null>(null);
     const [splitNames, setSplitNames] = useState<{ [splitId: string]: string }>({});
 
@@ -36,15 +42,17 @@ export default function HistoryScreen() {
         fetchLoggedWorkouts()
     }, [])
 
-    console.log("Here", loggedWorkouts)
-
     return(
         <SafeAreaView style={styles.screen}>
             <GravitusHeader showBackButton={true}/>
             <Text style={styles.title}>Logged Workouts</Text>
+            <View style={styles.topBar}>
+                <SearchBar value={searchText} onChange={setSearchText} placeholder="Search Workouts..."/>
+                <Feather name="filter" size={20} color="#ccc" style={styles.icon}/>
+            </View>
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                {loggedWorkouts?.map((workout) => (
-                    <FloatingCard key={workout.id} height={60} width={"90%"}>
+                {loggedWorkouts?.filter((l) => l.workoutDay.toLowerCase().includes(searchText.toLowerCase()))?.map((workout) => (
+                    <FloatingCard key={workout.id} height={60} width={"90%"} onPress={()=>router.push(`/(history)/${workout.id}`)}>
                         <View style={styles.loggedRow}>
                             <Text style={styles.loggedRowText}>{workout.date.substring(0, 10)}</Text>
                             <Text style={styles.loggedRowText}>{workout.workoutDay}</Text>
@@ -65,7 +73,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         alignItems: 'center',
-        paddingVertical: 24,
+        // paddingVertical: 24,
     },
     title: {
         fontSize: 30,
@@ -85,5 +93,14 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 15,
         fontWeight: '600'
-      },
+    },
+    topBar: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        marginHorizontal: 15,
+    },
+    icon:{
+        alignSelf: 'center'
+    },
 })

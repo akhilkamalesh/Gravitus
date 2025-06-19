@@ -1,5 +1,5 @@
 import { firestoreInstance } from "./firebase";
-import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp } from "@react-native-firebase/firestore";
+import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, orderBy } from "@react-native-firebase/firestore";
 import { Exercise, ExerciseLog } from "@/types/firestoreTypes";
 import auth from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
@@ -43,7 +43,7 @@ export const getSplit = async (splitId: string): Promise<Split | null> => {
     return null;
 };
 
-// TODO: Create function that loads full split information including exercises information
+// Function that loads full split information including exercises information
 export const getSplitInformation = async (split: Split): Promise <Split> => {
   const resolvedWorkouts = await Promise.all(
     split.workouts.map(async (workout) => {
@@ -184,14 +184,14 @@ export const logWorkout = async (exerciseLog: ExerciseLog) => {
 };
 
 // Grabs all logged workouts from a user (should include some type of limit)
-// TODO: Need to grab in descending date order
 export const getLoggedWorkouts = async (): Promise<ExerciseLog[]> => {
   const user = auth().currentUser;
   if (!user) throw new Error('User not authenticated');
 
   // Going to log collection
   const logsRef = collection(firestoreInstance, 'users', user.uid, 'logs');
-  const snapshot = await getDocs(logsRef);
+  const logsQuery = query(logsRef, orderBy('date', 'desc'));
+  const snapshot = await getDocs(logsQuery);
 
   const logs: ExerciseLog[] = snapshot.docs.map((log) => ({
     ...log.data(),
@@ -199,6 +199,25 @@ export const getLoggedWorkouts = async (): Promise<ExerciseLog[]> => {
 
   return logs;
 }
+
+// Get logged workout based on id
+export const getLoggedWorkoutById = async (logId: string): Promise<ExerciseLog> => {
+  const user = auth().currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  // Reference to the specific log document
+  const logRef = doc(firestoreInstance, 'users', user.uid, 'logs', logId);
+  const logSnap = await getDoc(logRef);
+
+  if (!logSnap.exists()) {
+    throw new Error('Log not found');
+  }
+
+  return {
+    id: logSnap.id, // Optional: add `id` if you want the log ID in your result
+    ...logSnap.data(),
+  } as ExerciseLog;
+};
 
 // Gets split information based on SplitID
 export const getSplitBySplitId = async (splitId:string): Promise<Split | null> => {

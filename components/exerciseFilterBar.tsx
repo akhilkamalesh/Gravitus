@@ -14,9 +14,9 @@ interface FilterModalProps {
 // TODO: Need to change UI for the Filter Modal
 const FilterModal = ({ visible, selected, options, onSelect, onApply, onClear, onClose }: FilterModalProps) => {
   return (
-    <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
-      <View style={styles.overlay}>
-        <View style={styles.modal}>
+    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
           <Text style={styles.title}>Select Muscle Groups</Text>
           <FlatList
             data={options}
@@ -31,6 +31,7 @@ const FilterModal = ({ visible, selected, options, onSelect, onApply, onClear, o
                 </Pressable>
               );
             }}
+            style={styles.flatList}
           />
           <View style={styles.actions}>
             <Pressable onPress={onClear}>
@@ -47,25 +48,35 @@ const FilterModal = ({ visible, selected, options, onSelect, onApply, onClear, o
 };
 
 const styles = StyleSheet.create({
-  overlay: {
+  modalContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  modal: {
+  
+  modalContent: {
+    width: '85%',
     backgroundColor: '#1c1f23',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
     padding: 20,
-    maxHeight: '80%',
+    borderRadius: 10,
   },
   title: {
     color: '#fff',
     fontSize: 18,
     marginBottom: 16,
+    fontWeight: 600,
+    alignSelf: 'center'
   },
   option: {
+    alignSelf: 'flex-start', // ⬅ ensures the item aligns left inside centered container
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 10,
+  },
+  flatList: {
+    alignSelf: 'center',
+    width: '100%',
   },
   optionText: {
     color: '#ccc',

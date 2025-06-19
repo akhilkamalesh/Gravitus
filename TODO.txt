@@ -11,29 +11,29 @@ Weekly Progress (No Priority):
 - Display in nice graph
 
 History (Medium Priority):
-- Make log display off date descending
-- Add Search/Filter Bar @ top
 - Make logs direct to [id].tsx that shows detailed view of workout
+    - Connection (done)
+    - Figure out UI
 
 Goals/PRS (No Priority):
 - Honestly, may remove this tab
 
 Training Splits (High Priority):
-- Update UI (shit looks ugly rn)
+- Update UI (shit looks ugly rn) (better)
 - Direct Current Split to working tab that shows details abt the current split including logged information
 - Finish writing script for Upper/Lower
 
 Exercises (Medium Priority):
-- Fix Filter Modal and Search Bar Modal: Use Modal in create to help with this
-- Fix UI for displaying Exercises in Floating Box; something with wrap is not working well
+- Fix UI for displaying Exercises in Floating Box; something with wrap is not working well (Done)
 
 Two (High Priority):
-- Make Delete Button on Floating Box Functional
+- Add New Exercises (Done)
+- Remove Sets (Done)
+- If no split, direct to split page or just track random workout
 
 
 Based Off Codebase (Low Priority):
 
 - Clean up create.tsx
-- Clean up firestoreFunctions.tsx
-- Fix exerciseFilterBar.tsx -> will be done with Exercise Modal Completion
+- Clean up firestoreFunctions.tsx (Modularize)
 

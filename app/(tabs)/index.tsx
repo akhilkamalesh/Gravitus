@@ -8,7 +8,6 @@ import { useAuth } from '@/lib/authContext';
 import SignUpModal from '../(auth)/signUp';
 
 
-
 export default function TabOneScreen() {
 
   const router = useRouter(); 

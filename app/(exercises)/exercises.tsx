@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StyleSheet, Pressable, Text, View, ScrollView } from 'react-native'
 import SearchBar from '@/components/searchBar'
-import ExerciseFilterBar from '@/components/exerciseFilterBar'
 import FilterModal from '@/components/exerciseFilterBar'
 import { Feather } from '@expo/vector-icons';
 import { getExercises } from '@/lib/firestoreFunctions'
@@ -13,7 +12,7 @@ import { Image } from 'react-native'
 
 export default function Exercises(){
 
-    const [searchText, setSearchText] = useState('');
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
     const [exercises, setExercises] = useState<Exercise[]>([])
@@ -26,7 +25,7 @@ export default function Exercises(){
     };
 
     // Exercise Groups
-    const groups = ["Chest", "Back", "Legs", "Arms", "Shoulders", "Core"];
+    const groups = ["Chest", "Quadriceps", "Rhomboids", "Latissimus Dorsi", "Shoulders", "Biceps", "Triceps", "Calves"];
 
     // Pulls exercises from the database
     useEffect(() => {
@@ -38,36 +37,37 @@ export default function Exercises(){
       loadExercises();
     }, [])
 
-    // console.log(exercises)
-
     // TODO: Fix UI of title so it wraps (too long)
-    // TODO: Fix Search Bar
-    // TODO: Fix Modal to be like Create Modal
     // this will probably be a later task after setting up split page, then tracking page
     return(
         <SafeAreaView style={styles.screen}>
             <GravitusHeader showBackButton={true}/>
+            <Text style={styles.mainTitle}>Exercises</Text>
             <View style={styles.topBar}>
-                <SearchBar value={searchText} onChange={setSearchText}/>
+                <SearchBar value={searchQuery} onChange={setSearchQuery}/>
                 <Feather name="filter" size={20} color="#ccc" style={styles.icon} onPress={()=>setModalVisible(true)}/>
             </View>
 
             <ScrollView>
               <View style={styles.listComp}>
-                {exercises.map((exercise) => (
-                  <FloatingCard key={exercise.id} height={75} width="90%">
-                    <View style={styles.exerciseInformation}>
-                      <View style={styles.leftColumn}>
-                        <View style={styles.titleWrapper}>
-                          <Text style={styles.title} numberOfLines={0}>{exercise.name}</Text>
+                {exercises
+                  .filter((e) => e.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+                  (selectedGroups.length === 0 || selectedGroups.includes(e.primaryMuscleGroup))
+                  )
+                  .map((exercise) => (
+                    <FloatingCard key={exercise.id} width="90%">
+                      <View style={styles.exerciseInformation}>
+                        <View style={styles.leftColumn}>
+                          <View style={styles.titleWrapper}>
+                            <Text style={styles.title} numberOfLines={0}>{exercise.name}</Text>
+                          </View>
+                        </View>
+                        <View style={styles.rightColumn}>
+                          <Text style={styles.secondary}>Primary: {exercise.primaryMuscleGroup}</Text>
+                          <Text style={styles.secondary}>Motion: {exercise.motion}</Text>
                         </View>
                       </View>
-                      <View style={styles.rightColumn}>
-                        <Text style={styles.secondary}>Primary: {exercise.primaryMuscleGroup}</Text>
-                        <Text style={styles.secondary}>Motion: {exercise.motion}</Text>
-                      </View>
-                    </View>
-                  </FloatingCard>
+                    </FloatingCard>
                 ))}
               </View>
             </ScrollView>
@@ -92,6 +92,15 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#1c1f23',
     },
+    mainTitle: {
+      fontSize: 30,
+      fontWeight: '600',
+      color: 'white',
+      alignSelf: 'center',
+      textAlign: 'center',
+      flexWrap: 'wrap',
+      margin: 12
+    },
     topBar: {
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -106,7 +115,7 @@ const styles = StyleSheet.create({
     },
     exerciseInformation: {
       flexDirection: 'row',
-      alignItems: 'flex-start', 
+      alignItems: 'center', 
       justifyContent: 'space-between',
       padding: 10,
       gap: 10,

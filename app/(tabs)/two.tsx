@@ -4,24 +4,24 @@ import FloatingCard from '@/components/floatingbox';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/title';
-import { getCurrentSplit, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout } from '@/lib/firestoreFunctions';
-import { ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
+import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout } from '@/lib/firestoreFunctions';
+import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
 import SaveButton from '@/components/saveButton';
 import { useRouter } from 'expo-router';
+import Exercises from '../(exercises)/exercises';
+import ExerciseSearchModal from '@/components/FilterModal';
 
 export default function TodayWorkoutScreen() {
-
-  /*
-    TODO:
-    - Page needs to be refreshed after save is called
-    - Delete Button needs to be operational for each floating card
-  */
 
   const router = useRouter(); 
 
   const [split, setSplit] = useState<Split | null>(null);
   const [todayWorkout, setTodayWorkout] = useState<workout | null>(null);
   const [loggedExercises, setLoggedExercises] = useState<ExerciseLog | null>(null);
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
   const addSet = (index: number) => {
     if (!loggedExercises) return;
@@ -30,11 +30,67 @@ export default function TodayWorkoutScreen() {
     setLoggedExercises(updated);
   };
 
+  const removeSet = (exerciseIndex: number) => {
+    if (!loggedExercises) return;
+    const updated = { ...loggedExercises };
+    const sets = updated.exercises[exerciseIndex].sets;
+  
+    if (sets.length > 1) {
+      sets.splice(0, 1); // Remove the set
+      setLoggedExercises(updated);
+    } else {
+      Alert.alert("Cannot delete the only set in this exercise");
+    }
+  };
+
   const updateSet = (exerciseIndex: number, setIndex: number, field: 'weight' | 'reps', value: string) => {
     if (!loggedExercises) return;
     const updated = { ...loggedExercises };
     updated.exercises[exerciseIndex].sets[setIndex][field] = Number(value);
     setLoggedExercises(updated);
+  };
+
+  const handleExerciseSelect = (exerciseId: string) => {
+    const selected = exercises.find((e) => e.id === exerciseId);
+    if (!selected || !todayWorkout || !loggedExercises) return;
+  
+    const newExercise: workoutExercise = {
+      exerciseId: selected.id,
+      sets: 2,
+      reps: { min: 4, max: 12 },
+      exerciseData: selected,
+    };
+  
+    const updatedTodayWorkout: workout = {
+      ...todayWorkout,
+      exercises: [...todayWorkout.exercises, newExercise],
+    };
+  
+    const updatedLog: ExerciseLog = {
+      ...loggedExercises,
+      exercises: [
+        ...loggedExercises.exercises,
+        {
+          exerciseId: selected.id,
+          sets: Array.from({ length: 2 }, () => ({ weight: 0, reps: 0 })),
+        },
+      ],
+    };
+  
+    setTodayWorkout(updatedTodayWorkout);
+    setLoggedExercises(updatedLog);
+    setModalVisible(false);
+    setSearchQuery('');
+  };
+  
+
+  const deleteExercise = (exerciseIndex: number) => {
+    if(todayWorkout?.exercises != null && todayWorkout?.exercises.length > 1){
+      const updated = todayWorkout.exercises.filter((_, index) => index !== exerciseIndex);
+      setTodayWorkout({ ...todayWorkout, exercises: updated });    
+    }else{
+      Alert.alert("Cannot delete only exercise")
+    }
   };
 
   const handleSave = async () => {
@@ -83,18 +139,20 @@ export default function TodayWorkoutScreen() {
         setSplit(split)
         setTodayWorkout(workout)
         setLoggedExercises(log);
-
-        // const initialLogged = workout.exercises.map((exercise) => {
-
-        // })
     };
 
+    const fetchExercises = async () => {
+      const e = await getExercises();
+      setExercises(e)
+    }
+
     fetchWorkout();
+    fetchExercises();
   }, [])
 
   // Error checking
   console.log(split)
-  console.log("Today workout: ", todayWorkout?.exercises[0])
+  console.log("Today workout: ", todayWorkout?.exercises)
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -106,7 +164,9 @@ export default function TodayWorkoutScreen() {
           <FloatingCard key={exercise.exerciseData?.name} width="90%">
             <View style={styles.cardHeader}>
               <Text style={styles.exerciseName}>{exercise.exerciseData?.name}</Text>
-              <Ionicons name="trash-outline" size={20} color="white" />
+              <Pressable onPress={() => deleteExercise(exIndex)}>
+                <Ionicons name="trash-outline" size={20} color="white" />
+              </Pressable>
             </View>
 
             <View style={styles.tableHeader}>
@@ -133,17 +193,33 @@ export default function TodayWorkoutScreen() {
               </View>
             ))}
 
-
-            <Pressable style={styles.addSetButton} onPress={() => addSet(exIndex)}>
-              <Ionicons name="add-circle-outline" size={20} color="white" />
-              <Text style={styles.addSetText}>Add Set</Text>
-            </Pressable>
+            <View style={styles.setRow}>
+              <Pressable style={styles.addSetButton} onPress={() => addSet(exIndex)}>
+                <Ionicons name="add-circle-outline" size={20} color="white" />
+                <Text style={styles.addSetText}>Add Set</Text>
+              </Pressable>
+              <Pressable style={styles.addSetButton} onPress={() => removeSet(exIndex)}>
+                <Ionicons name="remove-circle-outline" size={20} color="white" />
+                <Text style={styles.addSetText}>Remove Set</Text>
+              </Pressable>
+            </View>
           </FloatingCard>
         ))}
-        <SaveButton onPress={handleSave}/>
+        <Pressable style={styles.addButton} onPress={() => setModalVisible(true)}>
+            <Text style={styles.addText}>+ Add Exercise</Text>
+        </Pressable>
       </ScrollView>
-
+      <SaveButton onPress={handleSave}/>
+      <ExerciseSearchModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          exercises={exercises}
+          onSelectExercise={handleExerciseSelect}
+      />
     </SafeAreaView>
+    
 
   );
 }
@@ -216,5 +292,19 @@ const styles = StyleSheet.create({
   addSetText: {
     color: 'white',
     marginLeft: 6
+  },
+  addButton: {
+    marginTop: 20,
+  },
+  addText: {
+      color: '#4FD6EA',
+      fontSize: 16,
+      alignSelf: 'center'
+  },
+  setRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '70%',
+    alignSelf: 'center'
   }
 });

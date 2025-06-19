@@ -8,6 +8,7 @@ import SaveButton from '@/components/saveButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import { useRouter } from 'expo-router';
+import ExerciseSearchModal from '@/components/FilterModal';
 
 export default function CreateSplit(){
 
@@ -240,40 +241,14 @@ export default function CreateSplit(){
                     </Pressable>
                 </ScrollView>
             </KeyboardAvoidingView>
-            <Modal
-            visible={modalVisible}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                    <TextInput
-                        placeholder="Search exercises..."
-                        placeholderTextColor="#aaa"
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                        style={styles.searchInput}
-                    />
-                    <ScrollView style={{ maxHeight: 300 }}>
-                        {exercises
-                        .filter((e) => e.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                        .map((exercise) => (
-                            <Pressable
-                            key={exercise.id}
-                            onPress={() => handleExerciseSelect(exercise.id)}
-                            style={styles.searchItem}
-                            >
-                            <Text style={styles.searchItemText}>{exercise.name}</Text>
-                            </Pressable>
-                        ))}
-                    </ScrollView>
-                    <Pressable onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
-                        <Text style={styles.modalCloseText}>Close</Text>
-                    </Pressable>
-                    </View>
-                </View>
-            </Modal>
+            <ExerciseSearchModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                exercises={exercises}
+                onSelectExercise={handleExerciseSelect}
+            />
             <SaveButton onPress={handleSave}/>
         </SafeAreaView>
     )
