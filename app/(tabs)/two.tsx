@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, Alert } from 'react-native';
 import FloatingCard from '@/components/floatingbox';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/title';
-import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout } from '@/lib/firestoreFunctions';
+import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateRandomSplitId } from '@/lib/firestoreFunctions';
 import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
 import SaveButton from '@/components/saveButton';
 import { useRouter } from 'expo-router';
-import Exercises from '../(exercises)/exercises';
 import ExerciseSearchModal from '@/components/FilterModal';
+import { useRoute } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function TodayWorkoutScreen() {
 
   const router = useRouter(); 
+  const route = useRoute();
 
   const [split, setSplit] = useState<Split | null>(null);
   const [todayWorkout, setTodayWorkout] = useState<workout | null>(null);
   const [loggedExercises, setLoggedExercises] = useState<ExerciseLog | null>(null);
+  const [isStartingFresh, setIsStartingFresh] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -102,53 +106,59 @@ export default function TodayWorkoutScreen() {
       return;
     }
     try {
-      // Need to add logExercise here
+      // Log Workout
       logWorkout(loggedExercises);
       // Then call increment here
-      incrementDayIndex();
+      console.log(isStartingFresh)
+      if(!isStartingFresh){
+        incrementDayIndex();
+      }
       // message saying congrats on completing workout
       Alert.alert('Success', 'Workout Uploaded!');
       // Route back to home screen
-      router.push('/');
+      router.replace('/');
     } catch (err) {
       console.error("Error saving workout:", err);
     }
   }
 
-  // Runs every render
-  useEffect(() => {
-    const fetchWorkout = async () => {
-        const w = await getTodayWorkout()
-        if(!w){
-          console.error('Workout not found')
-          return;
-        }
-        console.log(w)
-        const {split, workout} = w;
-        const log: ExerciseLog = {
-          splitId: split.id,
-          workoutDay: workout.dayName,
-          date: new Date().toISOString(),
-          exercises: workout.exercises.map((exercise: workoutExercise) => ({
-            exerciseId: exercise.exerciseId,
-            sets: Array.from({ length: exercise.sets }, () => ({ weight: 0, reps: 0 })),
-          }))
-        }
+  // Runs every time screen is called
+  // different than useEffect which only runs when component is mounted then rerenders based of dependency array
+  useFocusEffect(
+    useCallback(() => {
+      const fetchWorkout = async () => {
+          const w = await getTodayWorkout()
+          if(!w){
+            console.error('Workout not found')
+            return;
+          }
+          console.log(w)
+          const {split, workout} = w;
+          const log: ExerciseLog = {
+            splitId: split.id,
+            workoutDay: workout.dayName,
+            date: new Date().toISOString(),
+            exercises: workout.exercises.map((exercise: workoutExercise) => ({
+              exerciseId: exercise.exerciseId,
+              sets: Array.from({ length: exercise.sets }, () => ({ weight: 0, reps: 0 })),
+            }))
+          }
 
 
-        setSplit(split)
-        setTodayWorkout(workout)
-        setLoggedExercises(log);
-    };
+          setSplit(split)
+          setTodayWorkout(workout)
+          setLoggedExercises(log);
+      };
 
-    const fetchExercises = async () => {
-      const e = await getExercises();
-      setExercises(e)
-    }
+      const fetchExercises = async () => {
+        const e = await getExercises();
+        setExercises(e)
+      }
 
-    fetchWorkout();
-    fetchExercises();
-  }, [])
+      fetchWorkout();
+      fetchExercises();
+    }, [])
+  );
 
   // Error checking
   console.log(split)
@@ -156,7 +166,21 @@ export default function TodayWorkoutScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <GravitusHeader />   
+      <GravitusHeader showEditButton={true} 
+      onTryNewWorkout={() => {
+        setIsStartingFresh(true);
+        setTodayWorkout({ dayName: 'Custom', exercises: [] });
+        setLoggedExercises({
+          splitId: generateRandomSplitId(),
+          workoutDay: 'Custom',
+          date: new Date().toISOString(),
+          exercises: []
+        });
+      }}
+      onChangeSplit={()=>{
+        router.push('../(trainingSplits)/trainingSplits')
+      }}
+      />      
       <Text style={styles.title}>Today’s Workout: {todayWorkout?.dayName}</Text>
       <Text style={styles.splitLink}>{split?.name}</Text>  
       <ScrollView contentContainerStyle={styles.scrollContent}>

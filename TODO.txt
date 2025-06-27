@@ -2,38 +2,37 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Index Page (Lower Priority):
-- Graphics
-- Make like fitbit UI
-
-Weekly Progress (No Priority):
-- Figure out algorithm to track how many workouts were done this week
-- Display in nice graph
-
-History (Medium Priority):
-- Make logs direct to [id].tsx that shows detailed view of workout
-    - Connection (done)
-    - Figure out UI
-
-Goals/PRS (No Priority):
-- Honestly, may remove this tab
-
 Training Splits (High Priority):
 - Update UI (shit looks ugly rn) (better)
 - Direct Current Split to working tab that shows details abt the current split including logged information
 - Finish writing script for Upper/Lower
 
-Exercises (Medium Priority):
-- Fix UI for displaying Exercises in Floating Box; something with wrap is not working well (Done)
+Exercises (High Priority):
+- Links to [id].tsx page that shows information about the exercise
+- Will also contain user's history within that exercise (Prev logs/PRs/Improvements)
 
-Two (High Priority):
-- Add New Exercises (Done)
-- Remove Sets (Done)
-- If no split, direct to split page or just track random workout
+Index Page (Low Priority):
+- UI additions to floating boxes
 
+Two (Medium Priority):
+- Lag iteration to the next workout to be the following calendar day (High Priority)
+- Simulator "Weight"/"Reps" should be pulled from last time that exercise was logged
+    - intricate firestore function that will involve exerciseLogs, date
+
+Weekly Progress (No Priority):
+- Figure out algorithm to track how many workouts were done this week
+- Display in nice graph
+
+History (Low/No Priority):
+- UI Updates
+- Pie Chart of Muscles Hit (in terms of sets)
+
+Goals/PRS (No Priority):
+- Honestly, may remove this tab
 
 Based Off Codebase (Low Priority):
 
 - Clean up create.tsx
 - Clean up firestoreFunctions.tsx (Modularize)
+- Fix firestore warnings (medium priority)
 

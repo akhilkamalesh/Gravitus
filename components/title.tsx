@@ -2,23 +2,36 @@ import React from 'react';
 import { Text, StyleSheet, View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import EditButton from './clearButton';
+import { useRouter } from 'expo-router';
 
 type Props = {
   showBackButton?: boolean;
+  showEditButton?: boolean;
+  onChangeSplit?: () => void;
+  onTryNewWorkout?: () => void;
 }
 
-export default function GravitusHeader({showBackButton = false}: Props) {
-  const navigation = useNavigation();
-
+export default function GravitusHeader({showBackButton = false, showEditButton = false, onChangeSplit, onTryNewWorkout}: Props) {
+  const router = useRouter();
 
   return (
     <View style={styles.wrapper}>
       {showBackButton && (
-        <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Pressable onPress={() => {
+          router.back();
+        }} 
+        style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </Pressable>
       )}
       <Text style={styles.text}>Gravitus</Text>
+      {showEditButton && (
+        <EditButton
+          onChangeSplit={onChangeSplit}
+          onTryNewWorkout={onTryNewWorkout}
+        />
+      )}
     </View>
   );
 }

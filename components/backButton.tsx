@@ -2,12 +2,21 @@ import React from 'react';
 import { Pressable, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function BackButton() {
-  const navigation = useNavigation();
+  const router = useRouter()
 
   return (
-    <Pressable onPress={() => navigation.goBack()} style={styles.button}>
+    <Pressable onPress={() => {
+      try {
+        router.back(); // Always attempts to go back; expo-router handles it gracefully
+      } catch (e) {
+        router.push('/')
+        console.warn('No screen to go back to.');
+      }    
+    }
+    } style={styles.button}>
       <Ionicons name="arrow-back" size={24} color="white" />
       <Text style={styles.text}>Back</Text>
     </Pressable>

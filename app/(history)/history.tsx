@@ -56,8 +56,10 @@ export default function HistoryScreen() {
                         <View style={styles.loggedRow}>
                             <Text style={styles.loggedRowText}>{workout.date.substring(0, 10)}</Text>
                             <Text style={styles.loggedRowText}>{workout.workoutDay}</Text>
-                            <Text style={styles.loggedRowText}>{splitNames[workout.splitId]}</Text>
-                        </View>
+                            <Text style={styles.loggedRowText}>
+                                {splitNames[workout.splitId] ?? 'One-Off'}
+                            </Text>                        
+                            </View>
                     </FloatingCard>
                 ))}
             </ScrollView>

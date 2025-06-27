@@ -1,5 +1,5 @@
-import { firestoreInstance } from "./firebase";
-import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, orderBy } from "@react-native-firebase/firestore";
+import { firestoreInstance, authInstance } from "./firebase";
+import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, orderBy, where } from "@react-native-firebase/firestore";
 import { Exercise, ExerciseLog } from "@/types/firestoreTypes";
 import auth from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
@@ -20,6 +20,23 @@ export const getExercises = async (): Promise<Exercise[]> => {
         return [];
     }
 }
+
+// Gets Exercise Based off ID
+export const getExerciseByID = async (id: string): Promise<Exercise> => {
+  const docRef = doc(firestoreInstance, 'exercises', id);
+  const snapshot = await getDoc(docRef)
+
+  if (!snapshot.exists()) {
+    throw new Error('Log not found');
+  }
+
+  return {
+    id: snapshot.id,
+    ...snapshot.data(),
+  } as Exercise;
+  
+}
+
 
 // Loads splits based off ID
 export const getSplit = async (splitId: string): Promise<Split | null> => {
@@ -185,10 +202,9 @@ export const logWorkout = async (exerciseLog: ExerciseLog) => {
 
 // Grabs all logged workouts from a user (should include some type of limit)
 export const getLoggedWorkouts = async (): Promise<ExerciseLog[]> => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
-  // Going to log collection
   const logsRef = collection(firestoreInstance, 'users', user.uid, 'logs');
   const logsQuery = query(logsRef, orderBy('date', 'desc'));
   const snapshot = await getDocs(logsQuery);
@@ -198,7 +214,7 @@ export const getLoggedWorkouts = async (): Promise<ExerciseLog[]> => {
   })) as ExerciseLog[];
 
   return logs;
-}
+};
 
 // Get logged workout based on id
 export const getLoggedWorkoutById = async (logId: string): Promise<ExerciseLog> => {
@@ -235,4 +251,31 @@ export const getSplitBySplitId = async (splitId:string): Promise<Split | null> =
   const split = { id: splitSnap.id, ...splitSnap.data() } as Split;
 
   return split;
+}
+
+// Generate random split ID
+export const generateRandomSplitId = () => {
+  const user = authInstance.currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  return doc(collection(firestoreInstance, 'users', user.uid, 'splits')).id;
+};
+
+// Check if workout is complete based of date
+export const checkWorkoutStatus = async () => {
+
+  const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
+
+  const user = authInstance.currentUser;
+  if (!user) throw new Error('User not authenticated');
+  const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
+
+  const q = query(logsRef,
+    where('date', '>=', todayISO),
+    where('date', '<', `${todayISO}T23:59:59`)
+  );
+
+  const snapshot = await getDocs(q)
+
+  return !snapshot.empty;
 }
