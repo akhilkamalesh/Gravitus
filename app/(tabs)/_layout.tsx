@@ -8,7 +8,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#1c1f23',
+          backgroundColor: '#121417',
           borderTopWidth: 2,
           borderTopColor: '#4FD6EA', // purple outline
           height: 70,

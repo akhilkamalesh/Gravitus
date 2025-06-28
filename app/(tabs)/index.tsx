@@ -139,7 +139,7 @@ const SectionHeader = ({ title }: { title: string }) => (
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#1c1f23',
+    backgroundColor: '#121417',
   },
   scrollContent: {
     alignItems: 'center',

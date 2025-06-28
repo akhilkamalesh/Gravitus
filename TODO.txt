@@ -3,7 +3,6 @@ MVP 1 TODO
 Based off Screens/Components:
 
 Training Splits (High Priority):
-- Update UI (shit looks ugly rn) (better)
 - Direct Current Split to working tab that shows details abt the current split including logged information
 - Finish writing script for Upper/Lower
 

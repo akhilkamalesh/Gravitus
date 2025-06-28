@@ -1,123 +1,112 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FloatingCard from '@/components/floatingbox';
 import GravitusHeader from '@/components/title';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, ScrollView, Text, View} from 'react-native';
-import BackButton from '@/components/backButton';
+import { StyleSheet, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { getCurrentSplit } from '@/lib/firestoreFunctions';
 import { Split } from '@/types/firestoreTypes';
+import { Feather } from '@expo/vector-icons';
 
+export default function TrainingSplits() {
+  const router = useRouter();
+  const [currentSplit, setCurrentSplit] = useState<Split | null>(null);
 
+  const splits = [
+    { id: 'pushPullLegs', name: 'Push / Pull / Legs' },
+    { id: 'upperLower', name: 'Upper / Lower' },
+    { id: 'gymBro', name: 'Gym Bro' },
+    { id: 'antagonist', name: 'Antagonist' },
+  ];
 
-export default function TrainingSplits(){
+  useEffect(() => {
+    const fetchSplit = async () => {
+      try {
+        const split = await getCurrentSplit();
+        setCurrentSplit(split);
+      } catch (err) {
+        console.error("Failed to fetch current split:", err);
+      }
+    };
+    fetchSplit();
+  }, []);
 
-    const router = useRouter(); 
+  return (
+    <SafeAreaView style={styles.screen}>
+      <GravitusHeader showBackButton={true} />
+      <Text style={styles.mainTitle}>Training Splits</Text>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
 
-    const [currentSplit, setCurrentSplit] = useState<Split | null>(null);
+        <Text style={styles.subtitle}>Current Split</Text>
+        <FloatingCard width="90%" height={70} onPress={() => router.push(`/(trainingSplits)/${currentSplit?.createdFromTemplateId}`)}>
+          <View style={styles.cardContent}>
+            <Feather name="calendar" size={18} color="#bbb" style={styles.cardIcon} />
+            <Text style={styles.text}>{currentSplit?.name}</Text>
+          </View>
+        </FloatingCard>
 
-    const splits = [
-        // {id: 'createYourOwn', name: 'Create Your Own!'},
-        { id: 'pushPullLegs', name: 'Push / Pull / Legs' },
-        { id: 'upperLower', name: 'Upper / Lower' },
-        { id: 'gymBro', name: 'Gym Bro' },
-        { id: 'antagonist', name: 'Antagonist' },
-    ]
+        <Text style={styles.subtitle}>Create Your Own!</Text>
+        <FloatingCard width="90%" height={70} onPress={() => router.push('/(trainingSplits)/create')}>
+          <View style={styles.cardContent}>
+            <Feather name="edit" size={18} color="#bbb" style={styles.cardIcon} />
+            <Text style={styles.text}>Create Your Own</Text>
+          </View>
+        </FloatingCard>
 
-    useEffect(() => {
-      const fetchSplit = async () => {
-        try {
-          const split = await getCurrentSplit();
-          setCurrentSplit(split);
-        } catch (err) {
-          console.error("Failed to fetch current split:", err);
-        }
-      };
-      fetchSplit();
-    }, []);
+        <Text style={styles.subtitle}>Explore Template Splits</Text>
+        {splits.map((split) => (
+          <FloatingCard key={split.id} height={70} width="90%" onPress={() => router.push(`/(trainingSplits)/${split.id}`)}>
+            <View style={styles.cardContent}>
+              <Feather name="folder" size={18} color="#bbb" style={styles.cardIcon} />
+              <Text style={styles.text}>{split.name}</Text>
+            </View>
+          </FloatingCard>
+        ))}
 
-    return(
-        <SafeAreaView style={styles.screen}>
-            <GravitusHeader showBackButton={true}/>
-            <Text style={styles.mainTitle}>Training Splits</Text>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                
-                <Text style={styles.subtitle}>Current Split</Text>
-                <FloatingCard width="90%" height={60} onPress={()=>router.push(`/(trainingSplits)/${currentSplit?.createdFromTemplateId}`)}>
-                    <View style={styles.floatingView}>
-                        {/* <Text style={styles.text}>{currentSplit?.id}</Text> */}
-                        <Text style={styles.text}>{currentSplit?.name}</Text>
-                    </View>
-                </FloatingCard>
-
-                <Text style={styles.subtitle}>Create Your Own!</Text>
-                <FloatingCard width="90%" height={60} onPress={()=>router.push('/(trainingSplits)/create')}>
-                    <View style={styles.floatingView}>
-                        <Text style={styles.text}>Create Your Own</Text>
-                    </View>
-                </FloatingCard>
-
-                <Text style={styles.subtitle}>Explore Template Splits</Text>
-                {splits.map((split) => (
-                    <FloatingCard key={split.id} height={60} width="90%" onPress={()=>router.push(`/(trainingSplits)/${split.id}`)}>
-                        <View style={styles.floatingView}>
-                            <Text style={styles.text}>{split.name}</Text>
-                        </View>
-                    </FloatingCard>
-                ))}
-            </ScrollView>
-        </SafeAreaView>
-    )
-
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
-
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: '#1c1f23',
-    },
-    scrollContent: {
-        alignItems: 'center',
-    },
-    mainTitle: {
-        fontSize: 30,
-        fontWeight: '600',
-        color: 'white',
-        alignSelf: 'center',
-        textAlign: 'center',
-        flexWrap: 'wrap',
-        margin: 12
-      },
-    floatingView: {
-        flex: 1,
-        alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    text: {
-        color: 'white',
-        fontWeight: '600',
-        fontSize: 20,
-        alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    subText: {
-        color: 'white',
-        fontWeight: '600',
-        fontSize: 15,
-        alignSelf: 'center',
-        justifyContent: 'center',
-        marginTop: 5
-    },
-    subTitleView: {
-        marginTop: 20,
-    },
-    subtitle: {
-        color: 'white',
-        fontWeight: '600',
-        fontSize: 20,
-        marginTop: 20,
-    }
-
-})
+  screen: {
+    flex: 1,
+    backgroundColor: '#121417',
+  },
+  scrollContent: {
+    alignItems: 'center',
+    paddingBottom: 40,
+  },
+  mainTitle: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: 'white',
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginVertical: 12,
+  },
+  subtitle: {
+    color: '#999',
+    fontWeight: '600',
+    fontSize: 18,
+    marginTop: 20,
+    marginBottom: 10,
+    alignSelf: 'flex-start',
+    paddingHorizontal: '5%',
+  },
+  cardContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    gap: 12,
+  },
+  text: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 18,
+  },
+  cardIcon: {
+    marginTop: 2,
+  },
+});

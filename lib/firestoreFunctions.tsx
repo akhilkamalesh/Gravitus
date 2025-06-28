@@ -253,6 +253,17 @@ export const getSplitBySplitId = async (splitId:string): Promise<Split | null> =
   return split;
 }
 
+// Clear Current Split
+export const clearCurrentSplit = async() => {
+
+  const user = auth().currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  const userRef = doc(firestoreInstance, 'users', user.uid)
+
+  await updateDoc(userRef, {currentSplitId: ""});
+}
+
 // Generate random split ID
 export const generateRandomSplitId = () => {
   const user = authInstance.currentUser;

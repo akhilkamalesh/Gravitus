@@ -10,99 +10,123 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 export default function HistoryScreen() {
+  const router = useRouter();
 
-    const router = useRouter(); 
+  const [searchText, setSearchText] = useState('');
+  const [loggedWorkouts, setLoggedWorkouts] = useState<ExerciseLog[] | null>(null);
+  const [splitNames, setSplitNames] = useState<{ [splitId: string]: string }>({});
 
-    const [searchText, setSearchText] = useState('');
-    const [loggedWorkouts, setLoggedWorkouts] = useState<ExerciseLog[] | null>(null);
-    const [splitNames, setSplitNames] = useState<{ [splitId: string]: string }>({});
+  const fetchSplitName = async (splitId: string) => {
+    if (splitNames[splitId]) return;
+    const split = await getSplitBySplitId(splitId);
+    if (split) {
+      setSplitNames((prev) => ({ ...prev, [splitId]: split.name }));
+    }
+  };
 
-    const fetchSplitName = async (splitId: string) => {
-        if (splitNames[splitId]) return; // already fetched
-      
-        const split = await getSplitBySplitId(splitId);
-        if (split) {
-          setSplitNames((prev) => ({ ...prev, [splitId]: split.name }));
-        }
-      };
+  useEffect(() => {
+    const fetchLoggedWorkouts = async () => {
+      const workouts = await getLoggedWorkouts();
+      if (!workouts) {
+        console.error("Logged workouts not fetched");
+        return;
+      }
+      setLoggedWorkouts(workouts);
+      for (const log of workouts) {
+        await fetchSplitName(log.splitId);
+      }
+    };
+    fetchLoggedWorkouts();
+  }, []);
 
-    useEffect(() => {
-        const fetchLoggedWorkouts = async () => {
-            const workouts = await getLoggedWorkouts();
-            if(!workouts){
-                console.error("Logged workouts not fetched")
-            }
-            setLoggedWorkouts(workouts);
+  return (
+    <SafeAreaView style={styles.screen}>
+      <GravitusHeader showBackButton={true} />
+      <Text style={styles.title}>Logged Workouts</Text>
 
-            // Immediately iterate on the raw workouts data, not state
-            for (const log of workouts) {
-                await fetchSplitName(log.splitId);
-            }
-        }
-        fetchLoggedWorkouts()
-    }, [])
+      <View style={styles.topBar}>
+        <SearchBar
+          value={searchText}
+          onChange={setSearchText}
+          placeholder="Search Workouts..."
+        />
+        <Feather name="filter" size={22} color="#bbb" style={styles.icon} />
+      </View>
 
-    return(
-        <SafeAreaView style={styles.screen}>
-            <GravitusHeader showBackButton={true}/>
-            <Text style={styles.title}>Logged Workouts</Text>
-            <View style={styles.topBar}>
-                <SearchBar value={searchText} onChange={setSearchText} placeholder="Search Workouts..."/>
-                <Feather name="filter" size={20} color="#ccc" style={styles.icon}/>
-            </View>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                {loggedWorkouts?.filter((l) => l.workoutDay.toLowerCase().includes(searchText.toLowerCase()))?.map((workout) => (
-                    <FloatingCard key={workout.id} height={60} width={"90%"} onPress={()=>router.push(`/(history)/${workout.id}`)}>
-                        <View style={styles.loggedRow}>
-                            <Text style={styles.loggedRowText}>{workout.date.substring(0, 10)}</Text>
-                            <Text style={styles.loggedRowText}>{workout.workoutDay}</Text>
-                            <Text style={styles.loggedRowText}>
-                                {splitNames[workout.splitId] ?? 'One-Off'}
-                            </Text>                        
-                            </View>
-                    </FloatingCard>
-                ))}
-            </ScrollView>
-        </SafeAreaView>
-    )
-
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {loggedWorkouts
+          ?.filter((l) =>
+            l.workoutDay.toLowerCase().includes(searchText.toLowerCase())
+          )
+          .map((workout) => (
+            <FloatingCard
+              key={workout.id}
+              height={70}
+              width="90%"
+              onPress={() => router.push(`/(history)/${workout.id}`)}
+            >
+              <View style={styles.loggedRow}>
+                <Text style={styles.loggedRowText}>{workout.date.substring(0, 10)}</Text>
+                <Text style={styles.loggedRowTextMiddle}>{workout.workoutDay}</Text>
+                <Text style={styles.loggedRowText}>
+                  {splitNames[workout.splitId] ?? 'One-Off'}
+                </Text>
+              </View>
+            </FloatingCard>
+          ))}
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: '#1c1f23',
-    },
-    scrollContent: {
-        alignItems: 'center',
-        // paddingVertical: 24,
-    },
-    title: {
-        fontSize: 30,
-        fontWeight: '600',
-        color: 'white',
-        alignSelf: 'center',
-        textAlign: 'center',
-        flexWrap: 'wrap',
-        margin: 12
-    },
-    loggedRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    loggedRowText: {
-        color: 'white',
-        fontSize: 15,
-        fontWeight: '600'
-    },
-    topBar: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-        marginHorizontal: 15,
-    },
-    icon:{
-        alignSelf: 'center'
-    },
-})
+  screen: {
+    flex: 1,
+    backgroundColor: '#121417',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: 'white',
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginVertical: 12,
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
+    marginBottom: 12,
+    gap: 8,
+  },
+  icon: {
+    padding: 6,
+  },
+  scrollContent: {
+    alignItems: 'center',
+    paddingBottom: 36,
+  },
+  loggedRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '100%', // ensures full vertical space is used
+  },
+  
+  loggedRowText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
+    width: 100, // or adjust to taste
+ },
+ loggedRowTextMiddle: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginHorizontal: 10,
+    width: 100, // or adjust to taste
+ },
+});
