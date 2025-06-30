@@ -8,6 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import { getExercises } from '@/lib/firestoreFunctions';
 import { Exercise } from '@/types/firestoreTypes';
 import FloatingCard from '@/components/floatingbox';
+import { router } from 'expo-router';
 
 export default function Exercises() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -56,7 +57,7 @@ export default function Exercises() {
                 (selectedGroups.length === 0 || selectedGroups.includes(e.primaryMuscleGroup))
             )
             .map((exercise) => (
-              <FloatingCard key={exercise.id} width="90%" height={95}>
+              <FloatingCard key={exercise.id} width="90%" height={95} onPress={()=>router.push('/(exercises)')}>
                 <View style={styles.exerciseCard}>
                   <View style={styles.exerciseTopRow}>
                     <Text style={styles.exerciseName} numberOfLines={2}>{exercise.name}</Text>

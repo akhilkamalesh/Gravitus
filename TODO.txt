@@ -2,29 +2,30 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Training Splits (High Priority):
-- Direct Current Split to working tab that shows details abt the current split including logged information
-- Finish writing script for Upper/Lower
-
 Exercises (High Priority):
 - Links to [id].tsx page that shows information about the exercise
 - Will also contain user's history within that exercise (Prev logs/PRs/Improvements)
 
 Index Page (Low Priority):
+- Fix getTodayWorkout function (High Priority)
 - UI additions to floating boxes
 
-Two (Medium Priority):
-- Lag iteration to the next workout to be the following calendar day (High Priority)
+Two (High Priority):
 - Simulator "Weight"/"Reps" should be pulled from last time that exercise was logged
     - intricate firestore function that will involve exerciseLogs, date
+
+Training Splits (Low Priority):
+- Finish writing script for Upper/Lower
+
+History (Low/No Priority):
+- UI Updates
+- Pie Chart of Muscles Hit (in terms of sets)
 
 Weekly Progress (No Priority):
 - Figure out algorithm to track how many workouts were done this week
 - Display in nice graph
 
-History (Low/No Priority):
-- UI Updates
-- Pie Chart of Muscles Hit (in terms of sets)
+
 
 Goals/PRS (No Priority):
 - Honestly, may remove this tab

@@ -38,13 +38,15 @@ export const getExerciseByID = async (id: string): Promise<Exercise> => {
 }
 
 
-// Loads splits based off ID
+// Loads splits based off ID (only for splitTemplates)
 export const getSplit = async (splitId: string): Promise<Split | null> => {
     try {
         const docRef = firestoreInstance.collection('splitTemplates').doc(splitId);
         const docSnap = await docRef.get();
+
+        console.log("docsnap is: ", docSnap.data)
     
-        if (docSnap) {
+        if (docSnap.exists()) {
           const data = docSnap.data();
           return {
             id: docSnap.id,
@@ -170,7 +172,7 @@ export const incrementDayIndex = async () => {
   const userRef = doc(firestoreInstance, 'users', user.uid);
   const userSnap = await getDoc(userRef);
   const currentIndex = userSnap.data()?.currentDayIndex ?? 0;
-
+  
   const nextIndex = (currentIndex + 1);
   await updateDoc(userRef, { currentDayIndex: nextIndex });
 };

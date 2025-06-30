@@ -31,6 +31,8 @@ export default function TrainingSplits() {
     fetchSplit();
   }, []);
 
+  console.log(currentSplit)
+
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showBackButton={true} />
@@ -38,7 +40,7 @@ export default function TrainingSplits() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
         <Text style={styles.subtitle}>Current Split</Text>
-        <FloatingCard width="90%" height={70} onPress={() => router.push(`/(trainingSplits)/${currentSplit?.createdFromTemplateId}`)}>
+        <FloatingCard width="90%" height={70} onPress={() => router.push(`/(trainingSplits)/${currentSplit?.id}`)}>
           <View style={styles.cardContent}>
             <Feather name="calendar" size={18} color="#bbb" style={styles.cardIcon} />
             <Text style={styles.text}>{currentSplit?.name}</Text>

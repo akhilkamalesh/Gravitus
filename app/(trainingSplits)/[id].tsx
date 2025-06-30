@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FloatingCard from "@/components/floatingbox";
 import { useLocalSearchParams } from "expo-router";
-import { getSplit, getSplitInformation, saveSplitToUser, updateCurrentSplit } from "@/lib/firestoreFunctions";
+import { getSplit, getSplitBySplitId, getSplitInformation, saveSplitToUser, updateCurrentSplit } from "@/lib/firestoreFunctions";
 import { Split } from "@/types/firestoreTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GravitusHeader from "@/components/title";
@@ -12,6 +12,7 @@ export default function SplitDetailScreen(){
     const {id} = useLocalSearchParams();
     const [split, setSplit] = useState<Split | null>(null);
     const [loading, setLoading] = useState(false)
+    const [isCurrSplit, setIsCurrSplit] = useState(false)
 
     // Logic for saving the split into your split collection
     const handleSave = async () => {
@@ -27,15 +28,24 @@ export default function SplitDetailScreen(){
 
 
     useEffect(() => {
-        if (typeof id !== 'string') return;
+        if (typeof id !== 'string'){
+            console.log('not a string')
+            return;
+        } 
 
         const fetchSplit = async () => {
             setLoading(true);
-            const rawSplit = await getSplit(id);
+            let rawSplit = await getSplit(id);
+            console.log("raw split: ", rawSplit)
             if (!rawSplit) {
+                rawSplit = await getSplitBySplitId(id);
+                setIsCurrSplit(true)
+                console.log(rawSplit)
+            }
+            if(!rawSplit){
                 setLoading(false);
                 return;
-              }
+            }
             const enrichedSplitData = await getSplitInformation(rawSplit)
             setSplit(enrichedSplitData)
             setLoading(false);
@@ -43,6 +53,8 @@ export default function SplitDetailScreen(){
 
         fetchSplit();
     }, [id]) // id is the dependency array, only run when this changes    
+
+    console.log(id)
 
     const workouts = split?.workouts;
     // console.log(split)
@@ -84,9 +96,10 @@ export default function SplitDetailScreen(){
                     </View>
                 ))}
             </ScrollView>
-            <SaveButton onPress={() => {
-                handleSave();
-            }}/>
+            {
+            !isCurrSplit && <SaveButton onPress={() => {handleSave();}}/>
+            }
+
         </SafeAreaView>
     );
 
@@ -95,7 +108,7 @@ export default function SplitDetailScreen(){
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#1c1f23',
+        backgroundColor: '#121417',
     },
     alignedRow: {
         width: '90%',

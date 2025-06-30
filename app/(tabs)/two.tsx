@@ -4,13 +4,14 @@ import FloatingCard from '@/components/floatingbox';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/title';
-import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateRandomSplitId } from '@/lib/firestoreFunctions';
+import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateRandomSplitId, checkWorkoutStatus } from '@/lib/firestoreFunctions';
 import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
 import SaveButton from '@/components/saveButton';
 import { useRouter } from 'expo-router';
 import ExerciseSearchModal from '@/components/FilterModal';
 import { useRoute } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
+import WorkoutCompleteModal from '@/components/CompleteModal';
 
 
 export default function TodayWorkoutScreen() {
@@ -22,6 +23,7 @@ export default function TodayWorkoutScreen() {
   const [todayWorkout, setTodayWorkout] = useState<workout | null>(null);
   const [loggedExercises, setLoggedExercises] = useState<ExerciseLog | null>(null);
   const [isStartingFresh, setIsStartingFresh] = useState(false);
+  const [isWorkoutDone, setIsWorkoutDone] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -127,6 +129,11 @@ export default function TodayWorkoutScreen() {
   useFocusEffect(
     useCallback(() => {
       const fetchWorkout = async () => {
+
+          if(await checkWorkoutStatus()){
+            setIsWorkoutDone(true)
+            // return;
+          }
           const w = await getTodayWorkout()
           if(!w){
             console.error('Workout not found')
@@ -167,20 +174,24 @@ export default function TodayWorkoutScreen() {
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showEditButton={true} 
-      onTryNewWorkout={() => {
-        setIsStartingFresh(true);
-        setTodayWorkout({ dayName: 'Custom', exercises: [] });
-        setLoggedExercises({
-          splitId: generateRandomSplitId(),
-          workoutDay: 'Custom',
-          date: new Date().toISOString(),
-          exercises: []
-        });
-      }}
-      onChangeSplit={()=>{
-        router.push('../(trainingSplits)/trainingSplits')
-      }}
+        onTryNewWorkout={() => {
+          setIsStartingFresh(true);
+          setTodayWorkout({ dayName: 'Custom', exercises: [] });
+          setLoggedExercises({
+            splitId: generateRandomSplitId(),
+            workoutDay: 'Custom',
+            date: new Date().toISOString(),
+            exercises: []
+          });
+        }}
+        onChangeSplit={()=>{
+          router.push('../(trainingSplits)/trainingSplits')
+        }}
       />      
+      <WorkoutCompleteModal
+        visible={isWorkoutDone}
+        onClose={() => setIsWorkoutDone(false)}
+      />
       <Text style={styles.title}>Today’s Workout: {todayWorkout?.dayName}</Text>
       <Text style={styles.splitLink}>{split?.name}</Text>  
       <ScrollView contentContainerStyle={styles.scrollContent}>
