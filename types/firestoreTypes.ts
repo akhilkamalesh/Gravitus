@@ -58,3 +58,10 @@ export interface workoutExercise {
   sets: number;
   exerciseData?: Exercise;
 }
+
+// Used for exercise [id] graphing purposes as well as statistics
+// Could definitely be used to replace sub dictionary in Exercise Log
+export interface ExerciseStat {
+  exerciseId: string;
+  sets: {weight: number; reps: number; date: string}[];
+}

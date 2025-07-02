@@ -57,7 +57,7 @@ export default function Exercises() {
                 (selectedGroups.length === 0 || selectedGroups.includes(e.primaryMuscleGroup))
             )
             .map((exercise) => (
-              <FloatingCard key={exercise.id} width="90%" height={95} onPress={()=>router.push('/(exercises)')}>
+              <FloatingCard key={exercise.id} width="90%" height={95} onPress={()=>router.push(`/(exercises)/${exercise.id}`)}>
                 <View style={styles.exerciseCard}>
                   <View style={styles.exerciseTopRow}>
                     <Text style={styles.exerciseName} numberOfLines={2}>{exercise.name}</Text>
