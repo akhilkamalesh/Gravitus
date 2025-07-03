@@ -3,15 +3,16 @@ MVP 1 TODO
 Based off Screens/Components:
 
 Exercises (High Priority):
-- Links to [id].tsx page that shows information about the exercise
-- Will also contain user's history within that exercise (Prev logs/PRs/Improvements) https://nearform.com/open-source/victory-native/
-
-Index Page (Low Priority):
-- UI additions to floating boxes
+- UI Changes
+- Graph updates (y-axis rotation, horizontal scrolling, images)
+- Figure out image store in firebase
 
 Two (High Priority):
 - Simulator "Weight"/"Reps" should be pulled from last time that exercise was logged
     - intricate firestore function that will involve exerciseLogs, date
+
+Index Page (Low Priority):
+- UI additions to floating boxes
 
 Training Splits (Low Priority):
 - Finish writing script for Upper/Lower
@@ -24,8 +25,6 @@ Weekly Progress (No Priority):
 - Figure out algorithm to track how many workouts were done this week
 - Display in nice graph: https://nearform.com/open-source/victory-native/
 
-
-
 Goals/PRS (No Priority):
 - Honestly, may remove this tab
 
@@ -34,4 +33,4 @@ Based Off Codebase (Low Priority):
 - Clean up create.tsx
 - Clean up firestoreFunctions.tsx (Modularize)
 - Fix firestore warnings (medium priority)
-
+- Create components for reusable code (ie scrollview, safeareaview, ...)

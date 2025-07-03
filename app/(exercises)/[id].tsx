@@ -1,45 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, Image, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, ScrollView, Dimensions } from 'react-native';
 import GravitusHeader from '@/components/title';
 import FloatingCard from '@/components/floatingbox';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { Exercise, ExerciseStat } from '@/types/firestoreTypes';
 import { getExerciseByID, getLogsByExerciseId } from '@/lib/firestoreFunctions';
+import { estimateOneRepMax } from '@/lib/otherFunctions';
+import { LineChart } from 'react-native-chart-kit';
+
+const screenWidth = Dimensions.get('window').width;
+
+const chartConfig = {
+    backgroundGradientFrom: '#2C3237',
+    backgroundGradientTo: '#2C3237',
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // white line
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // white labels
+    strokeWidth: 2,
+    propsForDots: {
+      r: '4',
+      strokeWidth: '2',
+      stroke: '#4FD6EA', // aqua blue dot stroke
+      fill: '#4FD6EA'    // aqua blue dot fill
+    },
+  };
 
 export default function ExerciseDetailScreen() {
-  // Sample data (replace with props or route params)
-  const {id} = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
   const [exercise, setExercise] = useState<Exercise>();
-  const [exerciseStat, setExerciseStat] = useState<ExerciseStat>();
+  const [estimatedOneRepMaxOverTime, setEstimatedOneRepMaxOverTime] = useState<{ date: string; oneRepMax: number }[]>([]);
 
   useEffect(() => {
-    if (!id || typeof id !== 'string'){
-        console.log('not a string')
-        return;
-    } 
+    if (!id || typeof id !== 'string') return;
 
     const fetchExercise = async () => {
-
-        console.log("fetch exercise is called")
-        const e = await getExerciseByID(id);
-        setExercise(e);
-    }
+      const e = await getExerciseByID(id);
+      setExercise(e);
+    };
 
     const fetchExerciseStats = async () => {
-        
-        const e = await getLogsByExerciseId(id);
-        if(e){
-            setExerciseStat(e)
-        }
-
-    }
+      const logs = await getLogsByExerciseId(id);
+      if (!logs) return;
+      const oneRepMaxOverTime = estimateOneRepMax(logs);
+      const chartData = Object.entries(oneRepMaxOverTime)
+        .map(([date, oneRepMax]) => ({ date, oneRepMax }))
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      setEstimatedOneRepMaxOverTime(chartData);
+    };
 
     fetchExercise();
     fetchExerciseStats();
-  }, [id])
-
+  }, [id]);
 
   if (!exercise) {
     return (
@@ -50,10 +62,6 @@ export default function ExerciseDetailScreen() {
     );
   }
 
-  console.log(exercise);
-  console.log(exerciseStat);    
-
-
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showBackButton={true} />
@@ -63,27 +71,43 @@ export default function ExerciseDetailScreen() {
         <Image style={styles.image} resizeMode="contain" />
 
         <View style={styles.detailBox}>
-            <Text style={styles.label}>Primary:</Text>
-            <Text style={styles.detail}>{exercise.primaryMuscleGroup}</Text>
+          <Text style={styles.label}>Primary:</Text>
+          <Text style={styles.detail}>{exercise.primaryMuscleGroup}</Text>
 
-            <Text style={styles.label}>Secondary:</Text>
-            <Text style={styles.detail}>{exercise.secondaryMuscleGroup?.join(", ")}</Text>
+          {exercise.secondaryMuscleGroup?.length > 0 && (
+            <>
+              <Text style={styles.label}>Secondary:</Text>
+              <Text style={styles.detail}>{exercise.secondaryMuscleGroup.join(', ')}</Text>
+            </>
+          )}
 
-            <Text style={styles.label}>Motion:</Text>
-            <Text style={styles.detail}>{exercise.motion}</Text>
+          <Text style={styles.label}>Motion:</Text>
+          <Text style={styles.detail}>{exercise.motion}</Text>
         </View>
 
-        <FloatingCard height={80} width="90%">
-            <Pressable style={styles.graphDropdown}>
-            <Text style={styles.graphText}>Graph “Stat” over time</Text>
-            <Ionicons name="chevron-down" size={20} color="white" />
-            </Pressable>
-        </FloatingCard>
-
-
-
+        {estimatedOneRepMaxOverTime.length > 0 && (
+          <View style={styles.graphWrapper}>
+            <Text style={styles.graphTitle}>Estimated 1RM Over Time</Text>
+            <LineChart
+              data={{
+                labels: estimatedOneRepMaxOverTime.map((entry) => new Date(entry.date).toLocaleDateString()),
+                datasets: [
+                  {
+                    data: estimatedOneRepMaxOverTime.map((entry) => entry.oneRepMax),
+                  },
+                ],
+              }}
+              width={screenWidth - 32}
+              height={220}
+              chartConfig={chartConfig}
+              bezier
+              style={styles.chart}
+              withInnerLines={false}
+              withOuterLines={false}
+            />
+          </View>
+        )}
       </ScrollView>
-
     </SafeAreaView>
   );
 }
@@ -95,7 +119,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingBottom: 48,
   },
   exerciseName: {
     fontSize: 28,
@@ -103,9 +127,10 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     marginTop: 12,
+    marginBottom: 12,
   },
   image: {
-    width: 250,
+    width: "90%",
     height: 250,
     marginTop: 12,
     marginBottom: 16,
@@ -121,23 +146,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#bbb',
     fontWeight: '600',
+    marginTop: 6,
   },
   detail: {
     fontSize: 16,
     color: 'white',
     fontWeight: '500',
-    marginBottom: 4,
   },
-  graphDropdown: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: '100%',
-    paddingHorizontal: 20,
+  graphWrapper: {
+    marginTop: 20,
+    width: '90%',
+    alignItems: 'center'
   },
-  graphText: {
+  graphTitle: {
     fontSize: 16,
-    fontWeight: '600',
     color: 'white',
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  chart: {
+    marginHorizontal: 16,
+    borderRadius: 8,
   },
 });
