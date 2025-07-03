@@ -2,24 +2,29 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Exercises (High Priority):
-- UI Changes
-- Graph updates (y-axis rotation, horizontal scrolling, images)
-- Figure out image store in firebase
-
 Two (High Priority):
 - Simulator "Weight"/"Reps" should be pulled from last time that exercise was logged
     - intricate firestore function that will involve exerciseLogs, date
+
+Exercises (Medium Priority):
+- UI Changes: make it match the rest of the formatting
+    - use of floating box for details
+- Chart: Clickable points that show the actual one rep max
+- Floating Box for additional details @ the bottom
 
 Index Page (Low Priority):
 - UI additions to floating boxes
 
 Training Splits (Low Priority):
+- Add detailed information about current split within [id]
+- Add a discard split button @ bottom of the page with confirmation
 - Finish writing script for Upper/Lower
 
 History (Low/No Priority):
+- Make filter be based off workout day
+- Make search be based off split
 - UI Updates
-- Pie Chart of Muscles Hit (in terms of sets): https://www.npmjs.com/package/react-native-pie-chart
+- Pie Chart of Muscles Hit (in terms of sets)
 
 Weekly Progress (No Priority):
 - Figure out algorithm to track how many workouts were done this week

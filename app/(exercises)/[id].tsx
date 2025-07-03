@@ -9,6 +9,8 @@ import { Exercise, ExerciseStat } from '@/types/firestoreTypes';
 import { getExerciseByID, getLogsByExerciseId } from '@/lib/firestoreFunctions';
 import { estimateOneRepMax } from '@/lib/otherFunctions';
 import { LineChart } from 'react-native-chart-kit';
+import StatLineChart from '@/components/LineGraph';
+
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -29,7 +31,7 @@ const chartConfig = {
 export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams();
   const [exercise, setExercise] = useState<Exercise>();
-  const [estimatedOneRepMaxOverTime, setEstimatedOneRepMaxOverTime] = useState<{ date: string; oneRepMax: number }[]>([]);
+  const [estimatedOneRepMaxOverTime, setEstimatedOneRepMaxOverTime] = useState<{ date: string; value: number }[]>([]);
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
@@ -44,7 +46,7 @@ export default function ExerciseDetailScreen() {
       if (!logs) return;
       const oneRepMaxOverTime = estimateOneRepMax(logs);
       const chartData = Object.entries(oneRepMaxOverTime)
-        .map(([date, oneRepMax]) => ({ date, oneRepMax }))
+        .map(([date, value]) => ({ date, value }))
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       setEstimatedOneRepMaxOverTime(chartData);
     };
@@ -52,6 +54,8 @@ export default function ExerciseDetailScreen() {
     fetchExercise();
     fetchExerciseStats();
   }, [id]);
+
+  console.log(estimatedOneRepMaxOverTime)
 
   if (!exercise) {
     return (
@@ -68,7 +72,7 @@ export default function ExerciseDetailScreen() {
       <Text style={styles.exerciseName}>{exercise.name}</Text>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Image style={styles.image} resizeMode="contain" />
+        <Image source={{uri: 'https://images.ctfassets.net/8urtyqugdt2l/2bMyO0jZaRJjfRptw60iwG/17c391156dd01ae6920c672cc2744fb1/desktop-bench-press.jpg'}} style={styles.image}/>
 
         <View style={styles.detailBox}>
           <Text style={styles.label}>Primary:</Text>
@@ -87,24 +91,7 @@ export default function ExerciseDetailScreen() {
 
         {estimatedOneRepMaxOverTime.length > 0 && (
           <View style={styles.graphWrapper}>
-            <Text style={styles.graphTitle}>Estimated 1RM Over Time</Text>
-            <LineChart
-              data={{
-                labels: estimatedOneRepMaxOverTime.map((entry) => new Date(entry.date).toLocaleDateString()),
-                datasets: [
-                  {
-                    data: estimatedOneRepMaxOverTime.map((entry) => entry.oneRepMax),
-                  },
-                ],
-              }}
-              width={screenWidth - 32}
-              height={220}
-              chartConfig={chartConfig}
-              bezier
-              style={styles.chart}
-              withInnerLines={false}
-              withOuterLines={false}
-            />
+            <StatLineChart data={estimatedOneRepMaxOverTime} label="Estimated One Rep Max Over Time"/>
           </View>
         )}
       </ScrollView>
