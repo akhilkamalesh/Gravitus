@@ -9,15 +9,16 @@ interface FilterModalProps {
   onApply: () => void;
   onClear: () => void;
   onClose: () => void;
+  title: string;
 }
 
 // TODO: Need to change UI for the Filter Modal
-const FilterModal = ({ visible, selected, options, onSelect, onApply, onClear, onClose }: FilterModalProps) => {
+const FilterModal = ({ visible, selected, options, onSelect, onApply, onClear, onClose, title }: FilterModalProps) => {
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.title}>Select Muscle Groups</Text>
+          <Text style={styles.title}>{title}</Text>
           <FlatList
             data={options}
             keyExtractor={(item) => item}

@@ -4,7 +4,10 @@ Based off Screens/Components:
 
 Two (High Priority):
 - Simulator "Weight"/"Reps" should be pulled from last time that exercise was logged
-    - intricate firestore function that will involve exerciseLogs, date
+
+    Need a function that grabs log based of ExerciseID (done)
+    Need a useEffect that is triggered when exercise is rendered to grab lastloggedset set, lb, rep for each exercise
+    Load that as default into the TextInput
 
 Exercises (Medium Priority):
 - UI Changes: make it match the rest of the formatting
@@ -21,10 +24,7 @@ Training Splits (Low Priority):
 - Finish writing script for Upper/Lower
 
 History (Low/No Priority):
-- Make filter be based off workout day
-- Make search be based off split
-- UI Updates
-- Pie Chart of Muscles Hit (in terms of sets)
+- Edit filter to be splitName rather than splitId
 
 Weekly Progress (No Priority):
 - Figure out algorithm to track how many workouts were done this week

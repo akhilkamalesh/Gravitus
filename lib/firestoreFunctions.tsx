@@ -371,5 +371,4 @@ export const getLogsByExerciseId = async (exerciseId: string): Promise<ExerciseS
     exerciseId,
     sets
   }
-
 } 

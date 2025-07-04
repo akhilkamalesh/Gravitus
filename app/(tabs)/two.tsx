@@ -167,6 +167,15 @@ export default function TodayWorkoutScreen() {
     }, [])
   );
 
+  useEffect(() => {
+    const fetchLastLogged = () => {
+      exercises.map((e) => {
+
+      })
+    }
+  
+  }, [exercises])
+
   // Error checking
   console.log(split)
   console.log("Today workout: ", todayWorkout?.exercises)
@@ -254,8 +263,6 @@ export default function TodayWorkoutScreen() {
           onSelectExercise={handleExerciseSelect}
       />
     </SafeAreaView>
-    
-
   );
 }
 

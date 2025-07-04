@@ -5,6 +5,8 @@ import GravitusHeader from "@/components/title";
 import { useLocalSearchParams } from "expo-router";
 import { ExerciseLog, Split, Exercise } from "@/types/firestoreTypes";
 import { getLoggedWorkoutById, getSplitBySplitId, getExerciseByID } from "@/lib/firestoreFunctions";
+import MuscleGroupPieChart from "@/components/PieChart";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function HistoryDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -13,11 +15,13 @@ export default function HistoryDetailScreen() {
   const [enrichedExercises, setEnrichedExercises] = useState<
     (ExerciseLog["exercises"][0] & Exercise)[]
   >([]);
+  const [pieChartInfo, setPieChartInfo] = useState<{muscle: string; sets: number}[]>([]);
 
   const totalVolume = enrichedExercises.reduce((sum, ex) => {
     return sum + ex.sets.reduce((setSum, set) => setSum + set.weight * set.reps, 0);
   }, 0);
 
+  // Fetching workout
   useEffect(() => {
     const fetchLogWorkoutById = async () => {
       const l = await getLoggedWorkoutById(String(id));
@@ -26,6 +30,7 @@ export default function HistoryDetailScreen() {
     fetchLogWorkoutById();
   }, [id]);
 
+  // Fetching split
   useEffect(() => {
     const fetchSplitById = async () => {
       if (logDetails?.splitId) {
@@ -37,10 +42,6 @@ export default function HistoryDetailScreen() {
         }
       }
     };
-    fetchSplitById();
-  }, [logDetails]);
-
-  useEffect(() => {
     const enrichExercises = async () => {
       if (!logDetails) return;
 
@@ -49,22 +50,44 @@ export default function HistoryDetailScreen() {
           const meta = await getExerciseByID(logEx.exerciseId);
 
           const totalVolume = logEx.sets.reduce((sum, set) => sum + set.weight * set.reps, 0);
-          const estimated1RM = Math.max(
-            ...logEx.sets.map((set) => set.weight * (1 + set.reps / 30))
-          );
+          
+          const sets = logEx.sets.length;
+          const muscle = meta.primaryMuscleGroup;
 
           return {
-            ...logEx,
-            ...meta,
-            totalVolume,
-            estimated1RM,
+            enriched: {
+              ...logEx,
+              ...meta,
+              totalVolume,
+            },
+            stats: {
+              muscle,
+              sets
+            }
           };
         })
       );
 
-      setEnrichedExercises(results);
+      const enriched = results.map((r) => r.enriched);
+      // Aggregate sets by muscle group
+      const statsMap: { [muscle: string]: number } = {};
+      for (const { stats } of results) {
+        statsMap[stats.muscle] = (statsMap[stats.muscle] || 0) + stats.sets;
+      }
+
+      // Convert aggregated object back to array
+      const aggregatedStats = Object.entries(statsMap).map(([muscle, sets]) => ({
+        muscle,
+        sets,
+      }));  
+      setEnrichedExercises(enriched);
+      setPieChartInfo(aggregatedStats);
     };
+
+
+    fetchSplitById();
     enrichExercises();
+
   }, [logDetails]);
 
   return (
@@ -76,6 +99,12 @@ export default function HistoryDetailScreen() {
       <Text style={styles.splitLink}>{split?.name}</Text>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
+      <SectionHeader title={"Statistics"}/>
+      <FloatingCard width="90%">
+        <Text style={styles.cardTitle}>Set Distribution by Muscle Group</Text>
+        <MuscleGroupPieChart data={pieChartInfo}/>
+      </FloatingCard>
+
         <FloatingCard width="90%">
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>Summary Statistics</Text>
@@ -86,6 +115,7 @@ export default function HistoryDetailScreen() {
           </View>
         </FloatingCard>
 
+        <SectionHeader title={"Workout Log"}/>
         {enrichedExercises?.map((exercise, exIndex) => (
           <FloatingCard key={exIndex} width="90%">
             <View style={styles.cardHeader}>

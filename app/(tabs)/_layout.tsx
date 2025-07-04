@@ -10,7 +10,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: '#121417',
           borderTopWidth: 2,
-          borderTopColor: '#4FD6EA', // purple outline
+          borderTopColor: '#4FD6EA', // blue outline
           height: 70,
           elevation: 8, // Android shadow
           shadowColor: '#4FD6EA', // iOS shadow

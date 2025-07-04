@@ -8,25 +8,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { Exercise, ExerciseStat } from '@/types/firestoreTypes';
 import { getExerciseByID, getLogsByExerciseId } from '@/lib/firestoreFunctions';
 import { estimateOneRepMax } from '@/lib/otherFunctions';
-import { LineChart } from 'react-native-chart-kit';
 import StatLineChart from '@/components/LineGraph';
-
-
-const screenWidth = Dimensions.get('window').width;
-
-const chartConfig = {
-    backgroundGradientFrom: '#2C3237',
-    backgroundGradientTo: '#2C3237',
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // white line
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // white labels
-    strokeWidth: 2,
-    propsForDots: {
-      r: '4',
-      strokeWidth: '2',
-      stroke: '#4FD6EA', // aqua blue dot stroke
-      fill: '#4FD6EA'    // aqua blue dot fill
-    },
-  };
 
 export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams();

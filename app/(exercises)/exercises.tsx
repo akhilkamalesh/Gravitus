@@ -80,6 +80,7 @@ export default function Exercises() {
         onClear={() => setSelectedGroups([])}
         onApply={() => setModalVisible(false)}
         onClose={() => setModalVisible(false)}
+        title="Select Muscle Groups"
       />
     </SafeAreaView>
   );

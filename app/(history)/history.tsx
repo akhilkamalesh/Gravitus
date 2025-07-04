@@ -8,6 +8,7 @@ import { getLoggedWorkouts, getSplitBySplitId } from "@/lib/firestoreFunctions";
 import SearchBar from "@/components/searchBar";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import FilterModal from '@/components/exerciseFilterBar';
 
 export default function HistoryScreen() {
   const router = useRouter();
@@ -15,6 +16,14 @@ export default function HistoryScreen() {
   const [searchText, setSearchText] = useState('');
   const [loggedWorkouts, setLoggedWorkouts] = useState<ExerciseLog[] | null>(null);
   const [splitNames, setSplitNames] = useState<{ [splitId: string]: string }>({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+
+  const toggleGroup = (group: string) => {
+    setSelectedGroups((prev) =>
+      prev.includes(group) ? prev.filter((g) => g !== group) : [...prev, group]
+    );
+  };
 
   const fetchSplitName = async (splitId: string) => {
     if (splitNames[splitId]) return;
@@ -48,15 +57,16 @@ export default function HistoryScreen() {
         <SearchBar
           value={searchText}
           onChange={setSearchText}
-          placeholder="Search Workouts..."
+          placeholder="Search By Workout..."
         />
-        <Feather name="filter" size={22} color="#bbb" style={styles.icon} />
+        <Feather name="filter" size={22} color="#bbb" style={styles.icon} onPress={()=>setModalVisible(true)}/>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {loggedWorkouts
           ?.filter((l) =>
-            l.workoutDay.toLowerCase().includes(searchText.toLowerCase())
+            l.workoutDay.toLowerCase().includes(searchText.toLowerCase()) &&
+            (selectedGroups.length === 0 || selectedGroups.includes(l.splitId))
           )
           .map((workout) => (
             <FloatingCard
@@ -75,6 +85,17 @@ export default function HistoryScreen() {
             </FloatingCard>
           ))}
       </ScrollView>
+
+      <FilterModal
+        visible={modalVisible}
+        selected={selectedGroups}
+        options={Object.keys(splitNames)}
+        onSelect={toggleGroup}
+        onClear={() => setSelectedGroups([])}
+        onApply={() => setModalVisible(false)}
+        onClose={() => setModalVisible(false)}
+        title="Select Split"
+      />
     </SafeAreaView>
   );
 }
