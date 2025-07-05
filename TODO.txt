@@ -3,8 +3,6 @@ MVP 1 TODO
 Based off Screens/Components:
 
 Exercises (Medium Priority):
-- If not enough data, add something that says not enough data to generate graph
-- Add more statistics underneath
 
 Index Page (Low Priority):
 - UI additions to floating boxes
@@ -30,3 +28,4 @@ Based Off Codebase (Low Priority):
 - Fix firestore warnings (medium priority)
 - Create components for reusable code (ie scrollview, safeareaview, ...)
 - Clean up all screens in terms of UI -> Should all be the same distancing for everything
+- Fix firestore warnings

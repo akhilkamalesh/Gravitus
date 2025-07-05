@@ -124,10 +124,10 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   subscript: {
-    color: 'white',
-    marginTop: 5,
-    fontSize: 12,
-    alignSelf: 'center'
+    color: '#bbb',
+    fontSize: 13,
+    alignSelf:'center',
+    marginTop: 5
   }
 });
 

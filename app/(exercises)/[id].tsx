@@ -5,7 +5,7 @@ import GravitusHeader from '@/components/title';
 import { useLocalSearchParams } from 'expo-router';
 import { Exercise } from '@/types/firestoreTypes';
 import { getExerciseByID, getLogsByExerciseId } from '@/lib/firestoreFunctions';
-import { estimateOneRepMax } from '@/lib/otherFunctions';
+import { estimateOneRepMax, getHighestVolumeSet } from '@/lib/otherFunctions';
 import StatLineChart from '@/components/LineGraph';
 import SectionHeader from '@/components/SectionHeader';
 import FloatingCard from '@/components/floatingbox';
@@ -16,6 +16,7 @@ export default function ExerciseDetailScreen() {
   const [estimatedOneRepMaxOverTime, setEstimatedOneRepMaxOverTime] = useState<
     { date: string; value: number }[]
   >([]);
+  const [highestVolumeSet, setHighestVolumeSet] = useState<{ weight: number; reps: number; volume: number; date: string }>();
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
@@ -29,6 +30,10 @@ export default function ExerciseDetailScreen() {
       if (exerciseData) setExercise(exerciseData);
 
       if (logs) {
+        const hvs = getHighestVolumeSet(logs);
+        if(hvs){
+          setHighestVolumeSet(hvs);
+        }
         const oneRepMaxOverTime = estimateOneRepMax(logs);
         const chartData = Object.entries(oneRepMaxOverTime)
           .map(([date, value]) => ({ date, value }))
@@ -49,15 +54,13 @@ export default function ExerciseDetailScreen() {
     );
   }
 
-  console.log(estimatedOneRepMaxOverTime)
-
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showBackButton />
       <Text style={styles.exerciseName}>{exercise.name}</Text>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <SectionHeader title={"Estimated One Rep Max Over Time"}/>
+        {estimatedOneRepMaxOverTime.length>=5&&(<SectionHeader title={"Estimated One Rep Max Over Time"}/>)}
         {estimatedOneRepMaxOverTime.length >= 5 && (
           <View style={styles.graphWrapper}>
             <StatLineChart
@@ -97,7 +100,13 @@ export default function ExerciseDetailScreen() {
 
         <FloatingCard width="90%">
           <Text style={styles.label}>Best Volume Set: </Text>
-            <Text style={styles.detail}>{estimatedOneRepMaxOverTime.length}</Text>
+            {highestVolumeSet != null && (
+              <Text style={styles.detail}>{highestVolumeSet?.volume} lbs - ({highestVolumeSet?.weight} lbs * {highestVolumeSet?.reps} reps)</Text>
+            )}
+            {highestVolumeSet == null && (
+              <Text style={styles.detail}>No set information found</Text>
+            )}
+            
         </FloatingCard>
 
 

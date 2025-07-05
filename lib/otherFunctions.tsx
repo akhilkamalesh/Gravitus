@@ -1,5 +1,5 @@
 // Estimated workout time
-import { ExerciseStat } from "@/types/firestoreTypes";
+import { ExerciseLog, ExerciseStat } from "@/types/firestoreTypes";
 
 export const estimateWorkoutTime = (exerciseCount: number, setsPerExercise: number): string => {
     const secondsPerSet = 60; // average effort + rest per set
@@ -44,3 +44,24 @@ export const estimateOneRepMax = (stat: ExerciseStat): Record<string, number> =>
     
     return arr;
 }
+
+// Grabs the set with the highest volume
+export function getHighestVolumeSet(stat: ExerciseStat): { weight: number; reps: number; volume: number; date: string } | null {
+    let maxVolumeSet: { weight: number; reps: number; volume: number; date: string } | null = null;
+  
+    for (const set of stat.sets) {
+      if (set.reps > 3) {
+        const volume = set.weight * set.reps;
+        if (!maxVolumeSet || volume > maxVolumeSet.volume) {
+          maxVolumeSet = {
+            weight: set.weight,
+            reps: set.reps,
+            volume,
+            date: set.date,
+          };
+        }
+      }
+    }
+  
+    return maxVolumeSet;
+  }
