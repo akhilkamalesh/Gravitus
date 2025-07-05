@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Dimensions, StyleSheet, ScrollView } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
@@ -20,15 +20,28 @@ const StatLineChart: React.FC<StatLineChartProps> = ({
   pointLabelFormatter = (label) => {
     const date = new Date(label);
     return `${date.getMonth() + 1}/${date.getDate()}`;
-  }}
-  ) => {
-  const chartPadding = 50; // Buffer padding to give space at the end
-  const pointSpacing = 60; // Customize spacing between each point
+  },
+}) => {
+  const chartPadding = 100;
+  const pointSpacing = 60;
+  const chartWidth = data.length * pointSpacing + chartPadding;
 
   const formattedLabels = data.map((entry) => pointLabelFormatter(entry.date));
   const formattedValues = data.map((entry) => entry.value);
 
-  const chartWidth = data.length * pointSpacing + chartPadding;
+  const [tooltipPos, setTooltipPos] = useState<{
+    x: number;
+    y: number;
+    value: number | null;
+    index: number | null;
+    visible: boolean;
+  }>({
+    x: 0,
+    y: 0,
+    value: null,
+    index: null,
+    visible: false,
+  });
 
   const chartConfig = {
     backgroundGradientFrom: '#2C3237',
@@ -45,8 +58,7 @@ const StatLineChart: React.FC<StatLineChartProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{label}</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, paddingRight: 60 }}>
         <LineChart
           data={{
             labels: formattedLabels,
@@ -61,8 +73,42 @@ const StatLineChart: React.FC<StatLineChartProps> = ({
           withHorizontalLabels={true}
           withVerticalLabels={true}
           style={styles.chart}
+          onDataPointClick={(data) => {
+            const isSamePoint = tooltipPos.x === data.x && tooltipPos.y === data.y;
+
+            setTooltipPos((prev) => ({
+              ...prev,
+              x: data.x,
+              y: data.y,
+              value: data.value,
+              index: data.index,
+              visible: !isSamePoint || !prev.visible,
+            }));
+          }}
+          decorator={() => {
+            if (!tooltipPos.visible || tooltipPos.value === null) return null;
+          
+            return (
+              <View
+                style={{
+                  position: 'absolute',
+                  left: tooltipPos.x - 30,
+                  top: tooltipPos.y - 40,
+                  backgroundColor: '#333',
+                  paddingHorizontal: 6,
+                  paddingVertical: 4,
+                  borderRadius: 6,
+                  zIndex: 9999,
+                }}
+              >
+                <Text style={{ color: 'white', fontSize: 12 }}>{tooltipPos.value}</Text>
+              </View>
+            );
+          }}
+          
         />
       </ScrollView>
+      <Text style={styles.subscript}>*Latest Value: {label}</Text>
     </View>
   );
 };
@@ -70,20 +116,19 @@ const StatLineChart: React.FC<StatLineChartProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'flex-start',
-    marginVertical: 12,
-  },
-  title: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 16,
-    textAlign: 'left',
-    alignSelf: 'center',
+    width: '100%',
   },
   chart: {
     borderRadius: 8,
     marginHorizontal: 8,
+    marginTop: 0,
   },
+  subscript: {
+    color: 'white',
+    marginTop: 5,
+    fontSize: 12,
+    alignSelf: 'center'
+  }
 });
 
 export default StatLineChart;

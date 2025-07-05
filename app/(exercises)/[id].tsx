@@ -1,81 +1,106 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, Image, StyleSheet, Pressable, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import GravitusHeader from '@/components/title';
-import FloatingCard from '@/components/floatingbox';
-import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
-import { Exercise, ExerciseStat } from '@/types/firestoreTypes';
+import { Exercise } from '@/types/firestoreTypes';
 import { getExerciseByID, getLogsByExerciseId } from '@/lib/firestoreFunctions';
 import { estimateOneRepMax } from '@/lib/otherFunctions';
 import StatLineChart from '@/components/LineGraph';
+import SectionHeader from '@/components/SectionHeader';
+import FloatingCard from '@/components/floatingbox';
 
 export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams();
   const [exercise, setExercise] = useState<Exercise>();
-  const [estimatedOneRepMaxOverTime, setEstimatedOneRepMaxOverTime] = useState<{ date: string; value: number }[]>([]);
+  const [estimatedOneRepMaxOverTime, setEstimatedOneRepMaxOverTime] = useState<
+    { date: string; value: number }[]
+  >([]);
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
 
-    const fetchExercise = async () => {
-      const e = await getExerciseByID(id);
-      setExercise(e);
+    const fetchData = async () => {
+      const [exerciseData, logs] = await Promise.all([
+        getExerciseByID(id),
+        getLogsByExerciseId(id),
+      ]);
+
+      if (exerciseData) setExercise(exerciseData);
+
+      if (logs) {
+        const oneRepMaxOverTime = estimateOneRepMax(logs);
+        const chartData = Object.entries(oneRepMaxOverTime)
+          .map(([date, value]) => ({ date, value }))
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        setEstimatedOneRepMaxOverTime(chartData);
+      }
     };
 
-    const fetchExerciseStats = async () => {
-      const logs = await getLogsByExerciseId(id);
-      if (!logs) return;
-      const oneRepMaxOverTime = estimateOneRepMax(logs);
-      const chartData = Object.entries(oneRepMaxOverTime)
-        .map(([date, value]) => ({ date, value }))
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-      setEstimatedOneRepMaxOverTime(chartData);
-    };
-
-    fetchExercise();
-    fetchExerciseStats();
+    fetchData();
   }, [id]);
-
-  console.log(estimatedOneRepMaxOverTime)
 
   if (!exercise) {
     return (
       <SafeAreaView style={styles.screen}>
-        <GravitusHeader showBackButton={true} />
-        <Text style={{ color: 'white', marginTop: 20 }}>Loading exercise...</Text>
+        <GravitusHeader showBackButton />
+        <Text style={styles.loadingText}>Loading exercise...</Text>
       </SafeAreaView>
     );
   }
 
+  console.log(estimatedOneRepMaxOverTime)
+
   return (
     <SafeAreaView style={styles.screen}>
-      <GravitusHeader showBackButton={true} />
+      <GravitusHeader showBackButton />
       <Text style={styles.exerciseName}>{exercise.name}</Text>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Image source={{uri: 'https://images.ctfassets.net/8urtyqugdt2l/2bMyO0jZaRJjfRptw60iwG/17c391156dd01ae6920c672cc2744fb1/desktop-bench-press.jpg'}} style={styles.image}/>
-
-        <View style={styles.detailBox}>
-          <Text style={styles.label}>Primary:</Text>
-          <Text style={styles.detail}>{exercise.primaryMuscleGroup}</Text>
-
-          {exercise.secondaryMuscleGroup?.length > 0 && (
-            <>
-              <Text style={styles.label}>Secondary:</Text>
-              <Text style={styles.detail}>{exercise.secondaryMuscleGroup.join(', ')}</Text>
-            </>
-          )}
-
-          <Text style={styles.label}>Motion:</Text>
-          <Text style={styles.detail}>{exercise.motion}</Text>
-        </View>
-
-        {estimatedOneRepMaxOverTime.length > 0 && (
+        <SectionHeader title={"Estimated One Rep Max Over Time"}/>
+        {estimatedOneRepMaxOverTime.length >= 5 && (
           <View style={styles.graphWrapper}>
-            <StatLineChart data={estimatedOneRepMaxOverTime} label="Estimated One Rep Max Over Time"/>
+            <StatLineChart
+              data={estimatedOneRepMaxOverTime}
+              label={String(estimatedOneRepMaxOverTime[estimatedOneRepMaxOverTime.length-1].value)}
+            />
           </View>
         )}
+
+        <SectionHeader title="About" />
+
+        <FloatingCard width="90%">
+            <Text style={styles.label}>Primary Muscle Targetted:</Text>
+            <Text style={styles.detail}>{exercise.primaryMuscleGroup}</Text>
+        </FloatingCard>
+
+        <FloatingCard width="90%">
+          {exercise.secondaryMuscleGroup?.length > 0 && (
+                <>
+                  <Text style={styles.label}>Secondary Muscle Targetted:</Text>
+                  <Text style={styles.detail}>{exercise.secondaryMuscleGroup.join(', ')}</Text>
+                </>
+          )}
+        </FloatingCard>
+
+        <FloatingCard width="90%">
+          <Text style={styles.label}>{exercise.name} Motion:</Text>
+            <Text style={styles.detail}>{exercise.motion}</Text>
+        </FloatingCard>
+
+        <SectionHeader title="Statistics"/>
+
+        <FloatingCard width="90%">
+          <Text style={styles.label}>Amount of {exercise.name} Sessions:</Text>
+            <Text style={styles.detail}>{estimatedOneRepMaxOverTime.length}</Text>
+        </FloatingCard>
+
+        <FloatingCard width="90%">
+          <Text style={styles.label}>Best Volume Set: </Text>
+            <Text style={styles.detail}>{estimatedOneRepMaxOverTime.length}</Text>
+        </FloatingCard>
+
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -95,16 +120,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'white',
     textAlign: 'center',
-    marginTop: 12,
-    marginBottom: 12,
+    marginVertical: 12,
   },
-  image: {
-    width: "90%",
-    height: 250,
-    marginTop: 12,
-    marginBottom: 16,
-    borderRadius: 8,
-    backgroundColor: '#1e1e1e',
+  loadingText: {
+    color: 'white',
+    marginTop: 20,
+    textAlign: 'center',
   },
   detailBox: {
     alignItems: 'center',
@@ -116,6 +137,7 @@ const styles = StyleSheet.create({
     color: '#bbb',
     fontWeight: '600',
     marginTop: 6,
+    marginBottom: 6
   },
   detail: {
     fontSize: 16,
@@ -124,18 +146,8 @@ const styles = StyleSheet.create({
   },
   graphWrapper: {
     marginTop: 20,
+    marginBottom: 10,
     width: '90%',
-    alignItems: 'center'
-  },
-  graphTitle: {
-    fontSize: 16,
-    color: 'white',
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 16,
-  },
-  chart: {
-    marginHorizontal: 16,
-    borderRadius: 8,
+    alignItems: 'center',
   },
 });

@@ -2,14 +2,9 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Two (High Priority):
-
 Exercises (Medium Priority):
-- UI Changes: make it match the rest of the formatting
-    - use of floating box for details
-- Remove photo and add chart to top of page
-- Chart: Clickable points that show the actual one rep max
-- Floating Box for additional details @ the bottom
+- If not enough data, add something that says not enough data to generate graph
+- Add more statistics underneath
 
 Index Page (Low Priority):
 - UI additions to floating boxes
@@ -31,7 +26,7 @@ Goals/PRS (No Priority):
 
 Based Off Codebase (Low Priority):
 
-- Clean up create.tsx
 - Clean up firestoreFunctions.tsx (Modularize)
 - Fix firestore warnings (medium priority)
 - Create components for reusable code (ie scrollview, safeareaview, ...)
+- Clean up all screens in terms of UI -> Should all be the same distancing for everything
