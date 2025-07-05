@@ -3,15 +3,11 @@ MVP 1 TODO
 Based off Screens/Components:
 
 Two (High Priority):
-- Simulator "Weight"/"Reps" should be pulled from last time that exercise was logged
-
-    Need a function that grabs log based of ExerciseID (done)
-    Need a useEffect that is triggered when exercise is rendered to grab lastloggedset set, lb, rep for each exercise
-    Load that as default into the TextInput
 
 Exercises (Medium Priority):
 - UI Changes: make it match the rest of the formatting
     - use of floating box for details
+- Remove photo and add chart to top of page
 - Chart: Clickable points that show the actual one rep max
 - Floating Box for additional details @ the bottom
 

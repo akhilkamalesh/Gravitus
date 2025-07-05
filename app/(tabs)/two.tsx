@@ -4,7 +4,7 @@ import FloatingCard from '@/components/floatingbox';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/title';
-import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateRandomSplitId, checkWorkoutStatus } from '@/lib/firestoreFunctions';
+import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateRandomSplitId, checkWorkoutStatus, getLogsByExerciseId } from '@/lib/firestoreFunctions';
 import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
 import SaveButton from '@/components/saveButton';
 import { useRouter } from 'expo-router';
@@ -17,14 +17,13 @@ import WorkoutCompleteModal from '@/components/CompleteModal';
 export default function TodayWorkoutScreen() {
 
   const router = useRouter(); 
-  const route = useRoute();
 
   const [split, setSplit] = useState<Split | null>(null);
   const [todayWorkout, setTodayWorkout] = useState<workout | null>(null);
   const [loggedExercises, setLoggedExercises] = useState<ExerciseLog | null>(null);
   const [isStartingFresh, setIsStartingFresh] = useState(false);
   const [isWorkoutDone, setIsWorkoutDone] = useState(false);
-
+  const [placeholders, setPlaceholders] = useState<{[exerciseId: string]: { date: string; reps: number; weight: number }[]}>({});
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -168,17 +167,49 @@ export default function TodayWorkoutScreen() {
   );
 
   useEffect(() => {
-    const fetchLastLogged = () => {
-      exercises.map((e) => {
+    const fetchLastLogged = async () => {
+      let arr: { [exerciseId: string]: { date: string; reps: number; weight: number }[] } = {};
 
-      })
+      if(!loggedExercises){
+        return;
+      }
+      for(const e of loggedExercises.exercises){
+        const log = await getLogsByExerciseId(e.exerciseId);
+        if(!log){
+          continue;
+        }
+
+        let date = '';
+
+        //date: new Date().toISOString(),
+
+        for(const set of log.sets){
+          if(date === ''){
+            console.log(set);
+            date = set.date;
+            arr[log.exerciseId] = [];
+            arr[log.exerciseId].push(set);
+          }else{
+            if(new Date(set.date) >= new Date(date)){
+              if (!arr[log.exerciseId]) {
+                arr[log.exerciseId] = [];
+              }
+              arr[log.exerciseId].push(set);
+            }else{
+              continue;
+            }
+          }
+        }
+      }
+
+      setPlaceholders(arr);
     }
-  
-  }, [exercises])
 
-  // Error checking
-  console.log(split)
-  console.log("Today workout: ", todayWorkout?.exercises)
+    fetchLastLogged();
+
+  }, [loggedExercises]);
+
+  // console.log(placeholders);
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -219,23 +250,33 @@ export default function TodayWorkoutScreen() {
               <Text style={styles.col}>Reps</Text>
             </View>
 
-            {loggedExercises?.exercises[exIndex]?.sets.map((set, setIndex) => (
+            {loggedExercises?.exercises[exIndex]?.sets.map((set, setIndex) => {
+              
+              const eId = loggedExercises.exercises[exIndex].exerciseId;
+              const placeholder = placeholders[eId];
+              const currPlaceHolderSet = placeholder?.[setIndex]
+
+              return (
+          
               <View key={setIndex} style={styles.tableRow}>
                 <Text style={styles.col}>{setIndex + 1}</Text>
                 <TextInput
                   style={styles.input}
                   keyboardType="numeric"
-                  value={set.weight.toString()}
+                  placeholder={String(currPlaceHolderSet?.weight)}
+                  placeholderTextColor="#ccc"
                   onChangeText={(val) => updateSet(exIndex, setIndex, 'weight', val)}
                 />
                 <TextInput
                   style={styles.input}
                   keyboardType="numeric"
-                  value={set.reps.toString()}
+                  placeholder={String(currPlaceHolderSet?.reps)}
+                  placeholderTextColor="#ccc"
                   onChangeText={(val) => updateSet(exIndex, setIndex, 'reps', val)}
                 />
               </View>
-            ))}
+              )
+            })}
 
             <View style={styles.setRow}>
               <Pressable style={styles.addSetButton} onPress={() => addSet(exIndex)}>
@@ -323,7 +364,7 @@ const styles = StyleSheet.create({
     width: '22%',
     textAlign: 'center',
     borderRadius: 6,
-    paddingVertical: 4
+    paddingVertical: 4, 
   },
   addSetButton: {
     flexDirection: 'row',
