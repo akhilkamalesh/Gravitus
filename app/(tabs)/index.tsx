@@ -7,8 +7,10 @@ import GravitusHeader from '@/components/title';
 import FloatingCard from '@/components/floatingbox';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { workout } from '@/types/firestoreTypes';
-import { checkWorkoutStatus, getTodayWorkout } from '@/lib/firestoreFunctions';
+import { checkWorkoutStatus, getTodayWorkout, getWorkoutCountPerWeek } from '@/lib/firestoreFunctions';
 import { estimateWorkoutTime } from '@/lib/otherFunctions';
+import { BarChart } from 'react-native-chart-kit';
+import WeeklyWorkoutBarChart from '@/components/BarChart';
 
 
 export default function TabOneScreen() {
@@ -19,6 +21,7 @@ export default function TabOneScreen() {
 
   const [status, setStatus] = useState<boolean>(false);
   const [workout, setWorkout] = useState<workout | null>(null);
+  const [workoutCountPerWeek, setWorkoutCountPerWeek] = useState<{ date: string; count: number}[]>([]);
 
 
   const handleSignOut = async () => {
@@ -42,11 +45,21 @@ export default function TabOneScreen() {
         const {split, workout} = w
         setWorkout(workout)
       }
+    };
+
+    const fetchWorkoutCountPerWeek = async () => {
+      const wcpw = await getWorkoutCountPerWeek();
+      if(wcpw != null){
+        setWorkoutCountPerWeek(wcpw);
+      }
     }
 
     fetchWorkout();
+    fetchWorkoutCountPerWeek();
 
   }, [])
+
+  console.log(workoutCountPerWeek)
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -55,9 +68,14 @@ export default function TabOneScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
         <SectionHeader title="Your Stats" />
-        <FloatingCard height={155} width="90%">
-          <Text style={styles.cardTitle}>Weekly Progress</Text>
-          <Feather name="bar-chart" size={40} color="white" style={styles.cardIcon} />
+        <FloatingCard width="90%">
+          <View style={styles.workoutHeader}>
+            <MaterialCommunityIcons name="details" size={28} color="white" />
+            <Text style={styles.cardTitle}>Weekly Progress</Text>
+          </View>
+          <View style={{ alignSelf: 'flex-start' }}>
+            <WeeklyWorkoutBarChart data={workoutCountPerWeek} width={320} />
+          </View>
         </FloatingCard>
 
         <SectionHeader title="Today's Plan" />

@@ -4,6 +4,7 @@ import { Exercise, ExerciseLog, ExerciseStat } from "@/types/firestoreTypes";
 import auth from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
 
+
 // Loads all exercises from the database
 export const getExercises = async (): Promise<Exercise[]> => {
     try{
@@ -372,3 +373,34 @@ export const getLogsByExerciseId = async (exerciseId: string): Promise<ExerciseS
     sets
   }
 } 
+
+export const getWorkoutCountPerWeek = async (): Promise<
+  { date: string; count: number }[] | null
+> => {
+  const allExerciseLogs = await getLoggedWorkouts();
+
+  if (!allExerciseLogs || allExerciseLogs.length === 0) {
+    return null;
+  }
+
+  const weekMap: Record<string, number> = {};
+
+  for (const log of allExerciseLogs) {
+    const logDate = new Date(log.date);
+    const day = logDate.getDay(); // 0 = Sunday
+    const sunday = new Date(logDate);
+    sunday.setDate(logDate.getDate() - day);
+    sunday.setHours(0, 0, 0, 0);
+
+    const weekKey = sunday.toISOString().split("T")[0];
+    weekMap[weekKey] = (weekMap[weekKey] || 0) + 1;
+  }
+
+  const sorted = Object.entries(weekMap).sort(
+    ([a], [b]) => new Date(a).getTime() - new Date(b).getTime()
+  );
+
+  return sorted.map(([date, count]) => ({ date, count }));
+};
+
+

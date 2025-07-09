@@ -2,8 +2,6 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Exercises (Medium Priority):
-
 Index Page (Low Priority):
 - UI additions to floating boxes
 
@@ -17,7 +15,7 @@ History (Low/No Priority):
 
 Weekly Progress (No Priority):
 - Figure out algorithm to track how many workouts were done this week
-- Display in nice graph: https://nearform.com/open-source/victory-native/
+- Display in nice graph
 
 Goals/PRS (No Priority):
 - Honestly, may remove this tab
