@@ -13,10 +13,6 @@ Training Splits (Low Priority):
 History (Low/No Priority):
 - Edit filter to be splitName rather than splitId
 
-Weekly Progress (No Priority):
-- Figure out algorithm to track how many workouts were done this week
-- Display in nice graph
-
 Goals/PRS (No Priority):
 - Honestly, may remove this tab
 

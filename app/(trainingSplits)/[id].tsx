@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
 import FloatingCard from "@/components/floatingbox";
-import { useLocalSearchParams } from "expo-router";
-import { getSplit, getSplitBySplitId, getSplitInformation, saveSplitToUser, updateCurrentSplit } from "@/lib/firestoreFunctions";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { clearCurrentSplit, getSplit, getSplitBySplitId, getSplitInformation, saveSplitToUser, updateCurrentSplit } from "@/lib/firestoreFunctions";
 import { Split } from "@/types/firestoreTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GravitusHeader from "@/components/title";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import SaveButton from "@/components/saveButton";
 
 export default function SplitDetailScreen(){
+
+    const router = useRouter();
+
+    const confirmAction = (title: string, message: string, onConfirm: () => void) => {
+        Alert.alert(title, message, [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Confirm', style: 'destructive', onPress: onConfirm },
+        ]);
+      };
+
     const {id} = useLocalSearchParams();
     const [split, setSplit] = useState<Split | null>(null);
     const [loading, setLoading] = useState(false)
@@ -16,15 +26,30 @@ export default function SplitDetailScreen(){
 
     // Logic for saving the split into your split collection
     const handleSave = async () => {
-        if (!split) return;
-        try {
-          const docRefId = await saveSplitToUser(split);
-          console.log("Doc Ref ID is:", docRefId);
-          await updateCurrentSplit(docRefId)
-        } catch (err) {
-          console.error("Error saving split:", err);
-        }
+        confirmAction('Save Split', 'Are you sure you want to save split?',async () => {
+            if (!split) return;
+            try {
+              const docRefId = await saveSplitToUser(split);
+              console.log("Doc Ref ID is:", docRefId);
+              await updateCurrentSplit(docRefId)
+            } catch (err) {
+              console.error("Error saving split:", err);
+            }
+        });
       };
+
+    // Logic for clearing a split
+    const handleClear = async () => {
+        confirmAction('Clear Current Split', 'Are you sure you want to clear current split?', async ()=>{
+            if(!split) return;
+            try {
+                await clearCurrentSplit();
+                router.back();
+            }catch (err) {
+                console.error("Error clearing split", err);
+            }
+        })
+    }
 
 
     useEffect(() => {
@@ -36,11 +61,9 @@ export default function SplitDetailScreen(){
         const fetchSplit = async () => {
             setLoading(true);
             let rawSplit = await getSplit(id);
-            console.log("raw split: ", rawSplit)
             if (!rawSplit) {
                 rawSplit = await getSplitBySplitId(id);
                 setIsCurrSplit(true)
-                console.log(rawSplit)
             }
             if(!rawSplit){
                 setLoading(false);
@@ -57,12 +80,6 @@ export default function SplitDetailScreen(){
     console.log(id)
 
     const workouts = split?.workouts;
-    // console.log(split)
-    // console.log(workouts)
-
-    // const exercises = split?.workouts[0].exercises;
-    // console.log(exercises)
-    console.log(split)
 
     return (
         <SafeAreaView style={styles.screen}>
@@ -98,6 +115,9 @@ export default function SplitDetailScreen(){
             </ScrollView>
             {
             !isCurrSplit && <SaveButton onPress={() => {handleSave();}}/>
+            }
+            {
+            isCurrSplit && <SaveButton text={"Clear Split"} onPress={() => {handleClear();}}/>
             }
 
         </SafeAreaView>

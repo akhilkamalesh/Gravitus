@@ -59,7 +59,7 @@ export default function TabOneScreen() {
 
   }, [])
 
-  console.log(workoutCountPerWeek)
+  console.log(userData)
 
   return (
     <SafeAreaView style={styles.screen}>
