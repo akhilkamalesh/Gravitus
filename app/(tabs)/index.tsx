@@ -67,17 +67,6 @@ export default function TabOneScreen() {
       <Text style={styles.welcome}>Welcome Back, {userData?.name}</Text>
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
-        <SectionHeader title="Your Stats" />
-        <FloatingCard width="90%">
-          <View style={styles.workoutHeader}>
-            <MaterialCommunityIcons name="details" size={28} color="white" />
-            <Text style={styles.cardTitle}>Weekly Progress</Text>
-          </View>
-          <View style={{ alignSelf: 'flex-start' }}>
-            <WeeklyWorkoutBarChart data={workoutCountPerWeek} width={320} />
-          </View>
-        </FloatingCard>
-
         <SectionHeader title="Today's Plan" />
         <FloatingCard height={170} width="90%" onPress={() => router.push('/two')}>
           <View style={styles.workoutCard}>
@@ -118,6 +107,12 @@ export default function TabOneScreen() {
             <Text style={styles.startPrompt}>Tap to begin</Text>
           </View>
         </FloatingCard>
+
+        {/* Can just add chart rather than having a floating box component */}
+        {/* <SectionHeader title="Workouts Completed" />
+        <View style={styles.graphWrapper}>
+          <WeeklyWorkoutBarChart data={workoutCountPerWeek}/>
+        </View> */}
 
         <SectionHeader title="Explore" />
         <View style={styles.row}>
@@ -249,5 +244,11 @@ const styles = StyleSheet.create({
     color: '#eee',
     fontWeight: '600',
     fontSize: 16,
+  },
+  graphWrapper: {
+    marginTop: 20,
+    marginBottom: 10,
+    width: '90%',
+    alignItems: 'center',
   },
 });

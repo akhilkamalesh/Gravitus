@@ -1,7 +1,6 @@
 import React from "react";
-import { Text, View } from "react-native";
 import { BarChart } from "react-native-chart-kit";
-import { Dimensions } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 
 type WeeklyWorkoutData = { date: string; count: number }[];
 
@@ -12,7 +11,7 @@ type Props = {
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function WeeklyWorkoutBarChart({ data, width = screenWidth * 0.85 }: Props) {
+export default function WeeklyWorkoutBarChart({ data, width = screenWidth * 0.90 }: Props) {
   const labels = data.map((item) => {
     const d = new Date(item.date);
     return `${d.getMonth() + 1}/${d.getDate()}`;
@@ -21,7 +20,7 @@ export default function WeeklyWorkoutBarChart({ data, width = screenWidth * 0.85
   const counts = data.map((item) => item.count);
 
   return (
-    <View>
+    <View style={styles.viewContainer}>
       <BarChart
         data={{
           labels,
@@ -31,11 +30,10 @@ export default function WeeklyWorkoutBarChart({ data, width = screenWidth * 0.85
         height={180}
         yAxisLabel=""
         chartConfig={{
-          backgroundColor: "transparent",
           backgroundGradientFrom: '#2C3237',
           backgroundGradientTo: '#2C3237',
           decimalPlaces: 0,
-          barPercentage: 0.6,
+          barPercentage: 0.7,
           color: (opacity = 1) => `#4FD6EA`,
           labelColor: (opacity = 1) => `rgba(204, 204, 204, ${opacity})`,
         }}
@@ -44,11 +42,15 @@ export default function WeeklyWorkoutBarChart({ data, width = screenWidth * 0.85
         withInnerLines={false}
         showValuesOnTopOfBars
         style={{
-          marginTop: 20,
-          marginBottom: 20,
-          marginRight: 20,
-          marginLeft: -10
+          borderRadius: 5,
         }} yAxisSuffix={""}      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  viewContainer: {
+    alignSelf: 'flex-start',
+    width: '100%',
+  }
+})

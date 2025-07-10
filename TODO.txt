@@ -3,7 +3,7 @@ MVP 1 TODO
 Based off Screens/Components:
 
 Index Page (Low Priority):
-- UI additions to floating boxes
+- Figure out how to change bar chart contribution UI
 
 Training Splits (Low Priority):
 - Add detailed information about current split within [id]
