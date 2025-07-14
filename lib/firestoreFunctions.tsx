@@ -374,6 +374,7 @@ export const getLogsByExerciseId = async (exerciseId: string): Promise<ExerciseS
   }
 } 
 
+// Calculate number of workouts per week (graph data)
 export const getWorkoutCountPerWeek = async (): Promise<
   { date: string; count: number }[] | null
 > => {
@@ -404,3 +405,52 @@ export const getWorkoutCountPerWeek = async (): Promise<
 };
 
 
+// Changes User's Name
+export const changeUserName = async (name:string) => {
+
+  // User Data
+  const user = authInstance.currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  const userDocRef = doc(firestoreInstance, 'users', user.uid);
+  await updateDoc(userDocRef, {
+    name: name
+  });
+}
+
+// Change User's Email
+export const changeUserEmail = async (email:string) => {
+
+  // User Data
+  const user = authInstance.currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  const userDocRef = doc(firestoreInstance, 'users', user.uid);
+  await updateDoc(userDocRef, {
+    email: email
+  });
+}
+
+// Change User's Password
+export const changeUserPassword = async (password:string) => {
+
+  // User Data
+  const user = authInstance.currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  user.updatePassword(password)
+}
+
+// Delete Account
+export const deleteAccount = async () => {
+  
+  // User Data
+  const user = authInstance.currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  // Dete User Data
+  await firestoreInstance.collection('users').doc(user.uid).delete();
+
+  // Delete the user from Firebase Authentication
+  await user.delete();
+}

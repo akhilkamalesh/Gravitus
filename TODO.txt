@@ -4,10 +4,10 @@ Based off Screens/Components:
 
 Index Page (Low Priority):
 - Figure out how to change bar chart contribution UI
+- Change to a focusedUseEffect?
 
 Training Splits (Low Priority):
 - Add detailed information about current split within [id]
-- Add a discard split button @ bottom of the page with confirmation
 - Finish writing script for Upper/Lower
 
 History (Low/No Priority):
@@ -16,10 +16,19 @@ History (Low/No Priority):
 Goals/PRS (No Priority):
 - Honestly, may remove this tab
 
+Settings Page (Medium Priority):
+- Add user changes
+- Add privacy policy
+
+Exercise:
+- Fix secondary muscle group bug
+
+Sets Per Week per muscle group
+
 Based Off Codebase (Low Priority):
 
 - Clean up firestoreFunctions.tsx (Modularize)
 - Fix firestore warnings (medium priority)
 - Create components for reusable code (ie scrollview, safeareaview, ...)
-- Clean up all screens in terms of UI -> Should all be the same distancing for everything
+- Clean up all screens in terms of UI -> Should all be the same css for everything
 - Fix firestore warnings

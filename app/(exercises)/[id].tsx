@@ -77,14 +77,13 @@ export default function ExerciseDetailScreen() {
             <Text style={styles.detail}>{exercise.primaryMuscleGroup}</Text>
         </FloatingCard>
 
-        <FloatingCard width="90%">
-          {exercise.secondaryMuscleGroup?.length > 0 && (
-                <>
-                  <Text style={styles.label}>Secondary Muscle Targetted:</Text>
-                  <Text style={styles.detail}>{exercise.secondaryMuscleGroup.join(', ')}</Text>
-                </>
-          )}
-        </FloatingCard>
+        {exercise.secondaryMuscleGroup?.length > 0 && (
+          <FloatingCard width="90%">
+            <Text style={styles.label}>Secondary Muscle Targetted:</Text>
+            <Text style={styles.detail}>{exercise.secondaryMuscleGroup.join(', ')}</Text>
+          </FloatingCard>
+        )}
+
 
         <FloatingCard width="90%">
           <Text style={styles.label}>{exercise.name} Motion:</Text>

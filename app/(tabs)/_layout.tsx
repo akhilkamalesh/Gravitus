@@ -10,15 +10,15 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: '#121417',
           borderTopWidth: 2,
-          borderTopColor: '#4FD6EA', // blue outline
+          borderTopColor: '#4FD6EA',
           height: 70,
-          elevation: 8, // Android shadow
-          shadowColor: '#4FD6EA', // iOS shadow
+          elevation: 8,
+          shadowColor: '#4FD6EA',
           shadowOffset: { width: 0, height: 0 },
           shadowOpacity: 0.5,
           shadowRadius: 10,
         },
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused }) => {
           let iconName = 'home';
           if (route.name === 'index') iconName = 'home';
           else if (route.name === 'two') iconName = 'barbell';
@@ -39,6 +39,10 @@ export default function TabLayout() {
           );
         },
       })}
-    />
+    >
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="two" />
+      <Tabs.Screen name="settings"/>
+    </Tabs>
   );
 }

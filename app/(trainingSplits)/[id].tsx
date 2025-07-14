@@ -17,7 +17,7 @@ export default function SplitDetailScreen(){
           { text: 'Cancel', style: 'cancel' },
           { text: 'Confirm', style: 'destructive', onPress: onConfirm },
         ]);
-      };
+    };
 
     const {id} = useLocalSearchParams();
     const [split, setSplit] = useState<Split | null>(null);

@@ -209,8 +209,6 @@ export default function TodayWorkoutScreen() {
 
   }, [loggedExercises]);
 
-  // console.log(placeholders);
-
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showEditButton={true} 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, TextInput, Button, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Modal, View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../lib/authContext'; // Adjust path as needed
 
 interface SignUpModalProps {
