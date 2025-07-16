@@ -1,5 +1,5 @@
 import { firestoreInstance, authInstance } from "./firebase";
-import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, orderBy, where, limit } from "@react-native-firebase/firestore";
+import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, orderBy, where, limit, deleteDoc } from "@react-native-firebase/firestore";
 import { Exercise, ExerciseLog, ExerciseStat } from "@/types/firestoreTypes";
 import auth from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
@@ -454,3 +454,43 @@ export const deleteAccount = async () => {
   // Delete the user from Firebase Authentication
   await user.delete();
 }
+
+// Admin Functions - Add Exercise to Exercise List
+export const addExercisesToExerciseList = async (exerciseList:Exercise[]) => {
+
+    console.log("Function called")
+
+    const firestoreExercises = collection(firestoreInstance, "exercises");
+
+    console.log(firestoreExercises)
+
+    for(const exercise of exerciseList){
+      try {
+        const exerciseRef = doc(firestoreExercises, exercise.id); // Use 'id' as document ID
+        await setDoc(exerciseRef, exercise);
+        console.log('Set exercise with ID:', exercise.id);
+      } catch (err) {
+        console.error('Error setting exercise:', err);
+      }
+    } 
+}
+
+//Admin Function - Delete All Exercises in exercise list
+export const deleteAllExercises = async () => {
+  const exercisesRef = collection(firestoreInstance, 'exercises');
+
+  try {
+    const snapshot = await getDocs(exercisesRef);
+
+    const deletePromises = snapshot.docs.map((docSnap) =>
+      deleteDoc(doc(firestoreInstance, 'exercises', docSnap.id))
+    );
+
+    await Promise.all(deletePromises);
+
+    console.log(`Deleted ${deletePromises.length} exercise(s).`);
+  } catch (error) {
+    console.error('Error deleting exercises:', error);
+    throw error;
+  }
+};

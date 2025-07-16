@@ -21,16 +21,7 @@ export default function TabOneScreen() {
 
   const [status, setStatus] = useState<boolean>(false);
   const [workout, setWorkout] = useState<workout | null>(null);
-  const [workoutCountPerWeek, setWorkoutCountPerWeek] = useState<{ date: string; count: number}[]>([]);
-
-
-  const handleSignOut = async () => {
-    try {
-      router.replace('/(auth)/auth');
-    } catch (e: any) {
-      console.error(e);
-    }
-  };
+  // const [workoutCountPerWeek, setWorkoutCountPerWeek] = useState<{ date: string; count: number}[]>([]);
 
   useEffect(()=>{
     const fetchWorkout = async () => {
@@ -47,15 +38,15 @@ export default function TabOneScreen() {
       }
     };
 
-    const fetchWorkoutCountPerWeek = async () => {
-      const wcpw = await getWorkoutCountPerWeek();
-      if(wcpw != null){
-        setWorkoutCountPerWeek(wcpw);
-      }
-    }
+    // const fetchWorkoutCountPerWeek = async () => {
+    //   const wcpw = await getWorkoutCountPerWeek();
+    //   if(wcpw != null){
+    //     setWorkoutCountPerWeek(wcpw);
+    //   }
+    // }
 
     fetchWorkout();
-    fetchWorkoutCountPerWeek();
+    // fetchWorkoutCountPerWeek();
 
   }, [])
 
@@ -135,10 +126,6 @@ export default function TabOneScreen() {
           <Text style={styles.cardTitleSmall}>Exercises</Text>
           <MaterialCommunityIcons name="weight-lifter" size={28} color="white" />
         </FloatingCard>
-
-        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-          <Text style={styles.signOutText}>Sign Out</Text>
-        </TouchableOpacity>
 
       </ScrollView>
     </SafeAreaView>
@@ -230,20 +217,6 @@ const styles = StyleSheet.create({
     color: '#00e0a1',
     fontSize: 13,
     fontWeight: '600',
-  },
-  signOutButton: {
-    marginTop: 20,
-    backgroundColor: '#26292e',
-    paddingVertical: 12,
-    paddingHorizontal: 28,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#444',
-  },
-  signOutText: {
-    color: '#eee',
-    fontWeight: '600',
-    fontSize: 16,
   },
   graphWrapper: {
     marginTop: 20,

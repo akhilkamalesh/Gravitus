@@ -1,14 +1,15 @@
 import GravitusHeader from '@/components/title';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Pressable, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Pressable, Text, View, ScrollView, Button } from 'react-native';
 import SearchBar from '@/components/searchBar';
 import FilterModal from '@/components/exerciseFilterBar';
 import { Feather } from '@expo/vector-icons';
-import { getExercises } from '@/lib/firestoreFunctions';
+import { addExercisesToExerciseList, getExercises, deleteAllExercises} from '@/lib/firestoreFunctions';
 import { Exercise } from '@/types/firestoreTypes';
 import FloatingCard from '@/components/floatingbox';
 import { router } from 'expo-router';
+// import { allExerciseData } from '@/jsonData/exercisesData';
 
 export default function Exercises() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -22,6 +23,14 @@ export default function Exercises() {
     );
   };
 
+  // const addExercises = async () => {
+  //   await addExercisesToExerciseList(allExerciseData);
+  // }
+
+  // const deleteExercises = async () => {
+  //   await deleteAllExercises();
+  // }
+
   const groups = ["Chest", "Quadriceps", "Rhomboids", "Latissimus Dorsi", "Shoulders", "Biceps", "Triceps", "Calves"];
 
   useEffect(() => {
@@ -31,6 +40,9 @@ export default function Exercises() {
     };
     loadExercises();
   }, []);
+
+  // exercises.forEach((e) => console.log(e.id))
+  console.log(exercises)
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -70,6 +82,8 @@ export default function Exercises() {
               </FloatingCard>
             ))}
         </View>
+        {/* <Button title={'dededed'} onPress={()=>{deleteExercises()}}></Button>
+        <Button title={'asdsa'} onPress={()=>{addExercises()}}></Button> */}
       </ScrollView>
 
       <FilterModal

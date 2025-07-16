@@ -17,7 +17,7 @@ export interface Exercise {
     secondaryMuscleGroup: string[];
     motion: string;
     // imageUrl?: string;
-  }
+}
 
 // Split type
 export interface Split {

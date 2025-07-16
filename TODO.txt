@@ -3,12 +3,12 @@ MVP 1 TODO
 Based off Screens/Components:
 
 Index Page (Low Priority):
-- Figure out how to change bar chart contribution UI
+- Figure out how to change bar chart contribution UI (Not needed for now/can be added later in MVP2)
 - Change to a focusedUseEffect?
 
 Training Splits (Low Priority):
 - Add detailed information about current split within [id]
-- Finish writing script for Upper/Lower
+- Finish writing script for Upper/Lower, Chest/Back
 
 History (Low/No Priority):
 - Edit filter to be splitName rather than splitId
@@ -16,19 +16,17 @@ History (Low/No Priority):
 Goals/PRS (No Priority):
 - Honestly, may remove this tab
 
-Settings Page (Medium Priority):
-- Add user changes
-- Add privacy policy
+AccountCenter:
+- Fix Sign Out Button
 
 Exercise:
-- Fix secondary muscle group bug
 
-Sets Per Week per muscle group
+Idea?:
+- Sets Per Week per muscle group
 
 Based Off Codebase (Low Priority):
 
 - Clean up firestoreFunctions.tsx (Modularize)
 - Fix firestore warnings (medium priority)
 - Create components for reusable code (ie scrollview, safeareaview, ...)
-- Clean up all screens in terms of UI -> Should all be the same css for everything
-- Fix firestore warnings
+- Styling Edits -> Should all be the same css for everything

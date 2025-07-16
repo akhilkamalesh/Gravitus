@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import FloatingCard from "@/components/floatingbox";
 import GravitusHeader from "@/components/title";
-import { Text, SafeAreaView, ScrollView, StyleSheet, View, Alert } from "react-native";
+import { Text, SafeAreaView, ScrollView, StyleSheet, View, Alert, TouchableOpacity } from "react-native";
 import AccountCenterModal from "@/components/AccountCenterModal";
 import { changeUserEmail, changeUserName, changeUserPassword, deleteAccount } from "@/lib/firestoreFunctions";
 import { useRouter } from "expo-router";
@@ -45,6 +45,15 @@ export default function AccountCenter(){
         setModalVisible(true);
     };
 
+    const handleSignOut = async () => {
+        try {
+          router.replace('/(auth)/auth');
+        } catch (e: any) {
+          console.error(e);
+        }
+      };
+    
+
     return (
         <SafeAreaView style={styles.screen}>
             <GravitusHeader showBackButton={true}/>
@@ -70,6 +79,9 @@ export default function AccountCenter(){
                         <Text style={styles.text}>Delete Account</Text>
                     </View>
                 </FloatingCard>
+                <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+                    <Text style={styles.signOutText}>Sign Out</Text>
+                </TouchableOpacity>
             </ScrollView>
             <AccountCenterModal
                 visible={modalVisible}
@@ -110,4 +122,18 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 18,
     },
+    signOutButton: {
+        marginTop: 20,
+        backgroundColor: '#26292e',
+        paddingVertical: 12,
+        paddingHorizontal: 28,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#444',
+      },
+      signOutText: {
+        color: '#eee',
+        fontWeight: '600',
+        fontSize: 16,
+      },
 })
