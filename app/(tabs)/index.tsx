@@ -9,8 +9,6 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { workout } from '@/types/firestoreTypes';
 import { checkWorkoutStatus, getTodayWorkout, getWorkoutCountPerWeek } from '@/lib/firestoreFunctions';
 import { estimateWorkoutTime } from '@/lib/otherFunctions';
-import { BarChart } from 'react-native-chart-kit';
-import WeeklyWorkoutBarChart from '@/components/BarChart';
 
 
 export default function TabOneScreen() {
@@ -99,14 +97,8 @@ export default function TabOneScreen() {
           </View>
         </FloatingCard>
 
-        {/* Can just add chart rather than having a floating box component */}
-        {/* <SectionHeader title="Workouts Completed" />
-        <View style={styles.graphWrapper}>
-          <WeeklyWorkoutBarChart data={workoutCountPerWeek}/>
-        </View> */}
-
         <SectionHeader title="Explore" />
-        <View style={styles.row}>
+        {/* <View style={styles.row}>
           <FloatingCard height={130} width={167} onPress={() => router.push('/(history)/history')}>
             <Text style={styles.cardTitleSmall}>History</Text>
             <Feather name="clock" size={28} color="white" />
@@ -115,14 +107,19 @@ export default function TabOneScreen() {
             <Text style={styles.cardTitleSmall}>Goals & PRs</Text>
             <Feather name="target" size={28} color="white" />
           </FloatingCard>
-        </View>
+        </View> */}
 
-        <FloatingCard height={130} width="90%" onPress={() => router.push('/(trainingSplits)/trainingSplits')}>
+        <FloatingCard height={110} width="90%" onPress={() => router.push('/(history)/history')}>
+            <Text style={styles.cardTitleSmall}>History</Text>
+            <Feather name="clock" size={28} color="white" />
+          </FloatingCard>
+
+        <FloatingCard height={110} width="90%" onPress={() => router.push('/(trainingSplits)/trainingSplits')}>
           <Text style={styles.cardTitleSmall}>Training Splits</Text>
           <Feather name="grid" size={28} color="white" />
         </FloatingCard>
 
-        <FloatingCard height={130} width="90%" onPress={() => router.push('/(exercises)/exercises')}>
+        <FloatingCard height={110} width="90%" onPress={() => router.push('/(exercises)/exercises')}>
           <Text style={styles.cardTitleSmall}>Exercises</Text>
           <MaterialCommunityIcons name="weight-lifter" size={28} color="white" />
         </FloatingCard>

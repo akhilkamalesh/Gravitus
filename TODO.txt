@@ -7,22 +7,17 @@ Index Page (Low Priority):
 - Change to a focusedUseEffect?
 
 Training Splits (Low Priority):
-- Add detailed information about current split within [id]
-- Finish writing script for Upper/Lower, Chest/Back
+- Add detailed information about current split within [id] (MVP2)
+- Add data points for push pull legs
 
 History (Low/No Priority):
 - Edit filter to be splitName rather than splitId
 
-Goals/PRS (No Priority):
-- Honestly, may remove this tab
-
 AccountCenter:
 - Fix Sign Out Button
 
-Exercise:
-
-Idea?:
-- Sets Per Week per muscle group
+Data:
+- Consolidate data entries to either be plural or singular for all (consistency)
 
 Based Off Codebase (Low Priority):
 

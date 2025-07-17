@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import FloatingCard from '@/components/floatingbox';
 import GravitusHeader from '@/components/title';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, ScrollView, Text, View } from 'react-native';
+import { StyleSheet, ScrollView, Text, View, Button } from 'react-native';
 import { useRouter } from 'expo-router';
-import { getCurrentSplit } from '@/lib/firestoreFunctions';
+import { getCurrentSplit, addSplitToTemplates } from '@/lib/firestoreFunctions';
 import { Split } from '@/types/firestoreTypes';
 import { Feather } from '@expo/vector-icons';
+import { arnold } from '@/jsonData/splitData';
 
 export default function TrainingSplits() {
   const router = useRouter();
@@ -15,9 +16,12 @@ export default function TrainingSplits() {
   const splits = [
     { id: 'pushPullLegs', name: 'Push / Pull / Legs' },
     { id: 'upperLower', name: 'Upper / Lower' },
-    { id: 'gymBro', name: 'Gym Bro' },
-    { id: 'antagonist', name: 'Antagonist' },
+    { id: 'arnold', name: 'Arnold'}
   ];
+
+  const addSplit = async () => {
+    await addSplitToTemplates(arnold);
+  } 
 
   useEffect(() => {
     const fetchSplit = async () => {
@@ -64,6 +68,8 @@ export default function TrainingSplits() {
             </View>
           </FloatingCard>
         ))}
+
+        {/* <Button title={'dededed'} onPress={()=>{addSplit()}}></Button> */}
 
       </ScrollView>
     </SafeAreaView>

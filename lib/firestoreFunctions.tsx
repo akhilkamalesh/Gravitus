@@ -494,3 +494,18 @@ export const deleteAllExercises = async () => {
     throw error;
   }
 };
+
+// Add a split to the splitTemplates
+export const addSplitToTemplates = async (split:Split) => {
+
+  const splitTemplates = collection(firestoreInstance, "splitTemplates")
+  
+  try {
+    const { id, ...rest } = split;
+    await setDoc(doc(splitTemplates, id), rest);
+    console.log('Set exercise with ID:', "arnold");
+  }catch (err){
+    console.log(err)
+  }
+
+}

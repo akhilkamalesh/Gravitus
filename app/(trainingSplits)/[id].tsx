@@ -21,6 +21,7 @@ export default function SplitDetailScreen(){
 
     const {id} = useLocalSearchParams();
     const [split, setSplit] = useState<Split | null>(null);
+    const [rawSplit, setRawSplit] = useState<Split | null>(null);
     const [loading, setLoading] = useState(false)
     const [isCurrSplit, setIsCurrSplit] = useState(false)
 
@@ -61,6 +62,8 @@ export default function SplitDetailScreen(){
         const fetchSplit = async () => {
             setLoading(true);
             let rawSplit = await getSplit(id);
+            setRawSplit(rawSplit)
+
             if (!rawSplit) {
                 rawSplit = await getSplitBySplitId(id);
                 setIsCurrSplit(true)
@@ -77,8 +80,7 @@ export default function SplitDetailScreen(){
         fetchSplit();
     }, [id]) // id is the dependency array, only run when this changes    
 
-    console.log(id)
-
+    console.log(rawSplit)
     const workouts = split?.workouts;
 
     return (
@@ -88,7 +90,7 @@ export default function SplitDetailScreen(){
             <Text style={styles.description}>{split?.description}. The duration of this split is {split?.weeksDuration} weeks.</Text>
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {workouts?.map((workout, index) => (
-                    <View key={workout.dayName} style={styles.workoutBox}>
+                    <View key={`${workout.dayName}-${index}`} style={styles.workoutBox}>
                         <Text style={styles.workoutTitle}>{workout.dayName}</Text>
                         <View style={styles.headersRow}>
                             <Text style={styles.headers}>Exercises: </Text>
@@ -174,6 +176,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         flexWrap: 'wrap',
         marginVertical: 15,
+        marginHorizontal: 15
     },
     headersRow: {
         flexDirection: 'row',
