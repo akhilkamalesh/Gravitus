@@ -4,7 +4,7 @@ import FloatingCard from '@/components/floatingbox';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/title';
-import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateRandomSplitId, checkWorkoutStatus, getLogsByExerciseId } from '@/lib/firestoreFunctions';
+import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateOneOffSplitId, checkWorkoutStatus, getLogsByExerciseId, saveSplitToUser, saveOneOffSplitToUser } from '@/lib/firestoreFunctions';
 import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
 import SaveButton from '@/components/saveButton';
 import { useRouter } from 'expo-router';
@@ -173,16 +173,20 @@ export default function TodayWorkoutScreen() {
       if(!loggedExercises){
         return;
       }
+
+      // Iterates through all of the exercies for the workout
       for(const e of loggedExercises.exercises){
         const log = await getLogsByExerciseId(e.exerciseId);
         if(!log){
+          arr[e.exerciseId].push({date: "", reps: 0, weight: 0})
           continue;
         }
 
+        console.log(e.exerciseId, ": ", log)
+
         let date = '';
 
-        //date: new Date().toISOString(),
-
+        // Has to grab the sets from that first date
         for(const set of log.sets){
           if(date === ''){
             console.log(set);
@@ -212,11 +216,27 @@ export default function TodayWorkoutScreen() {
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showEditButton={true} 
-        onTryNewWorkout={() => {
+        onTryNewWorkout={async () => {
+          
+          const newSplit: Split = {
+            id: generateOneOffSplitId(),
+            name: 'One-Off',
+            description: 'A custom workout not tied to a plan',
+            repeatDays: false,
+            weeksDuration: 1,
+            workouts: [
+              {
+                dayName: 'Custom',
+                exercises: [], // populated during workout
+              },
+            ],
+          };
+        
+          await saveOneOffSplitToUser(newSplit); // Overwrites the split with fixed ID
           setIsStartingFresh(true);
           setTodayWorkout({ dayName: 'Custom', exercises: [] });
           setLoggedExercises({
-            splitId: generateRandomSplitId(),
+            splitId: generateOneOffSplitId(),
             workoutDay: 'Custom',
             date: new Date().toISOString(),
             exercises: []
@@ -251,8 +271,11 @@ export default function TodayWorkoutScreen() {
             {loggedExercises?.exercises[exIndex]?.sets.map((set, setIndex) => {
               
               const eId = loggedExercises.exercises[exIndex].exerciseId;
-              const placeholder = placeholders[eId];
-              const currPlaceHolderSet = placeholder?.[setIndex]
+              let placeholder = placeholders[eId]
+              let currPlaceHolderSet = placeholder?.[setIndex]
+              if(currPlaceHolderSet === undefined){
+                currPlaceHolderSet = {date: "", weight: 0, reps: 0}
+              }
 
               return (
           

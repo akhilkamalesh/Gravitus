@@ -4,23 +4,20 @@ import GravitusHeader from '@/components/title';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, ScrollView, Text, View, Button } from 'react-native';
 import { useRouter } from 'expo-router';
-import { getCurrentSplit, addSplitToTemplates } from '@/lib/firestoreFunctions';
+import { getCurrentSplit, addSplitToTemplates, getSplits } from '@/lib/firestoreFunctions';
 import { Split } from '@/types/firestoreTypes';
 import { Feather } from '@expo/vector-icons';
-import { arnold } from '@/jsonData/splitData';
+import { arnold, pushPullLegs } from '@/jsonData/splitData';
+import { push } from 'expo-router/build/global-state/routing';
 
 export default function TrainingSplits() {
   const router = useRouter();
   const [currentSplit, setCurrentSplit] = useState<Split | null>(null);
+  const [splits, setSplits] = useState<Split[]>();
 
-  const splits = [
-    { id: 'pushPullLegs', name: 'Push / Pull / Legs' },
-    { id: 'upperLower', name: 'Upper / Lower' },
-    { id: 'arnold', name: 'Arnold'}
-  ];
-
+  // Admin Function - need to remove
   const addSplit = async () => {
-    await addSplitToTemplates(arnold);
+    await addSplitToTemplates(pushPullLegs);
   } 
 
   useEffect(() => {
@@ -32,10 +29,23 @@ export default function TrainingSplits() {
         console.error("Failed to fetch current split:", err);
       }
     };
+
+    const fetchSplits = async () => {
+      try{
+        const splits = await getSplits();
+        if(splits){
+          setSplits(splits)
+        }
+      }catch (err){
+        console.error(err)
+      }
+    }
     fetchSplit();
+    fetchSplits();
   }, []);
 
   console.log(currentSplit)
+  console.log(splits)
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -60,7 +70,7 @@ export default function TrainingSplits() {
         </FloatingCard>
 
         <Text style={styles.subtitle}>Explore Template Splits</Text>
-        {splits.map((split) => (
+        {splits?.map((split) => (
           <FloatingCard key={split.id} height={70} width="90%" onPress={() => router.push(`/(trainingSplits)/${split.id}`)}>
             <View style={styles.cardContent}>
               <Feather name="folder" size={18} color="#bbb" style={styles.cardIcon} />
@@ -69,7 +79,8 @@ export default function TrainingSplits() {
           </FloatingCard>
         ))}
 
-        {/* <Button title={'dededed'} onPress={()=>{addSplit()}}></Button> */}
+        {// Admin button - needs to be removed
+        /* <Button title={'dededed'} onPress={()=>{addSplit()}}></Button> */}
 
       </ScrollView>
     </SafeAreaView>

@@ -41,7 +41,12 @@ export default function HistoryScreen() {
         return;
       }
       setLoggedWorkouts(workouts);
+      const arr = []
       for (const log of workouts) {
+        if(log.splitId in arr){
+          continue;
+        }
+        arr.push(log.splitId)
         await fetchSplitName(log.splitId);
       }
     };
@@ -63,10 +68,13 @@ export default function HistoryScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {loggedWorkouts
+      {loggedWorkouts
           ?.filter((l) =>
             l.workoutDay.toLowerCase().includes(searchText.toLowerCase()) &&
-            (selectedGroups.length === 0 || selectedGroups.includes(l.splitId))
+            (
+              selectedGroups.length === 0 ||
+              selectedGroups.includes(splitNames[l.splitId] ?? 'One-Off')
+            )
           )
           .map((workout) => (
             <FloatingCard
@@ -89,7 +97,7 @@ export default function HistoryScreen() {
       <FilterModal
         visible={modalVisible}
         selected={selectedGroups}
-        options={Object.keys(splitNames)}
+        options={Object.values(splitNames)}
         onSelect={toggleGroup}
         onClear={() => setSelectedGroups([])}
         onApply={() => setModalVisible(false)}

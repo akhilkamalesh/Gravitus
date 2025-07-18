@@ -87,6 +87,67 @@ export const arnold = {
     ]
 }
 
-export const upperLower = {
+export const pushPullLegs = {
+    "id": "pushPullLegs",
+    "name": "Push / Pull / Legs",
+    "description": "A weekly recurring split that seperates the workout by pushing, pulling, and leg focused movements.",
+    "repeatDays": false,
+    "weeksDuration": 10,
+    "workouts": [
+        {"dayName": "Push", "exercises": [
+            {"exerciseId": "benchPress", "reps": {"max": 8, "min": 4}, "sets": 3},
+            {"exerciseId": "machineInclinePress", "reps": {"max": 10, "min": 6}, "sets": 3},
+            {"exerciseId": "chestFly", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "tricepRopePushdown", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "dumbbellLateralRaise", "reps": {"max": 15, "min": 10}, "sets": 3},
+            {"exerciseId": "cableOverheadExtensions", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "machineAbCrunches", "reps": {"max": 15, "min": 10}, "sets": 2},
+            {"exerciseId": "hangingLegRaise", "reps": {"max": 15, "min": 10}, "sets": 2},
+        ]},
+        {"dayName": "Pull", "exercises": [
+            {"exerciseId": "pullUps", "reps": {"max": 12, "min": 6}, "sets": 3},
+            {"exerciseId": "cableRow", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "tBarRow", "reps": {"max": 10, "min": 6}, "sets": 3},
+            {"exerciseId": "dumbbellInclineCurls", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "dumbbellHammerCurls", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "cableRearDeltFly", "reps": {"max": 12, "min": 8}, "sets": 2},
+        ]},
+        {"dayName": "Legs", "exercises": [
+            {"exerciseId": "smithMachineSquats", "reps": {"max": 8, "min": 4}, "sets": 3},
+            {"exerciseId": "legExtension", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "lyingHamstringCurl", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "seatedCalfRaises", "reps": {"max": 15, "min": 10}, "sets": 3},
+            {"exerciseId": "plateLoadedLegPress", "reps": {"max": 12, "min": 6}, "sets": 3},
+            {"exerciseId": "adductionMachine", "reps": {"max": 15, "min": 10}, "sets": 2},
+            {"exerciseId": "abductionMachine", "reps": {"max": 15, "min": 10}, "sets": 1},
+        ]},
+        {"dayName": "Push", "exercises": [
+            {"exerciseId": "inclineDumbbellPress", "reps": {"max": 8, "min": 4}, "sets": 3},
+            {"exerciseId": "machineFlatPress", "reps": {"max": 10, "min": 6}, "sets": 3},
+            {"exerciseId": "chestFly", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "cableLateralRaise", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "cableOverheadExtensions", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "machineShoulderPress", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "machineAbCrunches", "reps": {"max": 15, "min": 10}, "sets": 2},
+            {"exerciseId": "hangingLegRaise", "reps": {"max": 15, "min": 10}, "sets": 2},
+        ]},
+        {"dayName": "Pull", "exercises": [
+            {"exerciseId": "pullUps", "reps": {"max": 12, "min": 6}, "sets": 3},
+            {"exerciseId": "isoLateralHighRow", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "tBarRow", "reps": {"max": 10, "min": 6}, "sets": 3},
+            {"exerciseId": "dumbbellPreacherCurls", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "cableInclineCurl", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "cableRearDeltFly", "reps": {"max": 12, "min": 8}, "sets": 2},
+        ]},
+        {"dayName": "Legs", "exercises": [
+            {"exerciseId": "stiffLegDeadlifts", "reps": {"max": 8, "min": 4}, "sets": 3},
+            {"exerciseId": "legExtension", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "lyingHamstringCurl", "reps": {"max": 12, "min": 8}, "sets": 3},
+            {"exerciseId": "standingCalfRaises", "reps": {"max": 15, "min": 10}, "sets": 3},
+            {"exerciseId": "plateLoadedLegPress", "reps": {"max": 12, "min": 6}, "sets": 3},
+            {"exerciseId": "adductionMachine", "reps": {"max": 15, "min": 10}, "sets": 2},
+            {"exerciseId": "abductionMachine", "reps": {"max": 15, "min": 10}, "sets": 1},
+        ]},
+    ]
     
 }

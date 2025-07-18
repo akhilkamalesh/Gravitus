@@ -33,6 +33,7 @@ export default function SplitDetailScreen(){
               const docRefId = await saveSplitToUser(split);
               console.log("Doc Ref ID is:", docRefId);
               await updateCurrentSplit(docRefId)
+              // TODO: Reset Current Day Index
             } catch (err) {
               console.error("Error saving split:", err);
             }

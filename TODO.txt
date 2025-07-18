@@ -2,16 +2,8 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Index Page (Low Priority):
-- Figure out how to change bar chart contribution UI (Not needed for now/can be added later in MVP2)
-- Change to a focusedUseEffect?
-
-Training Splits (Low Priority):
-- Add detailed information about current split within [id] (MVP2)
-- Add data points for push pull legs
-
-History (Low/No Priority):
-- Edit filter to be splitName rather than splitId
+Two:
+- Bug happens after creating a new workout
 
 AccountCenter:
 - Fix Sign Out Button

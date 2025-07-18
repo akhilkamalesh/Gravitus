@@ -9,6 +9,8 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { workout } from '@/types/firestoreTypes';
 import { checkWorkoutStatus, getTodayWorkout, getWorkoutCountPerWeek } from '@/lib/firestoreFunctions';
 import { estimateWorkoutTime } from '@/lib/otherFunctions';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 
 export default function TabOneScreen() {
@@ -21,32 +23,24 @@ export default function TabOneScreen() {
   const [workout, setWorkout] = useState<workout | null>(null);
   // const [workoutCountPerWeek, setWorkoutCountPerWeek] = useState<{ date: string; count: number}[]>([]);
 
-  useEffect(()=>{
-    const fetchWorkout = async () => {
-
-      if (await checkWorkoutStatus()){
-        setStatus(true);
-        // return;
-      }
-
-      const w = await getTodayWorkout()
-      if(w != null){
-        const {split, workout} = w
-        setWorkout(workout)
-      }
-    };
-
-    // const fetchWorkoutCountPerWeek = async () => {
-    //   const wcpw = await getWorkoutCountPerWeek();
-    //   if(wcpw != null){
-    //     setWorkoutCountPerWeek(wcpw);
-    //   }
-    // }
-
-    fetchWorkout();
-    // fetchWorkoutCountPerWeek();
-
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      const fetchWorkout = async () => {
+        if (await checkWorkoutStatus()) {
+          setStatus(true);
+          // return;
+        }
+  
+        const w = await getTodayWorkout();
+        if (w != null) {
+          const { split, workout } = w;
+          setWorkout(workout);
+        }
+      };
+  
+      fetchWorkout();
+    }, [])
+  );
 
   console.log(userData)
 

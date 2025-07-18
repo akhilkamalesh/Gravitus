@@ -63,6 +63,23 @@ export const getSplit = async (splitId: string): Promise<Split | null> => {
     return null;
 };
 
+// Loads all splits
+export const getSplits = async (): Promise<Split[] | null> => {
+  const splitsRef = collection(firestoreInstance, "splitTemplates");
+  const snapshot = await getDocs(splitsRef);
+
+  if(!snapshot){
+    return null;
+  }
+
+  const splits: Split[] = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Split[];
+
+  return splits;
+}
+
 // Function that loads full split information including exercises information
 export const getSplitInformation = async (split: Split): Promise <Split> => {
   const resolvedWorkouts = await Promise.all(
@@ -110,6 +127,29 @@ export const saveSplitToUser = async (split: Split) => {
   return docRef.id; // return new splitId
 };
 
+// Save custom workout to a one-off split
+export const saveOneOffSplitToUser = async (split: Split) => {
+  const user = auth().currentUser;
+  if (!user) throw new Error("User not logged in");
+
+  const oneOffSplitId = generateOneOffSplitId();
+  const splitDocRef = doc(firestoreInstance, 'users', user.uid, 'splits', oneOffSplitId);
+
+  const existing = await getDoc(splitDocRef);
+  if (existing.exists()) {
+    return oneOffSplitId; // Already exists, reuse it
+  }
+
+  const splitData = {
+    ...split,
+    createdAt: serverTimestamp(),
+    createdFromTemplateId: split.id,
+  };
+
+  await setDoc(splitDocRef, splitData);
+  return oneOffSplitId;
+};
+
 // Save splitId to currentSplitId attribute under user
 export const updateCurrentSplit = async (splitId: string) => {
   const user = auth().currentUser;
@@ -147,41 +187,61 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
   const user = auth().currentUser;
   if (!user) throw new Error('User not authenticated');
 
+  const uid = user.uid;
+
   // Get user document
-  const userDocRef = doc(firestoreInstance, 'users', user.uid);
+  const userDocRef = doc(firestoreInstance, 'users', uid);
   const userSnap = await getDoc(userDocRef);
   const userData = userSnap.data();
 
-  const splitId = userData?.currentSplitId;
+  const currentSplitId = userData?.currentSplitId;
   const currentDayIndex = userData?.currentDayIndex || 0;
-  if (!splitId) return null;
 
-  // Get current split
-  const splitDocRef = doc(firestoreInstance, 'users', user.uid, 'splits', splitId);
-  const splitSnap = await getDoc(splitDocRef);
-  const split = { id: splitSnap.id, ...splitSnap.data() } as Split;
-
-  // If a workout has already been done today, return that logged workout
+  // If a workout has already been done today, return the logged one
   if (await checkWorkoutStatus()) {
     const log = await getPrevWorkoutStat();
-    if (!log) {
-      return null;
+    if (!log) return null;
+
+    console.log(log)
+
+    const loggedSplitId = log.splitId;
+
+    console.log(loggedSplitId)
+
+    // Get the split corresponding to the logged workout — whether it's currentSplit or one-off
+    const loggedSplitRef = doc(firestoreInstance, 'users', uid, 'splits', loggedSplitId);
+    const loggedSplitSnap = await getDoc(loggedSplitRef);
+
+    if (!loggedSplitSnap.exists()) {
+      console.warn(`No split found with ID '${loggedSplitId}'`);
     }
 
-    // Match workout by workoutDay string (e.g., "Push")
-    const loggedWorkout = split.workouts.find(w => w.dayName === log.workoutDay);
+    const loggedSplit = { id: loggedSplitSnap.id, ...loggedSplitSnap.data() } as Split;
+
+    // Find the workout by day name
+    const loggedWorkout = loggedSplit.workouts.find(w => w.dayName === log.workoutDay);
     if (!loggedWorkout) {
-      console.warn(`No workout found with name '${log.workoutDay}' in current split`);
+      console.warn(`No workout found with name '${log.workoutDay}' in split '${loggedSplitId}'`);
       return null;
     }
 
-    return { split, workout: loggedWorkout };
+    return { split: loggedSplit, workout: loggedWorkout };
   }
 
-  const workout = split.workouts[(currentDayIndex % split.workouts.length)];
+  // No workout logged today, return the current split's workout
+  if (!currentSplitId) return null;
+
+  const currentSplitRef = doc(firestoreInstance, 'users', uid, 'splits', currentSplitId);
+  const currentSplitSnap = await getDoc(currentSplitRef);
+
+  if (!currentSplitSnap.exists()) return null;
+
+  const split = { id: currentSplitSnap.id, ...currentSplitSnap.data() } as Split;
+  const workout = split.workouts[currentDayIndex % split.workouts.length];
 
   return { split, workout };
 };
+
 
 // Increment Day Index (want to keep the actual number and modulate in the previous function)
 export const incrementDayIndex = async () => {
@@ -286,11 +346,11 @@ export const clearCurrentSplit = async() => {
 }
 
 // Generate random split ID
-export const generateRandomSplitId = () => {
+export const generateOneOffSplitId = () => {
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
-  return doc(collection(firestoreInstance, 'users', user.uid, 'splits')).id;
+  return `one_off_${user.uid}`;
 };
 
 // Check if workout is complete based of date
