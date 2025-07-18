@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FloatingCard from "@/components/floatingbox";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { clearCurrentSplit, getSplit, getSplitBySplitId, getSplitInformation, saveSplitToUser, updateCurrentSplit } from "@/lib/firestoreFunctions";
+import { clearCurrentSplit, getSplit, getSplitBySplitId, getSplitInformation, resetDayIndex, saveSplitToUser, updateCurrentSplit } from "@/lib/firestoreFunctions";
 import { Split } from "@/types/firestoreTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GravitusHeader from "@/components/title";
@@ -33,7 +33,7 @@ export default function SplitDetailScreen(){
               const docRefId = await saveSplitToUser(split);
               console.log("Doc Ref ID is:", docRefId);
               await updateCurrentSplit(docRefId)
-              // TODO: Reset Current Day Index
+              await resetDayIndex();
             } catch (err) {
               console.error("Error saving split:", err);
             }
