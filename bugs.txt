@@ -1,2 +1,0 @@
-- Initial Load:
-    - If user doesn't exist, it is still routing towards index page

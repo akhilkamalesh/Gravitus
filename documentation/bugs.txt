@@ -1,0 +1,99 @@
+Sign Up Screen:
+- Purpose:
+    - User is able to enter in their name, email, and password to create an account
+- Bugs:
+    - None
+
+Auth Screen:
+- Purpose:
+     - User is able to enter in their username (email) and password to log in
+     - if successful, routes to index, if unsuccessful, throws an error saying log in info is invalid (firestore error)
+- Bugs:
+    - None
+
+Index Screen:
+- Purpose:
+    - Home page that displays different floating boxes corresponding to different functionalities of the application
+- Bugs:
+    - Logical Bug? Today Workout Widget estimated time function is completely off
+
+    History:
+    - Purpose:
+        - User is able to view their past workout logs
+    - Bugs:
+        - None
+
+    Training Splits:
+    - Purpose:
+        - Able to view different splits
+    - Bugs:
+        - If current split is null, should show that no current split as an option
+        - Clicking current split as null should not be able to route to any screen
+
+        Training Splits [Create]:
+        - Purpose:
+            - Able to create your own training split
+        - Bugs:
+            - Screen is still in old styling format
+            - Weeks duration should not be able to accept alpha characters (only numeric)
+            - When clicking submit, there should be a confirmation check
+
+        Training Splits [id]:
+        - Purpose:
+            - Able to view current split
+            - Able to view predefined splits
+        - Bugs:
+            - When clearing split for current split, doesn't trigger refresh when routing back to split screen (old screen is still mounted)
+            - When saving predefined split, there should be a pop up confirming that split has been saved and automatically routes back to index 
+            or trainingSplits screen
+
+    Exercises:
+    - Purpose:
+        - Users are able to view exercises / search and filter for them
+    - Bugs:
+        - Filter doesn't have all the options
+
+        Exercises [id]:
+        - Purpose:
+            - Able to view each exercise in further detail
+        - Bugs:
+            - None, but up to discretion about secondary muscle group
+
+Two:
+- Purpose:
+    - User is able to track their workout
+- Bugs:
+    - If user hasn't selected a split yet, error is throw in console because workout isn't found
+    - Try New Workout -> lets just map it back to the current split the user is on for simplicity reasons
+        - No need to create a new split to track, just have it be part of the current split
+        - Because of useFocusEffect, the component always refreshes, thus losing "today's workout"
+    - Functional Addition:
+        - There should be a skip workout day functionality
+
+Settings:
+- Purpose:
+    - Manage account and priacy Settings
+- Bugs:
+    - None
+
+
+    Privacy Policy:
+    - Purpose:
+        - User can view the privacy Policy
+    - Bugs:
+        - None
+
+    Account Center:
+    - Purpose:
+        - User can manage their account settings
+    - Bugs:
+        - None
+
+
+
+Tab Bar;
+- Purpose:
+    - Able to route to main screens: index, two, settings
+- Bugs:
+    - Tab bar is not available in subscreens...
+
