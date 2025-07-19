@@ -1,7 +1,7 @@
 import { firestoreInstance, authInstance } from "./firebase";
 import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, orderBy, where, limit, deleteDoc } from "@react-native-firebase/firestore";
 import { Exercise, ExerciseLog, ExerciseStat } from "@/types/firestoreTypes";
-import auth from '@react-native-firebase/auth'
+import auth, { updateEmail } from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
 
 
@@ -486,9 +486,12 @@ export const changeUserEmail = async (email:string) => {
   if (!user) throw new Error('User not authenticated');
 
   const userDocRef = doc(firestoreInstance, 'users', user.uid);
+
+  await updateEmail(user, email);
+
   await updateDoc(userDocRef, {
     email: email
-  });
+  }); 
 }
 
 // Change User's Password
@@ -498,7 +501,7 @@ export const changeUserPassword = async (password:string) => {
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
-  user.updatePassword(password)
+  await user.updatePassword(password)
 }
 
 // Delete Account
@@ -508,8 +511,18 @@ export const deleteAccount = async () => {
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
-  // Dete User Data
+  // Delete User Data
   await firestoreInstance.collection('users').doc(user.uid).delete();
+
+  const logsCollectionRef = collection(firestoreInstance, 'users', user.uid, 'logs');
+  const logsSnapshot = await getDocs(logsCollectionRef);
+  const logDeletionPromises = logsSnapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+  await Promise.all(logDeletionPromises);
+
+  const splitssCollectionRef = collection(firestoreInstance, 'users', user.uid, 'splits');
+  const splitssSnapshot = await getDocs(splitssCollectionRef);
+  const splitsDeletionPromises = splitssSnapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+  await Promise.all(splitsDeletionPromises);
 
   // Delete the user from Firebase Authentication
   await user.delete();

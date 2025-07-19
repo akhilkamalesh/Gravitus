@@ -2,9 +2,6 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Two:
-- Bug happens after creating a new workout
-
 AccountCenter:
 - Fix Sign Out Button
 

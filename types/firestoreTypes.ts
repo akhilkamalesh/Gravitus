@@ -7,7 +7,7 @@ export type FirestoreUserData = {
   name: string;
   email: string;
   currentSplitId: string;
-  currentDayIndex: number; //currentDatIndex
+  currentDayIndex: number; //currentDayIndex
 } | null;
 
 export interface Exercise {

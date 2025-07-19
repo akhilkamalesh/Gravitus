@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useAuth } from '@/lib/authContext';
 import GravitusHeader from '@/components/title';
 import FloatingCard from '@/components/floatingbox';
@@ -17,7 +17,7 @@ export default function TabOneScreen() {
   const router = useRouter();
   // router.push adds to the call stack while router.replace doesn;t
   // use push for subscreens, and replace for main screens
-  const { userData } = useAuth();
+  const { user, userData } = useAuth();
 
   const [status, setStatus] = useState<boolean>(false);
   const [workout, setWorkout] = useState<workout | null>(null);
@@ -42,7 +42,15 @@ export default function TabOneScreen() {
     }, [])
   );
 
-  console.log(userData)
+  if(user === null){
+    console.log("Here");
+    return(
+     <Redirect href="../(auth)/auth"/>
+    )
+  }
+
+
+  console.log("User Data: ", userData)
 
   return (
     <SafeAreaView style={styles.screen}>

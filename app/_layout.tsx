@@ -1,66 +1,57 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
+import { Stack, usePathname, Redirect } from 'expo-router';
+import { ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { useColorScheme } from '@/components/useColorScheme';
-import { AuthProvider } from '@/lib/authContext';
+import { AuthProvider, useAuth } from '@/lib/authContext';
+import { useEffect, useState } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(auth)/auth',
-};
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+export const unstable_settings = {
+  initialRouteName: '(auth)/auth', // safe default
+};
+
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
     <AuthProvider>
-      <RootLayoutNav />
+      <AuthGate />
     </AuthProvider>
   );
 }
 
-function RootLayoutNav() {
+function AuthGate() {
+  const { user, loading } = useAuth();
   const colorScheme = useColorScheme();
 
-  // TODO: Replace with real auth state from context, Firebase, etc.
-  const isLoggedIn = false; // Change to `true` to see tabs
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setReady(true), 100); // small debounce
+    return () => clearTimeout(timer);
+  }, [user]);
+
+  useEffect(() => {
+    if (!loading && ready) SplashScreen.hideAsync();
+  }, [loading, ready]);
+
+  if (loading || !ready) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
+        {user ? (
+          <Stack.Screen name="(tabs)" />
+        ) : (
           <Stack.Screen name="(auth)/auth" />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        )}
       </Stack>
     </ThemeProvider>
   );

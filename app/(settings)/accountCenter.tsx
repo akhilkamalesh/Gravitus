@@ -5,10 +5,12 @@ import { Text, SafeAreaView, ScrollView, StyleSheet, View, Alert, TouchableOpaci
 import AccountCenterModal from "@/components/AccountCenterModal";
 import { changeUserEmail, changeUserName, changeUserPassword, deleteAccount } from "@/lib/firestoreFunctions";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/lib/authContext";
 
 export default function AccountCenter(){
 
     const router = useRouter();
+    const { signOut } = useAuth();
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTitle, setModalTitle] = useState<"Change Name" | "Change Email" | "Change Password" | "">("");
@@ -47,6 +49,7 @@ export default function AccountCenter(){
 
     const handleSignOut = async () => {
         try {
+          await signOut();
           router.replace('/(auth)/auth');
         } catch (e: any) {
           console.error(e);
