@@ -1,6 +1,6 @@
 import { firestoreInstance, authInstance } from "./firebase";
 import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTimestamp, query, orderBy, where, limit, deleteDoc } from "@react-native-firebase/firestore";
-import { Exercise, ExerciseLog, ExerciseStat } from "@/types/firestoreTypes";
+import { Exercise, ExerciseLog, ExerciseStat, workout } from "@/types/firestoreTypes";
 import auth, { updateEmail } from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
 
@@ -198,35 +198,7 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
   const currentDayIndex = userData?.currentDayIndex || 0;
 
   // If a workout has already been done today, return the logged one
-  if (await checkWorkoutStatus()) {
-    const log = await getPrevWorkoutStat();
-    if (!log) return null;
-
-    console.log(log)
-
-    const loggedSplitId = log.splitId;
-
-    console.log(loggedSplitId)
-
-    // Get the split corresponding to the logged workout — whether it's currentSplit or one-off
-    const loggedSplitRef = doc(firestoreInstance, 'users', uid, 'splits', loggedSplitId);
-    const loggedSplitSnap = await getDoc(loggedSplitRef);
-
-    if (!loggedSplitSnap.exists()) {
-      console.warn(`No split found with ID '${loggedSplitId}'`);
-    }
-
-    const loggedSplit = { id: loggedSplitSnap.id, ...loggedSplitSnap.data() } as Split;
-
-    // Find the workout by day name
-    const loggedWorkout = loggedSplit.workouts.find(w => w.dayName === log.workoutDay);
-    if (!loggedWorkout) {
-      console.warn(`No workout found with name '${log.workoutDay}' in split '${loggedSplitId}'`);
-      return null;
-    }
-
-    return { split: loggedSplit, workout: loggedWorkout };
-  }
+  // Logic is deleted, to get it back, reset to previous git commit
 
   // No workout logged today, return the current split's workout
   if (!currentSplitId) return null;
@@ -399,6 +371,31 @@ const getPrevWorkoutStat = async (): Promise<ExerciseLog | null> => {
     id: doc.id,
     ...doc.data()
   } as ExerciseLog
+}
+
+// Gets previous loggedWorkout (used in getTodayWorkout function)
+const getPrevLoggedWorkout = async (): Promise<workout | null> => {
+  const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
+
+  const user = authInstance.currentUser;
+  if (!user) throw new Error('User not authenticated');
+  const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
+
+  const q = query(logsRef,
+    where('date', '>=', todayISO),
+    where('date', '<', `${todayISO}T23:59:59`),
+    limit(1)
+  );
+
+  const snapshot = await getDocs(q)
+
+  if(snapshot.empty){
+    console.log("Log doesn't exist")
+    return null;
+  }
+
+  const doc = snapshot.docs[0];
+  return null;
 }
 
 // Based off exerciseId, grab all ExerciseLog.exercises that contain that

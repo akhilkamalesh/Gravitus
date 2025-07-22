@@ -17,7 +17,7 @@ export default function WorkoutCompleteModal({ visible, onClose }: Props) {
       <View style={styles.overlay}>
         <View style={styles.modalBox}>
           <Text style={styles.title}>Workout Complete</Text>
-          <Text style={styles.message}>You’ve already finished today’s workout. Will see you tomorrow!</Text>
+          <Text style={styles.message}>You’ve already finished today’s workout. Click to see tomorrow's workout!</Text>
 
           <Pressable onPress={onClose} style={styles.button}>
             <Text style={styles.buttonText}>Continue</Text>

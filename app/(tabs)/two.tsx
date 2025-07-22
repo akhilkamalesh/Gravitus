@@ -100,7 +100,8 @@ export default function TodayWorkoutScreen() {
 
   const handleSave = async () => {
 
-    console.log("Handle Save is called")
+    console.log("Handle Save is called");
+    console.log(loggedExercises);
 
     if(!loggedExercises){
       console.error('Exercises not logged')
@@ -218,6 +219,7 @@ export default function TodayWorkoutScreen() {
       <GravitusHeader showEditButton={true} 
         onTryNewWorkout={async () => {
           
+          // This needs to be the same as the current split
           const newSplit: Split = {
             id: generateOneOffSplitId(),
             name: 'One-Off',
@@ -234,18 +236,22 @@ export default function TodayWorkoutScreen() {
         
           await saveOneOffSplitToUser(newSplit); // Overwrites the split with fixed ID
           setIsStartingFresh(true);
-          setTodayWorkout({ dayName: 'Custom', exercises: [] });
-          setLoggedExercises({
-            splitId: generateOneOffSplitId(),
-            workoutDay: 'Custom',
-            date: new Date().toISOString(),
-            exercises: []
-          });
-        }}
+
+          if(split !== null){
+            setTodayWorkout({ dayName: 'Custom', exercises: [] });
+            setLoggedExercises({
+              splitId: split.id,
+              workoutDay: 'Custom',
+              date: new Date().toISOString(),
+              exercises: []
+            });
+          }}
+        }
         onChangeSplit={()=>{
           router.push('../(trainingSplits)/trainingSplits')
         }}
       />      
+      {/* Workout complete modal */}
       <WorkoutCompleteModal
         visible={isWorkoutDone}
         onClose={() => setIsWorkoutDone(false)}

@@ -2,8 +2,7 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-AccountCenter:
-- Fix Sign Out Button
+Fix Bugs
 
 Data:
 - Consolidate data entries to either be plural or singular for all (consistency)
