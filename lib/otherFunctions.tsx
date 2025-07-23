@@ -1,12 +1,11 @@
 // Estimated workout time
 import { ExerciseLog, ExerciseStat } from "@/types/firestoreTypes";
 
-export const estimateWorkoutTime = (exerciseCount: number, setsPerExercise: number): string => {
+export const estimateWorkoutTime = (exerciseCount: number, totalSets: number): string => {
     const secondsPerSet = 60; // average effort + rest per set
-    const setupTimePerExercise = 180; // seconds
+    const setupTimePerExercise = 120; // seconds
     const restTimePerSet = 120; // seconds
-    
-    const totalSets = exerciseCount * setsPerExercise;
+
     const totalTimeSeconds = (totalSets * (secondsPerSet + restTimePerSet)) + (exerciseCount * setupTimePerExercise);
     
     const minutes = Math.floor(totalTimeSeconds / 60);

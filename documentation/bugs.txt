@@ -69,7 +69,7 @@ Two:
 
 Settings:
 - Purpose:
-    - Manage account and priacy Settings
+    - Manage account and privacy Settings
 - Bugs:
     - None
 
