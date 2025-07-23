@@ -53,13 +53,18 @@ export default function TrainingSplits() {
       <Text style={styles.mainTitle}>Training Splits</Text>
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
-        <Text style={styles.subtitle}>Current Split</Text>
-        <FloatingCard width="90%" height={70} onPress={() => router.push(`/(trainingSplits)/${currentSplit?.id}`)}>
-          <View style={styles.cardContent}>
-            <Feather name="calendar" size={18} color="#bbb" style={styles.cardIcon} />
-            <Text style={styles.text}>{currentSplit?.name}</Text>
-          </View>
-        </FloatingCard>
+        {currentSplit !== null && (
+          <Text style={styles.subtitle}>Current Split</Text>
+        )}
+        {currentSplit !== null && (
+            <FloatingCard width="90%" height={70} onPress={() => router.push(`/(trainingSplits)/${currentSplit?.id}`)}>
+              <View style={styles.cardContent}>
+                <Feather name="calendar" size={18} color="#bbb" style={styles.cardIcon} />
+                <Text style={styles.text}>{currentSplit?.name}</Text>
+              </View>
+            </FloatingCard>
+        )}
+
 
         <Text style={styles.subtitle}>Create Your Own!</Text>
         <FloatingCard width="90%" height={70} onPress={() => router.push('/(trainingSplits)/create')}>
