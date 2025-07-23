@@ -104,17 +104,14 @@ export default function TodayWorkoutScreen() {
     console.log(loggedExercises);
 
     if(!loggedExercises){
-      console.error('Exercises not logged')
+      console.log('Exercises not logged')
       return;
     }
     try {
       // Log Workout
       logWorkout(loggedExercises);
       // Then call increment here
-      console.log(isStartingFresh)
-      if(!isStartingFresh){
-        incrementDayIndex();
-      }
+      incrementDayIndex();
       // message saying congrats on completing workout
       Alert.alert('Success', 'Workout Uploaded!');
       // Route back to home screen
@@ -124,8 +121,7 @@ export default function TodayWorkoutScreen() {
     }
   }
 
-  // Runs every time screen is called
-  // different than useEffect which only runs when component is mounted then rerenders based of dependency array
+  // TODO: I think this needs to be a useEffect and after save it triggers a screen refresh
   useFocusEffect(
     useCallback(() => {
       const fetchWorkout = async () => {
@@ -136,7 +132,39 @@ export default function TodayWorkoutScreen() {
           }
           const w = await getTodayWorkout()
           if(!w){
-            console.error('Workout not found')
+            console.log('Workout not found')
+            // This needs to be the same as the current split
+            const newSplit: Split = {
+              id: generateOneOffSplitId(),
+              name: 'One-Off',
+              description: 'A custom workout not tied to a plan',
+              repeatDays: false,
+              weeksDuration: 1,
+              workouts: [
+                {
+                  dayName: 'Custom',
+                  exercises: [], // populated during workout
+                },
+              ],
+            };
+
+            const log: ExerciseLog = {
+              splitId: newSplit.id,
+              workoutDay: newSplit.workouts[0].dayName,
+              date: new Date().toISOString(),
+              exercises: newSplit.workouts[0].exercises.map((exercise: workoutExercise) => ({
+                exerciseId: exercise.exerciseId,
+                sets: Array.from({ length: exercise.sets }, () => ({ weight: 0, reps: 0 })),
+              }))
+            }
+
+            await saveOneOffSplitToUser(newSplit); // Overwrites the split with fixed ID
+            setIsStartingFresh(true);
+
+            setSplit(newSplit)
+            setTodayWorkout(newSplit.workouts[0])
+            setLoggedExercises(log);
+
             return;
           }
           console.log(w)

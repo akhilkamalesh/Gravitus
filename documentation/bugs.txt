@@ -63,10 +63,7 @@ Two:
 - Purpose:
     - User is able to track their workout
 - Bugs:
-    - If user hasn't selected a split yet, error is throw in console because workout isn't found
-    - Try New Workout -> lets just map it back to the current split the user is on for simplicity reasons
-        - No need to create a new split to track, just have it be part of the current split
-        - Because of useFocusEffect, the component always refreshes, thus losing "today's workout"
+    - Because of useFocusEffect, the component always refreshes, thus losing "today's workout"
     - Functional Addition:
         - There should be a skip workout day functionality
 

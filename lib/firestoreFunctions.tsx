@@ -373,30 +373,6 @@ const getPrevWorkoutStat = async (): Promise<ExerciseLog | null> => {
   } as ExerciseLog
 }
 
-// Gets previous loggedWorkout (used in getTodayWorkout function)
-const getPrevLoggedWorkout = async (): Promise<workout | null> => {
-  const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
-
-  const user = authInstance.currentUser;
-  if (!user) throw new Error('User not authenticated');
-  const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
-
-  const q = query(logsRef,
-    where('date', '>=', todayISO),
-    where('date', '<', `${todayISO}T23:59:59`),
-    limit(1)
-  );
-
-  const snapshot = await getDocs(q)
-
-  if(snapshot.empty){
-    console.log("Log doesn't exist")
-    return null;
-  }
-
-  const doc = snapshot.docs[0];
-  return null;
-}
 
 // Based off exerciseId, grab all ExerciseLog.exercises that contain that
 export const getLogsByExerciseId = async (exerciseId: string): Promise<ExerciseStat | null> => {
