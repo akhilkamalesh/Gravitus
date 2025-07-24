@@ -38,6 +38,19 @@ export const getExerciseByID = async (id: string): Promise<Exercise> => {
   
 }
 
+// Grabs all the exercise groups
+export const getExerciseGroups = async (): Promise<string[]> => {
+  const exercises = await getExercises();
+
+  const groupSet = new Set<string>();
+
+  for (const e of exercises) {
+    groupSet.add(String(e.primaryMuscleGroup));
+  }
+
+  return Array.from(groupSet);
+} 
+
 
 // Loads splits based off ID (only for splitTemplates)
 export const getSplit = async (splitId: string): Promise<Split | null> => {

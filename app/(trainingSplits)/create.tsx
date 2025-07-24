@@ -257,14 +257,14 @@ export default function CreateSplit(){
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#1c1f23',
+        backgroundColor: '#121417',
     },
     scrollContent: {
         alignItems: 'center',
         paddingVertical: 14,
     },
     title: {
-        fontSize: 30,
+        fontSize: 28,
         fontWeight: '600',
         color: 'white',
         alignSelf: 'center',

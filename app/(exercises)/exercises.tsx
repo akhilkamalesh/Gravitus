@@ -5,7 +5,7 @@ import { StyleSheet, Pressable, Text, View, ScrollView, Button } from 'react-nat
 import SearchBar from '@/components/searchBar';
 import FilterModal from '@/components/exerciseFilterBar';
 import { Feather } from '@expo/vector-icons';
-import { addExercisesToExerciseList, getExercises, deleteAllExercises} from '@/lib/firestoreFunctions';
+import { addExercisesToExerciseList, getExercises, deleteAllExercises, getExerciseGroups} from '@/lib/firestoreFunctions';
 import { Exercise } from '@/types/firestoreTypes';
 import FloatingCard from '@/components/floatingbox';
 import { router } from 'expo-router';
@@ -16,6 +16,7 @@ export default function Exercises() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [groups, setGroups] = useState<string[]>([]);
 
   const toggleGroup = (group: string) => {
     setSelectedGroups((prev) =>
@@ -31,18 +32,22 @@ export default function Exercises() {
   //   await deleteAllExercises();
   // }
 
-  const groups = ["Chest", "Quadriceps", "Rhomboids", "Latissimus Dorsi", "Shoulders", "Biceps", "Triceps", "Calves"];
+  // 
 
   useEffect(() => {
     const loadExercises = async () => {
       const data = await getExercises();
       setExercises(data);
     };
+    const getGroups = async () => {
+      const data = await getExerciseGroups();
+      setGroups(data);
+    }
+
     loadExercises();
+    getGroups();
   }, []);
 
-  // exercises.forEach((e) => console.log(e.id))
-  console.log(exercises)
 
   return (
     <SafeAreaView style={styles.screen}>

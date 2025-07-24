@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, Pressable, StyleSheet, FlatList } from 'react-native';
+import { Modal, View, Text, Pressable, StyleSheet, FlatList, Dimensions } from 'react-native';
 
 interface FilterModalProps {
   visible: boolean;
@@ -12,13 +12,24 @@ interface FilterModalProps {
   title: string;
 }
 
-// TODO: Need to change UI for the Filter Modal
-const FilterModal = ({ visible, selected, options, onSelect, onApply, onClear, onClose, title }: FilterModalProps) => {
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
+const FilterModal = ({
+  visible,
+  selected,
+  options,
+  onSelect,
+  onApply,
+  onClear,
+  onClose,
+  title,
+}: FilterModalProps) => {
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.title}>{title}</Text>
+
           <FlatList
             data={options}
             keyExtractor={(item) => item}
@@ -33,7 +44,10 @@ const FilterModal = ({ visible, selected, options, onSelect, onApply, onClear, o
               );
             }}
             style={styles.flatList}
+            contentContainerStyle={{ paddingBottom: 12 }}
+            showsVerticalScrollIndicator={false}
           />
+
           <View style={styles.actions}>
             <Pressable onPress={onClear}>
               <Text style={styles.actionText}>Clear</Text>
@@ -55,29 +69,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
   modalContent: {
     width: '85%',
     backgroundColor: '#1c1f23',
     padding: 20,
     borderRadius: 10,
+    maxHeight: SCREEN_HEIGHT * 0.50, // ✅ Cap modal height at 75% of screen
   },
   title: {
     color: '#fff',
     fontSize: 18,
     marginBottom: 16,
-    fontWeight: 600,
-    alignSelf: 'center'
+    fontWeight: '600',
+    alignSelf: 'center',
   },
   option: {
-    alignSelf: 'flex-start', // ⬅ ensures the item aligns left inside centered container
+    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
   },
   flatList: {
-    alignSelf: 'center',
-    width: '100%',
+    flexGrow: 0, // ✅ Makes FlatList respect maxHeight
   },
   optionText: {
     color: '#ccc',
