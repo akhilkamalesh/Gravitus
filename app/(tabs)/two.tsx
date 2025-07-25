@@ -27,6 +27,8 @@ export default function TodayWorkoutScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [trigger, setTrigger] = useState(false);
+
 
   const addSet = (index: number) => {
     if (!loggedExercises) return;
@@ -111,89 +113,93 @@ export default function TodayWorkoutScreen() {
       // Log Workout
       logWorkout(loggedExercises);
       // Then call increment here
-      incrementDayIndex();
+      if(!isStartingFresh){
+        incrementDayIndex();
+      }
       // message saying congrats on completing workout
       Alert.alert('Success', 'Workout Uploaded!');
-      // Route back to home screen
-      router.replace('/');
+      setTrigger(true);
     } catch (err) {
       console.error("Error saving workout:", err);
     }
   }
 
-  // TODO: I think this needs to be a useEffect and after save it triggers a screen refresh
-  useFocusEffect(
-    useCallback(() => {
-      const fetchWorkout = async () => {
+  const fetchWorkout = async () => {
 
-          if(await checkWorkoutStatus()){
-            setIsWorkoutDone(true)
-            // return;
-          }
-          const w = await getTodayWorkout()
-          if(!w){
-            console.log('Workout not found')
-            // This needs to be the same as the current split
-            const newSplit: Split = {
-              id: generateOneOffSplitId(),
-              name: 'One-Off',
-              description: 'A custom workout not tied to a plan',
-              repeatDays: false,
-              weeksDuration: 1,
-              workouts: [
-                {
-                  dayName: 'Custom',
-                  exercises: [], // populated during workout
-                },
-              ],
-            };
-
-            const log: ExerciseLog = {
-              splitId: newSplit.id,
-              workoutDay: newSplit.workouts[0].dayName,
-              date: new Date().toISOString(),
-              exercises: newSplit.workouts[0].exercises.map((exercise: workoutExercise) => ({
-                exerciseId: exercise.exerciseId,
-                sets: Array.from({ length: exercise.sets }, () => ({ weight: 0, reps: 0 })),
-              }))
-            }
-
-            await saveOneOffSplitToUser(newSplit); // Overwrites the split with fixed ID
-            setIsStartingFresh(true);
-
-            setSplit(newSplit)
-            setTodayWorkout(newSplit.workouts[0])
-            setLoggedExercises(log);
-
-            return;
-          }
-          console.log(w)
-          const {split, workout} = w;
-          const log: ExerciseLog = {
-            splitId: split.id,
-            workoutDay: workout.dayName,
-            date: new Date().toISOString(),
-            exercises: workout.exercises.map((exercise: workoutExercise) => ({
-              exerciseId: exercise.exerciseId,
-              sets: Array.from({ length: exercise.sets }, () => ({ weight: 0, reps: 0 })),
-            }))
-          }
-
-
-          setSplit(split)
-          setTodayWorkout(workout)
-          setLoggedExercises(log);
+    if(await checkWorkoutStatus()){
+      setIsWorkoutDone(true)
+      // return;
+    }
+    const w = await getTodayWorkout()
+    if(!w){
+      console.log('Workout not found')
+      // This needs to be the same as the current split
+      const newSplit: Split = {
+        id: generateOneOffSplitId(),
+        name: 'One-Off',
+        description: 'A custom workout not tied to a plan',
+        repeatDays: false,
+        weeksDuration: 1,
+        workouts: [
+          {
+            dayName: 'Custom',
+            exercises: [], // populated during workout
+          },
+        ],
       };
 
-      const fetchExercises = async () => {
-        const e = await getExercises();
-        setExercises(e)
+      const log: ExerciseLog = {
+        splitId: newSplit.id,
+        workoutDay: newSplit.workouts[0].dayName,
+        date: new Date().toISOString(),
+        exercises: newSplit.workouts[0].exercises.map((exercise: workoutExercise) => ({
+          exerciseId: exercise.exerciseId,
+          sets: Array.from({ length: exercise.sets }, () => ({ weight: 0, reps: 0 })),
+        }))
       }
 
-      fetchWorkout();
-      fetchExercises();
-    }, [])
-  );
+      await saveOneOffSplitToUser(newSplit); // Overwrites the split with fixed ID
+      setIsStartingFresh(true);
+
+      setSplit(newSplit)
+      setTodayWorkout(newSplit.workouts[0])
+      setLoggedExercises(log);
+
+      return;
+    }
+    const {split, workout} = w;
+    const log: ExerciseLog = {
+      splitId: split.id,
+      workoutDay: workout.dayName,
+      date: new Date().toISOString(),
+      exercises: workout.exercises.map((exercise: workoutExercise) => ({
+        exerciseId: exercise.exerciseId,
+        sets: Array.from({ length: exercise.sets }, () => ({ weight: 0, reps: 0 })),
+      }))
+    }
+
+
+    setSplit(split)
+    setTodayWorkout(workout)
+    setLoggedExercises(log);
+  };
+
+  const fetchExercises = async () => {
+    const e = await getExercises();
+    setExercises(e)
+  }
+
+  useEffect(() => {
+    fetchWorkout();
+    fetchExercises();
+    setTrigger(false)
+  }, [trigger])
+
+  useEffect(() => {
+      
+    fetchWorkout();
+    fetchExercises();
+  }, [])
 
   useEffect(() => {
     const fetchLastLogged = async () => {
@@ -280,6 +286,7 @@ export default function TodayWorkoutScreen() {
         }}
         onSkipWorkout={async () => {
           await incrementDayIndex();
+          setTrigger(true)
         }}
       />      
       {/* Workout complete modal */}

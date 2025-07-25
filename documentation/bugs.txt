@@ -11,12 +11,6 @@ Index Screen:
             - When saving predefined split, there should be a pop up confirming that split has been saved and automatically routes back to index 
             or trainingSplits screen
 
-Two:
-- Purpose:
-    - User is able to track their workout
-- Bugs:
-    - Because of useFocusEffect, the component always refreshes, thus losing "today's workout"
-
 Tab Bar;
 - Purpose:
     - Able to route to main screens: index, two, settings
