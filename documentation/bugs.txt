@@ -2,13 +2,6 @@ Index Screen:
 - Purpose:
     - Home page that displays different floating boxes corresponding to different functionalities of the application
 
-        Training Splits [Create]:
-        - Purpose:
-            - Able to create your own training split
-        - Bugs:
-            - Weeks duration should not be able to accept alpha characters (only numeric)
-            - When clicking submit, there should be a confirmation check
-
         Training Splits [id]:
         - Purpose:
             - Able to view current split

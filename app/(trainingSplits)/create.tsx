@@ -12,14 +12,14 @@ import ExerciseSearchModal from '@/components/FilterModal';
 
 export default function CreateSplit(){
 
-    /*
-    TODO:
-    - Repeat Days needs to be included
-    - Error Checks on everything (isNumber, saveFunction, ...)
-    - 
-    */
-
     const router = useRouter(); 
+
+    const confirmAction = (title: string, message: string, onConfirm: () => void) => {
+        Alert.alert(title, message, [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Confirm', style: 'destructive', onPress: onConfirm },
+        ]);
+    };
 
     const [name, setName] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -52,7 +52,7 @@ export default function CreateSplit(){
           const updated = [...prev];
           updated[dayIndex].exercises.push({
             exerciseId: '',
-            sets: 0,
+            sets: 3,
             reps: {
                 min: 4,
                 max: 12
@@ -111,30 +111,32 @@ export default function CreateSplit(){
             Alert.alert("Missing fields", "Fill out all the necessary information for the split")
         }
 
-        const split: Omit<Split, 'id'> = {
-            name,
-            description,
-            repeatDays,
-            weeksDuration: parseInt(weeksDuration),
-            workouts,
-            createdAt: new Date() as any,
-        };
-
-        try{
-            const enrichedSplit = await getSplitInformation({ ...split, id: '' });
-
-            const docId = await saveSplitToUser(enrichedSplit);
-            updateCurrentSplit(docId); // TODO: needs to be some type of check
-                                        // if user wants to make split that they created
-                                         // as their current split 
-            resetDayIndex();           // Reset Day index to 0
-            Alert.alert('Success', `Split saved with ID: ${docId}`);
-
-            router.push('/');
-        }catch(err){
-            console.error(err);
-            Alert.alert('Error', 'Failed to save split.');
-        }
+        confirmAction('Save Split', 'Are you sure you want to save split?', async () => {
+            const split: Omit<Split, 'id'> = {
+                name,
+                description,
+                repeatDays,
+                weeksDuration: parseInt(weeksDuration),
+                workouts,
+                createdAt: new Date() as any,
+            };
+    
+            try{
+                const enrichedSplit = await getSplitInformation({ ...split, id: '' });
+    
+                const docId = await saveSplitToUser(enrichedSplit);
+                updateCurrentSplit(docId); // TODO: needs to be some type of check
+                                            // if user wants to make split that they created
+                                             // as their current split 
+                resetDayIndex();           // Reset Day index to 0
+                Alert.alert('Success', `Split saved with ID: ${docId}`);
+    
+                router.push('/');
+            }catch(err){
+                console.error(err);
+                Alert.alert('Error', 'Failed to save split.');
+            }
+        })
     };
 
     useEffect(() => {
@@ -170,7 +172,10 @@ export default function CreateSplit(){
                 placeholderTextColor="#aaa"
                 keyboardType="numeric"
                 value={weeksDuration}
-                onChangeText={setWeeksDuration}
+                onChangeText={(text) => {
+                    const numericOnly = text.replace(/[^0-9]/g, ''); // ⬅ removes non-digits
+                    setWeeksDuration(numericOnly);
+                }}            
             />
             <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
                 <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
