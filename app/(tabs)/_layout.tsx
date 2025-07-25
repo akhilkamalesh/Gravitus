@@ -19,7 +19,7 @@ export default function TabLayout() {
           shadowRadius: 10,
         },
         tabBarIcon: ({ focused }) => {
-          let iconName = 'home';
+          let iconName = '';
           if (route.name === 'index') iconName = 'home';
           else if (route.name === 'two') iconName = 'barbell';
           else if (route.name === 'settings') iconName = 'settings';
@@ -40,9 +40,18 @@ export default function TabLayout() {
         },
       })}
     >
-      <Tabs.Screen name="index" />
+      <Tabs.Screen name="index"/>
       <Tabs.Screen name="two" />
       <Tabs.Screen name="settings"/>
+      <Tabs.Screen name="(trainingSplits)/[id]" options={{href:null,}}/>
+      <Tabs.Screen name="(trainingSplits)/trainingSplits" options={{href:null,}}/>
+      <Tabs.Screen name="(trainingSplits)/create" options={{href:null,}}/>
+      <Tabs.Screen name="(history)/[id]" options={{href:null,}}/>
+      <Tabs.Screen name="(history)/history" options={{href:null,}}/>
+      <Tabs.Screen name="(settings)/accountCenter" options={{href:null,}}/>
+      <Tabs.Screen name="(settings)/privacyPolicy" options={{href:null,}}/>
+      <Tabs.Screen name="(exercises)/[id]" options={{href:null,}}/>
+      <Tabs.Screen name="(exercises)/exercises" options={{href:null,}}/>
     </Tabs>
   );
 }
