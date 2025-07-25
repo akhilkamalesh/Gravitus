@@ -16,8 +16,6 @@ Two:
     - User is able to track their workout
 - Bugs:
     - Because of useFocusEffect, the component always refreshes, thus losing "today's workout"
-    - Functional Addition:
-        - There should be a skip workout day functionality
 
 Tab Bar;
 - Purpose:

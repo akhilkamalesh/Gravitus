@@ -5,9 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 type Props = {
   onChangeSplit?: () => void;
   onTryNewWorkout?: () => void;
+  onSkipWorkout?: () => void;
 };
 
-export default function EditButton({ onChangeSplit, onTryNewWorkout }: Props) {
+export default function EditButton({ onChangeSplit, onTryNewWorkout, onSkipWorkout }: Props) {
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -27,10 +28,15 @@ export default function EditButton({ onChangeSplit, onTryNewWorkout }: Props) {
     confirmAction('Try New Workout', 'Start a brand new workout plan?', () => {
       setModalVisible(false);
       if(onTryNewWorkout) onTryNewWorkout();
-      console.log('Trying new workout');
-      // TODO: Try new workout logic
     });
   };
+
+  const handleSkipWorkout = () => {
+    confirmAction('Skip New Workout', 'Are you sure you want to skip this workout', () => {
+      setModalVisible(false);
+      if(onSkipWorkout) onSkipWorkout();
+    })
+  }
 
   return (
     <>
@@ -53,6 +59,9 @@ export default function EditButton({ onChangeSplit, onTryNewWorkout }: Props) {
             </Pressable>
             <Pressable onPress={handleTryNewWorkout} style={styles.option}>
               <Text style={styles.optionText}>Try New Workout</Text>
+            </Pressable>
+            <Pressable onPress={handleSkipWorkout} style={styles.option}>
+              <Text style={styles.optionText}>Skip This Workout</Text>
             </Pressable>
 
             <Pressable onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>

@@ -10,9 +10,10 @@ type Props = {
   showEditButton?: boolean;
   onChangeSplit?: () => void;
   onTryNewWorkout?: () => void;
+  onSkipWorkout?: () => void;
 }
 
-export default function GravitusHeader({showBackButton = false, showEditButton = false, onChangeSplit, onTryNewWorkout}: Props) {
+export default function GravitusHeader({showBackButton = false, showEditButton = false, onChangeSplit, onTryNewWorkout, onSkipWorkout}: Props) {
   const router = useRouter();
 
   return (
@@ -30,6 +31,7 @@ export default function GravitusHeader({showBackButton = false, showEditButton =
         <EditButton
           onChangeSplit={onChangeSplit}
           onTryNewWorkout={onTryNewWorkout}
+          onSkipWorkout={onSkipWorkout}
         />
       )}
     </View>

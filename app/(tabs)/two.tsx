@@ -278,6 +278,9 @@ export default function TodayWorkoutScreen() {
         onChangeSplit={()=>{
           router.push('../(trainingSplits)/trainingSplits')
         }}
+        onSkipWorkout={async () => {
+          await incrementDayIndex();
+        }}
       />      
       {/* Workout complete modal */}
       <WorkoutCompleteModal
