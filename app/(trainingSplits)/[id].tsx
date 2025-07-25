@@ -34,6 +34,7 @@ export default function SplitDetailScreen(){
               console.log("Doc Ref ID is:", docRefId);
               await updateCurrentSplit(docRefId)
               await resetDayIndex();
+              router.back();
             } catch (err) {
               console.error("Error saving split:", err);
             }

@@ -1,16 +1,3 @@
-Index Screen:
-- Purpose:
-    - Home page that displays different floating boxes corresponding to different functionalities of the application
-
-        Training Splits [id]:
-        - Purpose:
-            - Able to view current split
-            - Able to view predefined splits
-        - Bugs:
-            - When clearing split for current split, doesn't trigger refresh when routing back to split screen (old screen is still mounted)
-            - When saving predefined split, there should be a pop up confirming that split has been saved and automatically routes back to index 
-            or trainingSplits screen
-
 Tab Bar;
 - Purpose:
     - Able to route to main screens: index, two, settings

@@ -9,8 +9,6 @@ import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/
 import SaveButton from '@/components/saveButton';
 import { useRouter } from 'expo-router';
 import ExerciseSearchModal from '@/components/FilterModal';
-import { useRoute } from '@react-navigation/native';
-import { useFocusEffect } from '@react-navigation/native';
 import WorkoutCompleteModal from '@/components/CompleteModal';
 
 

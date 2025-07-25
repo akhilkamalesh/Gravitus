@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import FloatingCard from '@/components/floatingbox';
 import GravitusHeader from '@/components/title';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, ScrollView, Text, View, Button } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { getCurrentSplit, addSplitToTemplates, getSplits } from '@/lib/firestoreFunctions';
 import { Split } from '@/types/firestoreTypes';
 import { Feather } from '@expo/vector-icons';
@@ -20,29 +20,31 @@ export default function TrainingSplits() {
     await addSplitToTemplates(pushPullLegs);
   } 
 
-  useEffect(() => {
-    const fetchSplit = async () => {
-      try {
-        const split = await getCurrentSplit();
-        setCurrentSplit(split);
-      } catch (err) {
-        console.error("Failed to fetch current split:", err);
-      }
-    };
 
-    const fetchSplits = async () => {
-      try{
-        const splits = await getSplits();
-        if(splits){
-          setSplits(splits)
+  useFocusEffect(
+    useCallback(() => {
+      const fetchSplit = async () => {
+        try {
+          const split = await getCurrentSplit();
+          setCurrentSplit(split);
+        } catch (err) {
+          console.error("Failed to fetch current split:", err);
         }
-      }catch (err){
-        console.error(err)
+      };
+  
+      const fetchSplits = async () => {
+        try{
+          const splits = await getSplits();
+          if(splits){
+            setSplits(splits)
+          }
+        }catch (err){
+          console.error(err)
+        }
       }
-    }
-    fetchSplit();
-    fetchSplits();
-  }, []);
+      fetchSplit();
+      fetchSplits();
+    }, []));
 
   console.log(currentSplit)
   console.log(splits)
