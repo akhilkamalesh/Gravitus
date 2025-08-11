@@ -1,6 +1,0 @@
-Tab Bar;
-- Purpose:
-    - Able to route to main screens: index, two, settings
-- Bugs:
-    - Tab bar is not available in subscreens...
-

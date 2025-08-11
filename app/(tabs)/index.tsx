@@ -49,9 +49,6 @@ export default function TabOneScreen() {
     )
   }
 
-
-  console.log("User Data: ", userData)
-
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader />
@@ -116,7 +113,7 @@ export default function TabOneScreen() {
             <Feather name="clock" size={28} color="white" />
           </FloatingCard>
 
-        <FloatingCard height={110} width="90%" onPress={() => router.push('/(trainingSplits)/trainingSplits')}>
+        <FloatingCard height={110} width="90%" onPress={() => router.push('/(tabs)/(trainingSplits)/trainingSplits')}>
           <Text style={styles.cardTitleSmall}>Training Splits</Text>
           <Feather name="grid" size={28} color="white" />
         </FloatingCard>

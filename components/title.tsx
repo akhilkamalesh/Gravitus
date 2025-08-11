@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, StyleSheet, View, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import EditButton from './clearButton';
 import { useRouter } from 'expo-router';
@@ -11,18 +10,34 @@ type Props = {
   onChangeSplit?: () => void;
   onTryNewWorkout?: () => void;
   onSkipWorkout?: () => void;
-}
+  /** Where to send the user if there's nothing to pop */
+  fallbackPath?: string; // e.g. '/(tabs)/index' or '/(tabs)/(history)/history'
+};
 
-export default function GravitusHeader({showBackButton = false, showEditButton = false, onChangeSplit, onTryNewWorkout, onSkipWorkout}: Props) {
+export default function GravitusHeader({
+  showBackButton = false,
+  showEditButton = false,
+  onChangeSplit,
+  onTryNewWorkout,
+  onSkipWorkout,
+  fallbackPath = '/(tabs)/index',
+}: Props) {
   const router = useRouter();
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      console.log("Here????")
+      router.back();
+    } else {
+      // replace avoids stacking another copy of the fallback
+      router.replace('/(tabs)/index');
+    }
+  };
 
   return (
     <View style={styles.wrapper}>
       {showBackButton && (
-        <Pressable onPress={() => {
-          router.back();
-        }} 
-        style={styles.backButton}>
+        <Pressable onPress={handleBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </Pressable>
       )}

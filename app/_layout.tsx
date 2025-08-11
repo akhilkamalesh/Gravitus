@@ -52,6 +52,8 @@ function AuthGate() {
         ) : (
           <Stack.Screen name="(auth)/auth" />
         )}
+        {/* <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(auth)/auth" /> */}
       </Stack>
     </ThemeProvider>
   );

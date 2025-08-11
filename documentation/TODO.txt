@@ -2,8 +2,6 @@ MVP 1 TODO
 
 Based off Screens/Components:
 
-Fix Bugs
-
 Data:
 - Consolidate data entries to either be plural or singular for all (consistency)
 

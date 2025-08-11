@@ -47,6 +47,7 @@ export default function HistoryScreen() {
           continue;
         }
         arr.push(log.splitId)
+        console.log("testing")
         await fetchSplitName(log.splitId);
       }
     };
@@ -81,7 +82,7 @@ export default function HistoryScreen() {
               key={workout.id}
               height={70}
               width="90%"
-              onPress={() => router.push(`/(history)/${workout.id}`)}
+              onPress={() => router.push(`/(tabs)/(history)/${workout.id}`)}
             >
               <View style={styles.loggedRow}>
                 <Text style={styles.loggedRowText}>{workout.date.substring(0, 10)}</Text>
