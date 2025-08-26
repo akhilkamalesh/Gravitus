@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { authInstance, firestoreInstance } from './firebase';
 import { FirebaseUser, FirestoreUserData } from '@/types/firestoreTypes';
-import { signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import { doc, getDoc } from '@react-native-firebase/firestore';
 
 interface AuthContextProps {
   user: FirebaseUser | null;
@@ -20,13 +21,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = authInstance.onAuthStateChanged(async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(authInstance, async (firebaseUser) => {
       console.log('Auth state changed:', firebaseUser?.email ?? 'no user');
 
       setUser(firebaseUser);
 
       if (firebaseUser) {
-        const userDoc = await firestoreInstance.collection('users').doc(firebaseUser.uid).get();
+        // const userDoc = await firestoreInstance.collection('users').doc(firebaseUser.uid).get();
+        const userDo = doc(firestoreInstance, 'users', firebaseUser.uid);
+        const userDoc = await getDoc(userDo)
         setUserData(userDoc.exists() ? (userDoc.data() as FirestoreUserData) : null);
       } else {
         setUserData(null);

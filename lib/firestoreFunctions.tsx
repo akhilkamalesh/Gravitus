@@ -3,12 +3,13 @@ import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTime
 import { Exercise, ExerciseLog, ExerciseStat, workout } from "@/types/firestoreTypes";
 import auth, { updateEmail } from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
+import ExerciseSearchModal from "@/components/FilterModal";
 
 
 // Loads all exercises from the database
 export const getExercises = async (): Promise<Exercise[]> => {
     try{
-        const snapshot = await getDocs(firestoreInstance.collection('exercises'));
+        const snapshot = await getDocs(collection(firestoreInstance, 'exercises'));
         const exercises: Exercise[] = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
@@ -55,8 +56,9 @@ export const getExerciseGroups = async (): Promise<string[]> => {
 // Loads splits based off ID (only for splitTemplates)
 export const getSplit = async (splitId: string): Promise<Split | null> => {
     try {
-        const docRef = firestoreInstance.collection('splitTemplates').doc(splitId);
-        const docSnap = await docRef.get();
+        const docRef = doc(firestoreInstance, "splitTemplates", splitId);
+        // const docRef = firestoreInstance.collection('splitTemplates').doc(splitId);
+        const docSnap = await getDoc(docRef)
 
         console.log("docsnap is: ", docSnap.data)
     
@@ -99,7 +101,7 @@ export const getSplitInformation = async (split: Split): Promise <Split> => {
     split.workouts.map(async (workout) => {
       const enrichedExercises = await Promise.all(
         workout.exercises.map(async (exercise) => {
-          const docRef = firestoreInstance.collection('exercises').doc(exercise.exerciseId);
+          const docRef = doc(firestoreInstance, 'exercises', exercise.exerciseId);
           const docSnap = await getDoc(docRef);
           return {
             ...exercise,
@@ -123,7 +125,7 @@ export const getSplitInformation = async (split: Split): Promise <Split> => {
 
 // Save split to user
 export const saveSplitToUser = async (split: Split) => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if(!user) throw new Error("User not logged in") // This error should never happen
 
   const { id, ...splitData } = split;
@@ -142,7 +144,7 @@ export const saveSplitToUser = async (split: Split) => {
 
 // Save custom workout to a one-off split
 export const saveOneOffSplitToUser = async (split: Split) => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error("User not logged in");
 
   const oneOffSplitId = generateOneOffSplitId();
@@ -165,7 +167,7 @@ export const saveOneOffSplitToUser = async (split: Split) => {
 
 // Save splitId to currentSplitId attribute under user
 export const updateCurrentSplit = async (splitId: string) => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const userDocRef = doc(firestoreInstance, 'users', user.uid);
@@ -176,7 +178,7 @@ export const updateCurrentSplit = async (splitId: string) => {
 
 // Retrieves the current split
 export const getCurrentSplit = async (): Promise<Split | null> => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   // Step 1: Get currentSplitId from user document
@@ -197,7 +199,7 @@ export const getCurrentSplit = async (): Promise<Split | null> => {
 
 // Gets todays workout
 export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } | null> => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;;
   if (!user) throw new Error('User not authenticated');
 
   const uid = user.uid;
@@ -230,7 +232,7 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
 
 // Increment Day Index (want to keep the actual number and modulate in the previous function)
 export const incrementDayIndex = async () => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const userRef = doc(firestoreInstance, 'users', user.uid);
@@ -243,7 +245,7 @@ export const incrementDayIndex = async () => {
 
 // Reset Day Index (when switching to another split)
 export const resetDayIndex = async () => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const userRef = doc(firestoreInstance, 'users', user.uid);
@@ -252,7 +254,7 @@ export const resetDayIndex = async () => {
 
 // Log workout for the day
 export const logWorkout = async (exerciseLog: ExerciseLog) => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const logsRef = collection(firestoreInstance, 'users', user.uid, 'logs');
@@ -284,7 +286,7 @@ export const getLoggedWorkouts = async (): Promise<ExerciseLog[]> => {
 
 // Get logged workout based on id
 export const getLoggedWorkoutById = async (logId: string): Promise<ExerciseLog> => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   // Reference to the specific log document
@@ -303,7 +305,7 @@ export const getLoggedWorkoutById = async (logId: string): Promise<ExerciseLog> 
 
 // Gets split information based on SplitID
 export const getSplitBySplitId = async (splitId:string): Promise<Split | null> => {
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const splitRef = doc(firestoreInstance, 'users', user.uid, 'splits', splitId);
@@ -322,7 +324,7 @@ export const getSplitBySplitId = async (splitId:string): Promise<Split | null> =
 // Clear Current Split
 export const clearCurrentSplit = async() => {
 
-  const user = auth().currentUser;
+  const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const userRef = doc(firestoreInstance, 'users', user.uid)
@@ -346,6 +348,7 @@ export const checkWorkoutStatus = async () => {
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
   const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
+
 
   const q = query(logsRef,
     where('date', '>=', todayISO),
@@ -498,7 +501,8 @@ export const deleteAccount = async () => {
   if (!user) throw new Error('User not authenticated');
 
   // Delete User Data
-  await firestoreInstance.collection('users').doc(user.uid).delete();
+  // await firestoreInstance.collection('users').doc(user.uid).delete();
+  await deleteDoc(doc(firestoreInstance, 'users', user.uid));  
 
   const logsCollectionRef = collection(firestoreInstance, 'users', user.uid, 'logs');
   const logsSnapshot = await getDocs(logsCollectionRef);
