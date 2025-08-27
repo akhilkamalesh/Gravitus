@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { authInstance, firestoreInstance } from './firebase';
 import { FirebaseUser, FirestoreUserData } from '@/types/firestoreTypes';
-import { onAuthStateChanged, signInWithEmailAndPassword } from '@react-native-firebase/auth';
-import { doc, getDoc } from '@react-native-firebase/firestore';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import { collection, doc, getDoc } from '@react-native-firebase/firestore';
 
 interface AuthContextProps {
   user: FirebaseUser | null;
@@ -47,13 +47,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, name: string) => {
     try{
-      const userCredential = await authInstance.createUserWithEmailAndPassword(email, password);
+      const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
+      // const userCredential = await authInstance.createUserWithEmailAndPassword(email, password);
       const uid = userCredential.user.uid;
-      await firestoreInstance.collection('users').doc(uid).set({
+      await collection(firestoreInstance, 'users').doc(uid).set({
         name,
         email,
         currentSplitId: '',
       });
+      // await firestoreInstance.collection('users').doc(uid).set({
+      //   name,
+      //   email,
+      //   currentSplitId: '',
+      // });
     }catch(err){
       console.log(err)
     }
@@ -61,6 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     await authInstance.signOut();
+    // await authInstance.signOut();
   };
 
   return (
