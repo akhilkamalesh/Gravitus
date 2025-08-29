@@ -109,6 +109,11 @@ export default function TodayWorkoutScreen() {
     }
     try {
       // Log Workout
+      if(await checkWorkoutStatus() == true){
+        Alert.alert('Cannot Save', 'Workout is already done!')
+        return;
+      }
+
       logWorkout(loggedExercises);
       // Then call increment here
       if(!isStartingFresh){

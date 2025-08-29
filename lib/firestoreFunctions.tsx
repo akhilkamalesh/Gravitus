@@ -210,7 +210,7 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
   const userData = userSnap.data();
 
   const currentSplitId = userData?.currentSplitId;
-  const currentDayIndex = userData?.currentDayIndex || 0;
+  let currentDayIndex = userData?.currentDayIndex || 0;
 
   // If a workout has already been done today, return the logged one
   // Logic is deleted, to get it back, reset to previous git commit
@@ -224,7 +224,14 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
   if (!currentSplitSnap.exists()) return null;
 
   const split = { id: currentSplitSnap.id, ...currentSplitSnap.data() } as Split;
+
+  if(await checkWorkoutStatus() == true){
+    console.log("workout has been completed")
+    currentDayIndex -= 1;
+  }
   const workout = split.workouts[currentDayIndex % split.workouts.length];
+
+  console.log(workout)
 
   return { split, workout };
 };
@@ -361,7 +368,7 @@ export const checkWorkoutStatus = async () => {
 }
 
 // Gets previous workout statistics (used in getTodayWorkout function)
-const getPrevWorkoutStat = async (): Promise<ExerciseLog | null> => {
+export const getPrevWorkoutStat = async (): Promise<ExerciseLog | null> => {
   const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
 
   const user = authInstance.currentUser;

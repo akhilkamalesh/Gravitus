@@ -7,7 +7,7 @@ import GravitusHeader from '@/components/title';
 import FloatingCard from '@/components/floatingbox';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { workout } from '@/types/firestoreTypes';
-import { checkWorkoutStatus, getTodayWorkout, getWorkoutCountPerWeek } from '@/lib/firestoreFunctions';
+import { checkWorkoutStatus, getPrevWorkoutStat, getTodayWorkout, getWorkoutCountPerWeek } from '@/lib/firestoreFunctions';
 import { estimateWorkoutTime } from '@/lib/otherFunctions';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
@@ -27,7 +27,11 @@ export default function TabOneScreen() {
     useCallback(() => {
       const fetchWorkout = async () => {
         if (await checkWorkoutStatus()) {
+          console.log("inside")
           setStatus(true);
+          const workoutStat = await getPrevWorkoutStat();
+          console.log("workout is: ", workoutStat)
+          // setWorkout(workout);
           // return;
         }
   
