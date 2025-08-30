@@ -1,1 +1,1 @@
-Today's workout changes to tomorrow's workout after pressing save workout
+Consolidate exercisefilterbar and FilterModal - or rename and understand what they do

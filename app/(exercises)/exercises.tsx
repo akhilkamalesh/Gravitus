@@ -24,16 +24,6 @@ export default function Exercises() {
     );
   };
 
-  // const addExercises = async () => {
-  //   await addExercisesToExerciseList(allExerciseData);
-  // }
-
-  // const deleteExercises = async () => {
-  //   await deleteAllExercises();
-  // }
-
-  // 
-
   useEffect(() => {
     const loadExercises = async () => {
       const data = await getExercises();

@@ -50,7 +50,7 @@ function AuthGate() {
         {user ? (
           <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }}/>
         ) : (
-          <Stack.Screen name="(auth)/auth" />
+          <Stack.Screen name="(auth)/auth" options={{ gestureEnabled: false }}/>
         )}
       </Stack>
     </ThemeProvider>

@@ -1,0 +1,14 @@
+Questions to ask to form a product risk registry on an existing product:
+- Where are there areas of ambiguity or uncertainty as to how the solution should function
+- Where are there complexities, or things that are difficult to understand and comprehend
+- What required functionality has not been created or tested with an end user
+- What is blocking the end-user from achieving their desired objectives
+- Where are there aspects or characteristics of the solution that would cause it to fail
+- Where are we not clear abou whether or not the user would react positively
+- What solution features or workflows are still pain points for the end user
+
+Product risks can be identified as large segments of the user workflow, or even at the individual feature level
+Risks should be framed as implementation free description of the underlying problem
+    - This specific feature is difficult or cumbersome for the user to navigate through and use
+    - There is a missing part of the solution's workflow that is necessary for the user to achieve their goal and solve their problem
+    

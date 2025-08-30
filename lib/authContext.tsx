@@ -2,7 +2,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { authInstance, firestoreInstance } from './firebase';
 import { FirebaseUser, FirestoreUserData } from '@/types/firestoreTypes';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from '@react-native-firebase/auth';
-import { collection, doc, getDoc } from '@react-native-firebase/firestore';
+import { collection, doc, getDoc, setDoc } from '@react-native-firebase/firestore';
+import { emailList } from '@/jsonData/emailList';
+import { Alert } from 'react-native';
 
 interface AuthContextProps {
   user: FirebaseUser | null;
@@ -47,21 +49,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, name: string) => {
     try{
+      //if email not in emailList: reject
+      if(!emailList.includes(email)){
+        Alert.alert('Email Not Included', 'Not authorized to use the app');
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
       // const userCredential = await authInstance.createUserWithEmailAndPassword(email, password);
       const uid = userCredential.user.uid;
-      await collection(firestoreInstance, 'users').doc(uid).set({
-        name,
-        email,
-        currentSplitId: '',
-      });
-      // await firestoreInstance.collection('users').doc(uid).set({
+      // await collection(firestoreInstance, 'users').doc(uid).set({
       //   name,
       //   email,
       //   currentSplitId: '',
       // });
+      // then when saving a user:
+      await setDoc(doc(firestoreInstance, 'users', uid), {
+        name,
+        email,
+        currentSplitId: '',
+      });
+
     }catch(err){
-      console.log(err)
+      console.error(err)
     }
   };
 
