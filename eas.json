@@ -4,11 +4,6 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "ios": {
-      "hooks": {
-        "prebuild": "node scripts/inject-firebase-config.cjs"
-      }
-    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
@@ -20,6 +15,7 @@
       "autoIncrement": true
     }
   },
+  
   "submit": {
     "production": {}
   }
