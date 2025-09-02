@@ -39,3 +39,5 @@ yarn-error.*
 GoogleService-Info.plist
 
 jsonData/emailList.tsx
+
+.env

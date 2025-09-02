@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/GravitusHeader';
 import { getExercises, getTodayWorkout, incrementDayIndex, logWorkout, generateOneOffSplitId, checkWorkoutStatus, getLogsByExerciseId, saveOneOffSplitToUser } from '@/lib/firestoreFunctions';
 import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
-import SaveButton from '@/components/SaveButton';
+import SaveButton from "@/components/SaveButton";
 import { useRouter } from 'expo-router';
 import ExerciseSearchModal from '@/components/ExerciseSearchModal';
 import WorkoutCompleteModal from '@/components/CompleteModal';

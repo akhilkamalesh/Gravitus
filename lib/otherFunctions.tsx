@@ -1,5 +1,6 @@
 // Estimated workout time
 import { ExerciseLog, ExerciseStat } from "@/types/firestoreTypes";
+import Constants from 'expo-constants';
 
 export const estimateWorkoutTime = (exerciseCount: number, totalSets: number): string => {
     const secondsPerSet = 60; // average effort + rest per set
@@ -64,3 +65,14 @@ export function getHighestVolumeSet(stat: ExerciseStat): { weight: number; reps:
   
     return maxVolumeSet;
   }
+
+function getAllowlist(): string[] {
+  const raw = (Constants.expoConfig?.extra as any)?.EMAIL_ALLOWLIST || '';
+  return String(raw)
+    .split(',')
+    .map(s => s.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+export const emailAllowlist = getAllowlist();
+export const emailAllowSet = new Set(emailAllowlist);
