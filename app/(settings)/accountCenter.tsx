@@ -34,10 +34,10 @@ export default function AccountCenter(){
         confirmAction("Delete Account", "Are you sure you want to delete", async () => {
             try{
                 await deleteAccount()
-                console.log("Deleted Account")
+                Alert.alert("Account is deleted :(")
                 router.replace("../(auth)/auth")
             }catch (err){
-                console.log("Error in deleting account")
+                console.error("Error in deleting account")
             }
         });
     }

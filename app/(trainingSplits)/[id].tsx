@@ -31,7 +31,6 @@ export default function SplitDetailScreen(){
             if (!split) return;
             try {
               const docRefId = await saveSplitToUser(split);
-              console.log("Doc Ref ID is:", docRefId);
               await updateCurrentSplit(docRefId)
               await resetDayIndex();
               router.back();
@@ -57,7 +56,6 @@ export default function SplitDetailScreen(){
 
     useEffect(() => {
         if (typeof id !== 'string'){
-            console.log('not a string')
             return;
         } 
 
@@ -82,7 +80,6 @@ export default function SplitDetailScreen(){
         fetchSplit();
     }, [id]) // id is the dependency array, only run when this changes    
 
-    console.log(rawSplit)
     const workouts = split?.workouts;
 
     return (

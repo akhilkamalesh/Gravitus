@@ -46,9 +46,6 @@ export default function TrainingSplits() {
       fetchSplits();
     }, []));
 
-  console.log(currentSplit)
-  console.log(splits)
-
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showBackButton={true} />

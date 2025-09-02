@@ -69,6 +69,7 @@ export default function HistoryDetailScreen() {
       );
 
       const enriched = results.map((r) => r.enriched);
+
       // Aggregate sets by muscle group
       const statsMap: { [muscle: string]: number } = {};
       for (const { stats } of results) {
@@ -83,7 +84,6 @@ export default function HistoryDetailScreen() {
       setEnrichedExercises(enriched);
       setPieChartInfo(aggregatedStats);
     };
-
 
     fetchSplitById();
     enrichExercises();

@@ -100,11 +100,8 @@ export default function TodayWorkoutScreen() {
 
   const handleSave = async () => {
 
-    console.log("Handle Save is called");
-    console.log(loggedExercises);
-
     if(!loggedExercises){
-      console.log('Exercises not logged')
+      Alert.alert('Cannot Save', 'Nothing has been inputted')
       return;
     }
     try {
@@ -135,7 +132,6 @@ export default function TodayWorkoutScreen() {
     }
     const w = await getTodayWorkout()
     if(!w){
-      console.log('Workout not found')
       // This needs to be the same as the current split
       const newSplit: Split = {
         id: generateOneOffSplitId(),
@@ -220,14 +216,11 @@ export default function TodayWorkoutScreen() {
           continue;
         }
 
-        console.log(e.exerciseId, ": ", log)
-
         let date = '';
 
         // Has to grab the sets from that first date
         for(const set of log.sets){
           if(date === ''){
-            console.log(set);
             date = set.date;
             arr[log.exerciseId] = [];
             arr[log.exerciseId].push(set);

@@ -57,8 +57,6 @@ export const getSplit = async (splitId: string): Promise<Split | null> => {
         const docRef = doc(firestoreInstance, "splitTemplates", splitId);
         // const docRef = firestoreInstance.collection('splitTemplates').doc(splitId);
         const docSnap = await getDoc(docRef)
-
-        console.log("docsnap is: ", docSnap.data)
     
         if (docSnap.exists()) {
           const data = docSnap.data();
@@ -224,12 +222,9 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
   const split = { id: currentSplitSnap.id, ...currentSplitSnap.data() } as Split;
 
   if(await checkWorkoutStatus() == true){
-    console.log("workout has been completed")
     currentDayIndex -= 1;
   }
   const workout = split.workouts[currentDayIndex % split.workouts.length];
-
-  console.log(workout)
 
   return { split, workout };
 };
@@ -526,17 +521,12 @@ export const deleteAccount = async () => {
 // Admin Functions - Add Exercise to Exercise List
 export const addExercisesToExerciseList = async (exerciseList:Exercise[]) => {
 
-    console.log("Function called")
-
     const firestoreExercises = collection(firestoreInstance, "exercises");
-
-    console.log(firestoreExercises)
 
     for(const exercise of exerciseList){
       try {
         const exerciseRef = doc(firestoreExercises, exercise.id); // Use 'id' as document ID
-        await setDoc(exerciseRef, exercise);
-        console.log('Set exercise with ID:', exercise.id);
+        await setDoc(exerciseRef, exercise); 
       } catch (err) {
         console.error('Error setting exercise:', err);
       }
@@ -556,7 +546,6 @@ export const deleteAllExercises = async () => {
 
     await Promise.all(deletePromises);
 
-    console.log(`Deleted ${deletePromises.length} exercise(s).`);
   } catch (error) {
     console.error('Error deleting exercises:', error);
     throw error;
@@ -571,9 +560,9 @@ export const addSplitToTemplates = async (split:Split) => {
   try {
     const { id, ...rest } = split;
     await setDoc(doc(splitTemplates, id), rest);
-    console.log('Set exercise with ID:', "arnold");
+    
   }catch (err){
-    console.log(err)
+    console.error(err)
   }
 
 }
