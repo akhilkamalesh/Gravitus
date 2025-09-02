@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import FloatingCard from '@/components/floatingbox';
-import GravitusHeader from '@/components/title';
+import GravitusHeader from '@/components/GravitusHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, ScrollView, Text, View, Button } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';

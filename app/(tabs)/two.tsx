@@ -3,12 +3,12 @@ import { View, Text, TextInput, Pressable, ScrollView, StyleSheet, Alert } from 
 import FloatingCard from '@/components/floatingbox';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import GravitusHeader from '@/components/title';
-import { getCurrentSplit, getExercises, getSplitInformation, getTodayWorkout, incrementDayIndex, logWorkout, generateOneOffSplitId, checkWorkoutStatus, getLogsByExerciseId, saveSplitToUser, saveOneOffSplitToUser } from '@/lib/firestoreFunctions';
+import GravitusHeader from '@/components/GravitusHeader';
+import { getExercises, getTodayWorkout, incrementDayIndex, logWorkout, generateOneOffSplitId, checkWorkoutStatus, getLogsByExerciseId, saveOneOffSplitToUser } from '@/lib/firestoreFunctions';
 import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/firestoreTypes';
-import SaveButton from '@/components/saveButton';
+import SaveButton from '@/components/SaveButton';
 import { useRouter } from 'expo-router';
-import ExerciseSearchModal from '@/components/FilterModal';
+import ExerciseSearchModal from '@/components/ExerciseSearchModal';
 import WorkoutCompleteModal from '@/components/CompleteModal';
 
 

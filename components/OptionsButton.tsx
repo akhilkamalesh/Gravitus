@@ -8,7 +8,7 @@ type Props = {
   onSkipWorkout?: () => void;
 };
 
-export default function EditButton({ onChangeSplit, onTryNewWorkout, onSkipWorkout }: Props) {
+export default function OptionsButton({ onChangeSplit, onTryNewWorkout, onSkipWorkout }: Props) {
 
   const [modalVisible, setModalVisible] = useState(false);
 

@@ -4,9 +4,9 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { clearCurrentSplit, getSplit, getSplitBySplitId, getSplitInformation, resetDayIndex, saveSplitToUser, updateCurrentSplit } from "@/lib/firestoreFunctions";
 import { Split } from "@/types/firestoreTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GravitusHeader from "@/components/title";
+import GravitusHeader from "@/components/GravitusHeader";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import SaveButton from "@/components/saveButton";
+import SaveButton from "@/components/SaveButton";
 
 export default function SplitDetailScreen(){
 

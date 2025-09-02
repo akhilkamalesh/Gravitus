@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import FloatingCard from "@/components/floatingbox";
-import GravitusHeader from "@/components/title";
+import GravitusHeader from "@/components/GravitusHeader";
 import { Text, SafeAreaView, ScrollView, StyleSheet, View, Alert, TouchableOpacity } from "react-native";
 import AccountCenterModal from "@/components/AccountCenterModal";
 import { changeUserEmail, changeUserName, changeUserPassword, deleteAccount } from "@/lib/firestoreFunctions";

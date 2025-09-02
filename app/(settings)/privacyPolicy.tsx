@@ -1,6 +1,6 @@
 import React from "react";
 import { SafeAreaView, ScrollView, View, Text, StyleSheet } from "react-native";
-import GravitusHeader from "@/components/title";
+import GravitusHeader from "@/components/GravitusHeader";
 
 export default function PrivacyPolicy() {
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import GravitusHeader from '@/components/title';
+import GravitusHeader from '@/components/GravitusHeader';
 import { useLocalSearchParams } from 'expo-router';
 import { Exercise } from '@/types/firestoreTypes';
 import { getExerciseByID, getLogsByExerciseId } from '@/lib/firestoreFunctions';

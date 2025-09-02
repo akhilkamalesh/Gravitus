@@ -3,8 +3,6 @@ import { collection, getDoc, setDoc, getDocs, addDoc, updateDoc, doc, serverTime
 import { Exercise, ExerciseLog, ExerciseStat, workout } from "@/types/firestoreTypes";
 import auth, { updateEmail } from '@react-native-firebase/auth'
 import { Split } from "@/types/firestoreTypes";
-import ExerciseSearchModal from "@/components/FilterModal";
-
 
 // Loads all exercises from the database
 export const getExercises = async (): Promise<Exercise[]> => {

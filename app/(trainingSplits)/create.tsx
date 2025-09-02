@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Alert, TextInput, ScrollView, Pressable, KeyboardAvoidingView, Modal } from 'react-native';
 import FloatingCard from '@/components/floatingbox';
-import GravitusHeader from '@/components/title';
+import GravitusHeader from '@/components/GravitusHeader';
 import { Exercise, Split, workout, workoutExercise } from '@/types/firestoreTypes';
 import { saveSplitToUser, updateCurrentSplit, getExercises, getSplitInformation, resetDayIndex} from '@/lib/firestoreFunctions';
-import SaveButton from '@/components/saveButton';
+import SaveButton from '@/components/SaveButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import { useRouter } from 'expo-router';
-import ExerciseSearchModal from '@/components/FilterModal';
+import ExerciseSearchModal from '@/components/ExerciseSearchModal';
 
 export default function CreateSplit(){
 

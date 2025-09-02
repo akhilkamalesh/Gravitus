@@ -1,11 +1,11 @@
-import GravitusHeader from '@/components/title';
+import GravitusHeader from '@/components/GravitusHeader';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, Pressable, Text, View, ScrollView, Button } from 'react-native';
-import SearchBar from '@/components/searchBar';
-import FilterModal from '@/components/exerciseFilterBar';
+import SearchBar from '@/components/SearchBar';
+import MuscleGroupModal from '@/components/MuscleGroupModal';
 import { Feather } from '@expo/vector-icons';
-import { addExercisesToExerciseList, getExercises, deleteAllExercises, getExerciseGroups} from '@/lib/firestoreFunctions';
+import {getExercises, getExerciseGroups} from '@/lib/firestoreFunctions';
 import { Exercise } from '@/types/firestoreTypes';
 import FloatingCard from '@/components/floatingbox';
 import { router } from 'expo-router';
@@ -77,11 +77,9 @@ export default function Exercises() {
               </FloatingCard>
             ))}
         </View>
-        {/* <Button title={'dededed'} onPress={()=>{deleteExercises()}}></Button>
-        <Button title={'asdsa'} onPress={()=>{addExercises()}}></Button> */}
       </ScrollView>
 
-      <FilterModal
+      <MuscleGroupModal
         visible={modalVisible}
         selected={selectedGroups}
         options={groups}

@@ -3,11 +3,11 @@ import { StyleSheet, ScrollView, View, Text, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, useRouter } from 'expo-router';
 import { useAuth } from '@/lib/authContext';
-import GravitusHeader from '@/components/title';
+import GravitusHeader from '@/components/GravitusHeader';
 import FloatingCard from '@/components/floatingbox';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { workout } from '@/types/firestoreTypes';
-import { checkWorkoutStatus, getPrevWorkoutStat, getTodayWorkout, getWorkoutCountPerWeek } from '@/lib/firestoreFunctions';
+import { checkWorkoutStatus, getTodayWorkout, getWorkoutCountPerWeek } from '@/lib/firestoreFunctions';
 import { estimateWorkoutTime } from '@/lib/otherFunctions';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
@@ -21,18 +21,12 @@ export default function TabOneScreen() {
 
   const [status, setStatus] = useState<boolean>(false);
   const [workout, setWorkout] = useState<workout | null>(null);
-  // const [workoutCountPerWeek, setWorkoutCountPerWeek] = useState<{ date: string; count: number}[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       const fetchWorkout = async () => {
         if (await checkWorkoutStatus()) {
-          console.log("inside")
           setStatus(true);
-          const workoutStat = await getPrevWorkoutStat();
-          console.log("workout is: ", workoutStat)
-          // setWorkout(workout);
-          // return;
         }
   
         const w = await getTodayWorkout();
@@ -47,14 +41,10 @@ export default function TabOneScreen() {
   );
 
   if(user === null){
-    console.log("Here");
     return(
      <Redirect href="../(auth)/auth"/>
     )
   }
-
-
-  console.log("User Data: ", userData)
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -87,7 +77,7 @@ export default function TabOneScreen() {
                     workout ?
                     workout.exercises.reduce((sum, ex) => sum + ex.sets, 0) : 0
                   )} min
-              </Text>
+                </Text>
               </View>
             </View>
             )}
@@ -104,16 +94,6 @@ export default function TabOneScreen() {
         </FloatingCard>
 
         <SectionHeader title="Explore" />
-        {/* <View style={styles.row}>
-          <FloatingCard height={130} width={167} onPress={() => router.push('/(history)/history')}>
-            <Text style={styles.cardTitleSmall}>History</Text>
-            <Feather name="clock" size={28} color="white" />
-          </FloatingCard>
-          <FloatingCard height={130} width={167}>
-            <Text style={styles.cardTitleSmall}>Goals & PRs</Text>
-            <Feather name="target" size={28} color="white" />
-          </FloatingCard>
-        </View> */}
 
         <FloatingCard height={110} width="90%" onPress={() => router.push('/(history)/history')}>
             <Text style={styles.cardTitleSmall}>History</Text>

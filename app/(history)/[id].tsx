@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, Text, StyleSheet, ScrollView, View } from "react-native";
 import FloatingCard from "@/components/floatingbox";
-import GravitusHeader from "@/components/title";
+import GravitusHeader from "@/components/GravitusHeader";
 import { useLocalSearchParams } from "expo-router";
 import { ExerciseLog, Split, Exercise } from "@/types/firestoreTypes";
 import { getLoggedWorkoutById, getSplitBySplitId, getExerciseByID } from "@/lib/firestoreFunctions";

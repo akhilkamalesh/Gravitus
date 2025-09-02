@@ -1,7 +1,7 @@
 import React from "react";
 import { SafeAreaView, ScrollView, View, Text, StyleSheet } from "react-native";
 import FloatingCard from "@/components/floatingbox";
-import GravitusHeader from "@/components/title";
+import GravitusHeader from "@/components/GravitusHeader";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 

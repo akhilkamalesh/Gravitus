@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import GravitusHeader from "@/components/title";
+import GravitusHeader from "@/components/GravitusHeader";
 import FloatingCard from "@/components/floatingbox";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { ExerciseLog } from "@/types/firestoreTypes";
 import { getLoggedWorkouts, getSplitBySplitId } from "@/lib/firestoreFunctions";
-import SearchBar from "@/components/searchBar";
+import SearchBar from "@/components/SearchBar";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import FilterModal from '@/components/exerciseFilterBar';
+import MuscleGroupModal from '@/components/MuscleGroupModal';
 
 export default function HistoryScreen() {
   const router = useRouter();
@@ -94,7 +94,7 @@ export default function HistoryScreen() {
           ))}
       </ScrollView>
 
-      <FilterModal
+      <MuscleGroupModal
         visible={modalVisible}
         selected={selectedGroups}
         options={Object.values(splitNames)}

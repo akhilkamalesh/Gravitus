@@ -1,8 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, View, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import EditButton from './clearButton';
+import OptionsButton from './OptionsButton';
 import { useRouter } from 'expo-router';
 
 type Props = {
@@ -28,7 +27,7 @@ export default function GravitusHeader({showBackButton = false, showEditButton =
       )}
       <Text style={styles.text}>Gravitus</Text>
       {showEditButton && (
-        <EditButton
+        <OptionsButton
           onChangeSplit={onChangeSplit}
           onTryNewWorkout={onTryNewWorkout}
           onSkipWorkout={onSkipWorkout}

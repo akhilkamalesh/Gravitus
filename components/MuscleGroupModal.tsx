@@ -14,7 +14,7 @@ interface FilterModalProps {
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-const FilterModal = ({
+const MuscleGroupModal = ({
   visible,
   selected,
   options,
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FilterModal;
+export default MuscleGroupModal;
