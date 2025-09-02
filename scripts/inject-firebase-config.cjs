@@ -2,17 +2,19 @@
 const fs = require('fs');
 const path = require('path');
 
-function writeIfEnv(envName, outPath) {
+function writeFromEnv(envName, outPath) {
   const b64 = process.env[envName];
-  if (!b64) return false;
+  if (!b64) {
+    console.error(`[inject-firebase-config] Missing env var: ${envName}`);
+    process.exit(1); // Fail the build early if not provided
+  }
   const buf = Buffer.from(b64, 'base64');
   fs.writeFileSync(path.join(process.cwd(), outPath), buf);
-  console.log(`Wrote ${outPath} from ${envName}`);
-  return true;
+  console.log(`[inject-firebase-config] Wrote ${outPath} (${buf.length} bytes)`);
 }
 
-// iOS
-writeIfEnv('GOOGLE_SERVICE_INFO_PLIST_BASE64', 'GoogleService-Info.plist');
+// iOS Firebase config
+writeFromEnv('GOOGLE_SERVICE_INFO_PLIST_BASE64', 'GoogleService-Info.plist');
 
-// Android (optional)
-// writeIfEnv('GOOGLE_SERVICES_JSON_BASE64', 'google-services.json');
+// Android Firebase config (optional — only if you set this secret too)
+// writeFromEnv('GOOGLE_SERVICES_JSON_BASE64', 'google-services.json');
