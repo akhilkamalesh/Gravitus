@@ -3,6 +3,10 @@ import 'dotenv/config';
 
 export default ({ config }: any) => ({
   ...config,
+  ios: {
+    ...(config.ios || {}),
+    googleServicesFile: './GoogleService-Info.plist',
+  },
   extra: {
     ...(config.extra || {}),
     // This will be embedded into the app at build time
