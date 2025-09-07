@@ -4,6 +4,7 @@ import { ConfigContext, ExpoConfig } from '@expo/config';
 
 export default ({ config }: any) => ({
   ...config,
+  icon: "./assets/GravitusIcon.png", // path to your 1024x1024 icon
   ios: {
     ...(config.ios || {}),
     googleServicesFile: './GoogleService-Info.plist',
