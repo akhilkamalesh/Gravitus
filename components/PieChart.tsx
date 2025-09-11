@@ -4,6 +4,8 @@ import { PieChart } from 'react-native-chart-kit';
 
 const screenWidth = Dimensions.get('window').width;
 
+// TODO: Create map for muscle group to colors with similar groups being colored similar shades
+
 const colors = [
     '#4FD6EA', // Vibrant cyan (base)
     '#EA4F9C', // Muted magenta-pink
