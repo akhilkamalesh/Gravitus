@@ -71,6 +71,7 @@ export default function TodayWorkoutScreen() {
       exercises: [...todayWorkout.exercises, newExercise],
     };
   
+    // Update log here when adding an exercise
     const updatedLog: ExerciseLog = {
       ...loggedExercises,
       exercises: [
@@ -88,11 +89,16 @@ export default function TodayWorkoutScreen() {
     setSearchQuery('');
   };
   
-
+  // TODO: Need to update loggedExercises to be updated here as well
   const deleteExercise = (exerciseIndex: number) => {
-    if(todayWorkout?.exercises != null && todayWorkout?.exercises.length > 1){
+    if(todayWorkout?.exercises != null && todayWorkout?.exercises.length > 1 && loggedExercises){
       const updated = todayWorkout.exercises.filter((_, index) => index !== exerciseIndex);
       setTodayWorkout({ ...todayWorkout, exercises: updated });    
+      const updatedLog: ExerciseLog = {
+        ...loggedExercises,
+        exercises: loggedExercises.exercises.filter((_, index) => index !== exerciseIndex),
+      };
+      setLoggedExercises(updatedLog);
     }else{
       Alert.alert("Cannot delete only exercise")
     }
