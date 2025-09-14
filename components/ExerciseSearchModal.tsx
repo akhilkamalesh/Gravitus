@@ -34,7 +34,8 @@ const ExerciseSearchModal = ({visible, onClose, searchQuery, setSearchQuery, exe
               .map((exercise) => (
                 <Pressable
                   key={exercise.id}
-                  onPress={() => onSelectExercise(exercise.id)}
+                  onPress={() => {
+                    onSelectExercise(exercise.id)}}
                   style={styles.searchItem}
                 >
                   <Text style={styles.searchItemText}>{exercise.name}</Text>

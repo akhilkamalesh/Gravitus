@@ -221,9 +221,7 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
 
   const split = { id: currentSplitSnap.id, ...currentSplitSnap.data() } as Split;
 
-  if(await checkWorkoutStatus() == true){
-    currentDayIndex -= 1;
-  }
+  // Removed checkWorkoutStatus() checker since this is accounted for in workoutService.tsx
   const workout = split.workouts[currentDayIndex % split.workouts.length];
 
   return { split, workout };
