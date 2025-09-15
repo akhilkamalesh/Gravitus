@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
+import { getExerciseGroups } from '@/lib/firestoreFunctions';
 
 const screenWidth = Dimensions.get('window').width;
 
 // TODO: Create map for muscle group to colors with similar groups being colored similar shades
-
 const colors = [
     '#4FD6EA', // Vibrant cyan (base)
     '#EA4F9C', // Muted magenta-pink
