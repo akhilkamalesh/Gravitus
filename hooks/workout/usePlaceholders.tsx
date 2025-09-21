@@ -1,4 +1,5 @@
 // hooks/usePlaceholders.ts
+// TODO: need documentation
 import { useEffect, useState } from 'react';
 import { ExerciseLog } from '@/types/firestoreTypes';
 import { loadLastLogsByExercise } from '@/lib/orchestration/workoutService';

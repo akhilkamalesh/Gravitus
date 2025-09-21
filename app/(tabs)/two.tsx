@@ -1,4 +1,5 @@
 // app/(workout)/TodayWorkoutScreen.tsx
+// TODO: Needs documentation
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/GravitusHeader';

@@ -7,3 +7,5 @@ Each file will correspond to a screen in which the functions will be used in (us
 ### homeService.tsx
 
 ### workoutService.tsx
+
+### accountService.tsx
