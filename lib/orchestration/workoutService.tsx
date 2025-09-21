@@ -1,3 +1,4 @@
+//workoutService.tsx
 import {
     getExercises, getTodayWorkout, incrementDayIndex, logWorkout,
     generateOneOffSplitId, checkWorkoutStatus, getLogsByExerciseId, saveOneOffSplitToUser
@@ -66,8 +67,7 @@ export async function loadExercises(): Promise<Exercise[]> { return getExercises
 
 /**
  * Returns the last log for exercise given id
- * @param exerciseId {String}
- * id that maps to exerciseId in firestore
+ * @param exerciseId [String] - id that maps to exerciseId in firestore
  * @returns ExerciseStat | null [Promise<ExerciseStat | null>]
  */
 export async function loadLastLogsByExercise(exerciseId: string) { return getLogsByExerciseId(exerciseId); }
