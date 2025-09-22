@@ -10,4 +10,6 @@ Each file will correspond to a screen in which the functions will be used in (us
 
 ### accountService.tsx
 
-### useHistory.tsx
+### historyService.ts
+
+### historyDetailService.ts
