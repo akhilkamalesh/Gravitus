@@ -1,5 +1,5 @@
-// hooks/useWorkoutEdits.ts
-// TODO: Need documentation / this doesn't look like a hook
+// hooks/useWorkoutEdits.tsx
+// TODO: Need documentation
 import { Alert } from 'react-native';
 import { ExerciseLog, Exercise, workout } from '@/types/firestoreTypes';
 

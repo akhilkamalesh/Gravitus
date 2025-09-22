@@ -224,6 +224,9 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
   // Removed checkWorkoutStatus() checker since this is accounted for in workoutService.tsx
   const workout = split.workouts[currentDayIndex % split.workouts.length];
 
+  // console.log(workout)
+  // console.log(currentDayIndex)
+
   return { split, workout };
 };
 
