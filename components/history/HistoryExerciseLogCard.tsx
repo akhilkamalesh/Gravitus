@@ -5,8 +5,8 @@ import FloatingCard from '@/components/floatingbox';
 /**
  * Creates the card for exercises containing their sets, weights, and reps
  * @param param0 object type containing:
- *  - name: name of the exercise
- *  - sets: array of objects containing weight and reps for each set
+ *  - @param name: name of the exercise
+ *  - @param sets: array of objects containing weight and reps for each set
  * @returns 
  */
 export default function HistoryExerciseLogCard({

@@ -13,3 +13,5 @@ Each file will correspond to a screen in which the functions will be used in (us
 ### historyService.ts
 
 ### historyDetailService.ts
+
+### exerciseService.ts

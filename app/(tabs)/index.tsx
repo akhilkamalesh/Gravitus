@@ -10,6 +10,7 @@ import ExploreCard from '@/components/home/ExploreCard';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useHomeSummary } from '@/hooks/home/useHomeSummary';
 
+
 export default function TabOneScreen() {
   const router = useRouter();
   const { user, userData } = useAuth(); // calling auth context
