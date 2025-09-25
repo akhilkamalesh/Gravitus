@@ -17,3 +17,9 @@ Each file will correspond to a screen in which the functions will be used in (us
 ### exerciseService.ts
 
 ### exerciseDetailService.ts
+
+### trainingSplitsService.ts
+
+### createSplitService.ts
+
+### splitDetailService.ts
