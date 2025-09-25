@@ -342,23 +342,22 @@ export const generateOneOffSplitId = () => {
 };
 
 // Check if workout is complete based of date
+// TODO: Fix date comparison
 export const checkWorkoutStatus = async () => {
 
-  const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
+  const todayISO = new Date().toLocaleString().split(',')[0]; // '2025-06-15'
 
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
   const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
-
-
-  const q = query(logsRef,
-    where('date', '>=', todayISO),
-    where('date', '<', `${todayISO}T23:59:59`)
-  );
+  
+  const q = query(logsRef, orderBy('date', 'desc'), limit(1));
 
   const snapshot = await getDocs(q)
 
-  return !snapshot.empty;
+  const snapshotDate = snapshot.docs[0].data().date.split(',')[0];
+
+  return (snapshotDate === todayISO)
 }
 
 // Gets previous workout statistics (used in getTodayWorkout function)

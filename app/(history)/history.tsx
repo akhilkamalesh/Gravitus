@@ -44,7 +44,7 @@ export default function HistoryScreen() {
         {!loading && filtered.map(w => (
           <HistoryItem
             key={w.id}
-            logId={w.id}
+            logId={w.id ?? ''}
             date={w.date}
             dayName={w.workoutDay}
             splitName={splitNames[w.splitId] ?? 'One-Off'}

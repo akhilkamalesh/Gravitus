@@ -33,7 +33,7 @@ export interface Split {
 
 // Log type
 export interface ExerciseLog {
-  id: string;
+  id?: string;
   splitId: string;
   workoutDay: string;
   date: string;
