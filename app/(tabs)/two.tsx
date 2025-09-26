@@ -71,7 +71,7 @@ export default function TodayWorkoutScreen() {
             exIndex={exIndex}
             sets={log?.exercises[exIndex]?.sets ?? []}
             placeholders={placeholders[ex.exerciseId] ?? []}
-            onDelete={() => deleteExercise(exIndex)}
+            onDelete={() => {if(canEdit) deleteExercise(exIndex)}}
             onAddSet={() => addSet(exIndex)}
             onRemoveSet={() => removeSet(exIndex)}
             onUpdateSet={(setIdx, field, val) => updateSet(exIndex, setIdx, field, Number(val))}
