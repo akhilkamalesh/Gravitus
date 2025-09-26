@@ -22,7 +22,7 @@ export default function HistoryDetailScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#121417' }}>
       <GravitusHeader showBackButton />
       <Text style={{ fontSize: 26, fontWeight: '600', color: 'white', alignSelf: 'center', marginVertical: 12 }}>
-        {log ? `${log.workoutDay}: ${log.date.substring(0, 10)}` : 'Workout'}
+        {log ? `${log.workoutDay}: ${log.date.substring(0, 9)}` : 'Workout'}
       </Text>
       <Text style={{ color: '#4FD6EA', fontSize: 14, marginBottom: 16, alignSelf: 'center' }}>
         {split?.name ?? ''}
