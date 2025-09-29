@@ -37,14 +37,19 @@ export async function loadInitialWorkout() {
         await saveOneOffSplitToUser(split);
         const workout = split.workouts[0];
 
+        // console.log(workout)
+
         // TODO: Ensure data is stored in some consistent format that could compare
         const log: ExerciseLog = {splitId: split.id, workoutDay: workout.dayName, date: new Date().toLocaleString(), exercises: [] };
+
+        // console.log(split, workout, log)
 
         if (await checkWorkoutStatus()) return { split, workout, log, isFresh: true, isDone: true } as const;
         return { split, workout, log, isFresh: true } as const;
     }
 
     const { split, workout } = w;
+
     const log: ExerciseLog = {
         splitId: split.id,
         workoutDay: workout.dayName,
@@ -54,6 +59,8 @@ export async function loadInitialWorkout() {
         sets: Array.from({ length: e.sets }, () => ({ weight: 0, reps: 0 })),
         })),
     };
+
+    console.log(split, workout, log)
 
     if (await checkWorkoutStatus()) return { split, workout, log, isFresh: false, isDone: true } as const;
 

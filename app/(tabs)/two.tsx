@@ -17,7 +17,7 @@ export default function TodayWorkoutScreen() {
   const router = useRouter();
   const {
     split, workout, setWorkout, log, setLog, exercises,
-    isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout
+    isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout, loading
   } = useTodayWorkout();
 
   const placeholders = usePlaceholders(log);
@@ -28,7 +28,9 @@ export default function TodayWorkoutScreen() {
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const canEdit = Boolean(workout && log && !isDone);
+  const canEdit = Boolean(!loading && workout && log && !isDone);
+
+  // console.log(canEdit, workout, log, isDone, loading);
 
   const onSelectExercise = (exerciseId: string) => {
     try {

@@ -24,14 +24,34 @@ export function useTodayWorkout() {
   const [isFresh, setIsFresh] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [loading, setLoading] = useState(true);  
 
   /*
   Refreshes the page and calls loadInitialWorkout to setStates of split, workout, log, and isFresh
   */
   const refresh = useCallback(async () => {
-    const res = await svc.loadInitialWorkout();
-    if ('isDone' in res) { setIsDone(true)}
-    setSplit(res.split); setWorkout(res.workout); setLog(res.log); setIsFresh(res.isFresh);
+    setLoading(true);                             // ⬅ set loading to true at the start
+    try {
+
+      // console.log("Calling loadInitialWorkout");
+
+      const res = await svc.loadInitialWorkout();          // your function that creates a one-off if missing
+
+      // console.log("res is ", res);
+
+      if ('isDone' in res && res.isDone === true && !res.workout) {
+        // if your service can return a “done” sentinel without a workout, normalize here if needed
+      }
+      setSplit(res.split);
+      setWorkout(res.workout);
+      setLog(res.log);
+      setIsFresh(res.isFresh);
+      setIsDone(!!(res as any).isDone);
+    } catch (err) {
+      console.error("error in refresh:", err);
+    } finally {
+      setLoading(false);                                   // ⬅ end
+    }
   }, []);
 
   /*
@@ -76,5 +96,5 @@ export function useTodayWorkout() {
     await refresh(); // Loads in the following workout, however, will not be able to edit or save
   }, [log, isFresh, refresh]);
 
-  return { split, setWorkout, workout, log, setLog, exercises, isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout };
+  return { split, setWorkout, workout, log, setLog, exercises, isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout, loading };
 }

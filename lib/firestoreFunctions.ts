@@ -223,10 +223,7 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
 
   // Removed checkWorkoutStatus() checker since this is accounted for in workoutService.tsx
   const workout = split.workouts[currentDayIndex % split.workouts.length];
-
-  // console.log(workout)
-  // console.log(currentDayIndex)
-
+  
   return { split, workout };
 };
 
@@ -344,21 +341,25 @@ export const generateOneOffSplitId = () => {
 // Check if workout is complete based of date
 // TODO: Fix date comparison
 export const checkWorkoutStatus = async () => {
+  try {
+    const todayISO = new Date().toLocaleString().split(',')[0];
 
-  const todayISO = new Date().toLocaleString().split(',')[0]; // '2025-06-15'
+    const user = authInstance.currentUser;
+    if (!user) throw new Error('User not authenticated');
 
-  const user = authInstance.currentUser;
-  if (!user) throw new Error('User not authenticated');
-  const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
-  
-  const q = query(logsRef, orderBy('date', 'desc'), limit(1));
+    const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
+    const q = query(logsRef, orderBy('date', 'desc'), limit(1));
+    const snapshot = await getDocs(q);
 
-  const snapshot = await getDocs(q)
+    if (snapshot.empty) return false;
 
-  const snapshotDate = snapshot.docs[0].data().date.split(',')[0];
-
-  return (snapshotDate === todayISO)
-}
+    const snapshotDate = snapshot.docs[0].data().date.split(',')[0];
+    return (snapshotDate === todayISO);
+  } catch (err) {
+    console.error("checkWorkoutStatus error:", err);
+    return false;
+  }
+};
 
 // Gets previous workout statistics (used in getTodayWorkout function)
 export const getPrevWorkoutStat = async (): Promise<ExerciseLog | null> => {
