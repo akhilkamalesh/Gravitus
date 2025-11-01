@@ -351,6 +351,8 @@ export const checkWorkoutStatus = async () => {
   if (!user) throw new Error('User not authenticated');
   const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
   
+  // This is where the issue is
+  // Date with localeString is being compared on string ie (09/01 vs 9/1)
   const q = query(logsRef, orderBy('date', 'desc'), limit(1));
 
   const snapshot = await getDocs(q)

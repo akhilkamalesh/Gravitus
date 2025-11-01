@@ -25,6 +25,11 @@ import { Exercise, ExerciseLog, Split, workout, workoutExercise } from '@/types/
 export async function loadInitialWorkout() {
     const w = await getTodayWorkout();
 
+    const generateInstanceId = () => {
+        if (typeof crypto !== 'undefined' && (crypto as any).randomUUID) return (crypto as any).randomUUID();
+        return Math.random().toString(36).slice(2) + Date.now().toString(36);
+    };
+
     if (!w) {
         const split: Split = {
             id: generateOneOffSplitId(),
@@ -37,27 +42,41 @@ export async function loadInitialWorkout() {
         await saveOneOffSplitToUser(split);
         const workout = split.workouts[0];
 
-        // TODO: Ensure data is stored in some consistent format that could compare
-        const log: ExerciseLog = {splitId: split.id, workoutDay: workout.dayName, date: new Date().toLocaleString(), exercises: [] };
+        const log: ExerciseLog = {
+            splitId: split.id,
+            workoutDay: workout.dayName,
+            date: new Date().toISOString(),
+            exercises: []
+        };
 
         if (await checkWorkoutStatus()) return { split, workout, log, isFresh: true, isDone: true } as const;
         return { split, workout, log, isFresh: true } as const;
     }
 
     const { split, workout } = w;
+
+    // Ensure each workout exercise has a stable instanceId
+    const normalizedExercises: workoutExercise[] = workout.exercises.map((e: workoutExercise) =>
+        e.instanceId ? e : { ...e, instanceId: generateInstanceId() }
+    );
+
+    // Build a log that aligns exercises by instanceId so inputs stay stable
     const log: ExerciseLog = {
         splitId: split.id,
         workoutDay: workout.dayName,
-        date: new Date().toLocaleString(),
-        exercises: workout.exercises.map((e: workoutExercise) => ({
-        exerciseId: e.exerciseId,
-        sets: Array.from({ length: e.sets }, () => ({ weight: 0, reps: 0 })),
+        date: new Date().toISOString(),
+        exercises: normalizedExercises.map((e: workoutExercise) => ({
+            instanceId: e.instanceId,
+            exerciseId: e.exerciseId,
+            sets: Array.from({ length: e.sets }, () => ({ weight: 0, reps: 0 })),
         })),
     };
 
-    if (await checkWorkoutStatus()) return { split, workout, log, isFresh: false, isDone: true } as const;
+    const normalizedWorkout: workout = { ...workout, exercises: normalizedExercises };
 
-    return { split, workout, log, isFresh: false } as const;
+    if (await checkWorkoutStatus()) return { split, workout: normalizedWorkout, log, isFresh: false, isDone: true } as const;
+
+    return { split, workout: normalizedWorkout, log, isFresh: false } as const;
 }
   
 /** 
@@ -96,4 +115,3 @@ export async function skipWorkoutDay() { await incrementDayIndex(); }
  * @todo: Could make split static
  */
 export async function startOneOff(split: Split) { await saveOneOffSplitToUser(split); }
-  

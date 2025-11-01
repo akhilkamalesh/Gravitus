@@ -66,10 +66,10 @@ export default function TodayWorkoutScreen() {
       <ScrollView contentContainerStyle={{alignItems:'center', paddingVertical:24}}>
         {workout?.exercises.map((ex, exIndex) => (
           <ExerciseCard
-            key={`${ex.exerciseId}-${exIndex}`}
+            key={ex.instanceId ?? `${ex.exerciseId}-${exIndex}`} // <-- use stable instanceId
             exercise={ex}
             exIndex={exIndex}
-            sets={log?.exercises[exIndex]?.sets ?? []}
+            sets={log?.exercises.find(e => e.instanceId === ex.instanceId)?.sets ?? log?.exercises[exIndex]?.sets ?? []}
             placeholders={placeholders[ex.exerciseId] ?? []}
             onDelete={() => {if(canEdit) deleteExercise(exIndex)}}
             onAddSet={() => addSet(exIndex)}

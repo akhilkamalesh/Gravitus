@@ -38,6 +38,7 @@ export interface ExerciseLog {
   workoutDay: string;
   date: string;
   exercises: {
+    instanceId?: string; // <-- added so log entries can be matched to workout instances
     exerciseId: string;
     sets: {weight: number; reps: number}[];
   }[];
@@ -57,6 +58,7 @@ export interface workoutExercise {
   }
   sets: number;
   exerciseData?: Exercise;
+  instanceId?: string; // <-- added so log entries can be matched to workout instances
 }
 
 // Used for exercise [id] graphing purposes as well as statistics

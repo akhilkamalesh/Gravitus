@@ -12,7 +12,14 @@ export function useWorkoutEdits(
   const addExercise = (exercise: Exercise) => {
     if (!workout || !log) return;
 
+    const generateInstanceId = () => {
+      if (typeof crypto !== 'undefined' && (crypto as any).randomUUID) return (crypto as any).randomUUID();
+      return Math.random().toString(36).slice(2) + Date.now().toString(36);
+    };
+    const instanceId = generateInstanceId();
+
     const newExercise = {
+      instanceId,                     // <-- stable id for this instance
       exerciseId: exercise.id,
       sets: 2,
       reps: { min: 4, max: 12 },
@@ -28,12 +35,14 @@ export function useWorkoutEdits(
         ...curr,
         exercises: [
           ...curr.exercises,
-          { exerciseId: exercise.id, sets: Array.from({ length: 2 }, () => ({ weight: 0, reps: 0 })) },
+          { instanceId, exerciseId: exercise.id, sets: Array.from({ length: 2 }, () => ({ weight: 0, reps: 0 })) },
         ],
       } : curr
     );
   };
 
+  // Need to make sure when you delete an exercise that values from exercises underneath still remain
+  /*
   const deleteExercise = (exIndex: number) => {
     if (!workout || !log) return;
     if (workout.exercises.length <= 1) {
@@ -42,6 +51,37 @@ export function useWorkoutEdits(
     }
     setWorkout(curr => curr ? { ...curr, exercises: curr.exercises.filter((_, i) => i !== exIndex) } : curr);
     setLog(curr => curr ? { ...curr, exercises: curr.exercises.filter((_, i) => i !== exIndex) } : curr);
+  };
+  */
+
+  const deleteExercise = (exIndex: number) => {
+    if (!workout || !log) return;
+    if (workout.exercises.length <= 1) {
+      Alert.alert('Cannot delete only exercise');
+      return;
+    }
+
+    const removedExerciseId = workout.exercises[exIndex]?.exerciseId;
+    if (!removedExerciseId) return;
+
+    console.log('removedExerciseId:', removedExerciseId);
+
+    // Remove the exercise from the workout by index
+    setWorkout(curr =>
+      curr ? { ...curr, exercises: curr.exercises.filter((_, i) => i !== exIndex) } : curr
+    );
+
+    // Remove the corresponding log entry by matching exerciseId.
+    // This prevents shifting user-entered values for exercises below.
+    setLog(curr => {
+      if (!curr) return curr;
+      const logIndex = curr.exercises.findIndex(e => e.exerciseId === removedExerciseId);
+      if (logIndex === -1) {
+        // No id match — fall back to removing by the same index to keep arrays aligned
+        return { ...curr, exercises: curr.exercises.filter((_, i) => i !== exIndex) };
+      }
+      return { ...curr, exercises: curr.exercises.filter((_, i) => i !== logIndex) };
+    });
   };
 
   const addSet = (exIndex: number) => {
