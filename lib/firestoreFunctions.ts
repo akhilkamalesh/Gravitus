@@ -345,7 +345,9 @@ export const generateOneOffSplitId = () => {
 // TODO: Fix date comparison
 export const checkWorkoutStatus = async () => {
 
-  const todayISO = new Date().toLocaleString().split(',')[0]; // '2025-06-15'
+  // const todayISO = new Date().toLocaleString().split(',')[0]; // '2025-06-15'
+  const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
+  const todayLocal = new Date().toLocaleDateString();
 
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
@@ -357,9 +359,9 @@ export const checkWorkoutStatus = async () => {
 
   const snapshot = await getDocs(q)
 
-  const snapshotDate = snapshot.docs[0].data().date.split(',')[0];
+  const snapshotDate = snapshot.docs[0].data().localDate?.split(',')[0];
 
-  return (snapshotDate === todayISO)
+  return (snapshotDate === todayLocal)
 }
 
 // Gets previous workout statistics (used in getTodayWorkout function)

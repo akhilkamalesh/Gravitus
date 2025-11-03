@@ -46,6 +46,7 @@ export async function loadInitialWorkout() {
             splitId: split.id,
             workoutDay: workout.dayName,
             date: new Date().toISOString(),
+            localDate: new Date().toLocaleDateString(),
             exercises: []
         };
 
@@ -65,6 +66,7 @@ export async function loadInitialWorkout() {
         splitId: split.id,
         workoutDay: workout.dayName,
         date: new Date().toISOString(),
+        localDate: new Date().toLocaleDateString(),
         exercises: normalizedExercises.map((e: workoutExercise) => ({
             instanceId: e.instanceId,
             exerciseId: e.exerciseId,
@@ -75,6 +77,8 @@ export async function loadInitialWorkout() {
     const normalizedWorkout: workout = { ...workout, exercises: normalizedExercises };
 
     if (await checkWorkoutStatus()) return { split, workout: normalizedWorkout, log, isFresh: false, isDone: true } as const;
+
+    console.log(log)
 
     return { split, workout: normalizedWorkout, log, isFresh: false } as const;
 }

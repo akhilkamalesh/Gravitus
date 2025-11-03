@@ -37,6 +37,7 @@ export interface ExerciseLog {
   splitId: string;
   workoutDay: string;
   date: string;
+  localDate?: string; // optional local date string for easier querying
   exercises: {
     instanceId?: string; // <-- added so log entries can be matched to workout instances
     exerciseId: string;

@@ -20,7 +20,7 @@ export default function HistoryItem({
   return (
     <FloatingCard height={70} width="90%" onPress={() => onPress(logId)}>
       <View style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center', height:'100%' }}>
-        <Text style={{ color:'white', fontSize:15, fontWeight:'600', textAlign:'center', width:100 }}>{date.substring(0, 9)}</Text>
+        <Text style={{ color:'white', fontSize:15, fontWeight:'600', textAlign:'center', width:100 }}>{date.substring(0, 10)}</Text>
         <Text style={{ color:'white', fontSize:15, fontWeight:'600', textAlign:'center', marginHorizontal:10, width:100 }}>{dayName}</Text>
         <Text style={{ color:'white', fontSize:15, fontWeight:'600', textAlign:'center', width:100 }}>{splitName}</Text>
       </View>
