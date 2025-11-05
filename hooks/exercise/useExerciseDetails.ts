@@ -38,6 +38,7 @@ export function useExerciseDetail(id?: string | string[]) {
       try {
         const realId = Array.isArray(id) ? id[0] : id;
         const { exercise, oneRmSeries, bestSet } = await svc.buildExerciseDetail(realId);
+
         if (cancelled) return;
         setExercise(exercise);
         setOneRmSeries(oneRmSeries);

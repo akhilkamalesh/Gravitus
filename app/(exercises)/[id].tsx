@@ -30,6 +30,7 @@ import ExerciseStatsCard from '@/components/exercise/ExerciseStatsCard';
  */
 export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams();
+
   const { loading, exercise, oneRmSeries, bestSet, sessionCount } = useExerciseDetail(id);
 
   if (!exercise) {
