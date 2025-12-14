@@ -16,7 +16,7 @@ export default function TabOneScreen() {
   const { user, userData } = useAuth(); // calling auth context
   const { isDone, workoutMeta } = useHomeSummary(); // calling hook context
 
-  if (user === null) return <Redirect href="../(auth)/auth" />; // shoots to auth screen is user is null
+  if (user === null) return <Redirect href="../(onboarding)/welcomeScreen" />; // shoots to auth screen is user is null
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#121417' }}>

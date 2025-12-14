@@ -56,14 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
-      // const userCredential = await authInstance.createUserWithEmailAndPassword(email, password);
       const uid = userCredential.user.uid;
-      // await collection(firestoreInstance, 'users').doc(uid).set({
-      //   name,
-      //   email,
-      //   currentSplitId: '',
-      // });
-      // then when saving a user:
       await setDoc(doc(firestoreInstance, 'users', uid), {
         name,
         email,

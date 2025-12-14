@@ -1,1 +1,0 @@
-Consolidate exercisefilterbar and FilterModal - or rename and understand what they do
