@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
+import SkipButton from "./SkipButton";
 
 type Props = {
   step: number;
   totalSteps: number;
   title: string;
   children: React.ReactNode;
+  onSkip?: () => void;
 };
 
 export default function OnboardingLayout({
@@ -12,9 +14,12 @@ export default function OnboardingLayout({
   totalSteps,
   title,
   children,
+  onSkip,
 }: Props) {
   return (
     <View style={styles.container}>
+      {onSkip && <SkipButton onPress={onSkip} />}
+
       <Text style={styles.step}>
         Step {step} of {totalSteps}
       </Text>
@@ -50,6 +55,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   scrollContent: {
-    paddingBottom: 40, // ensures CTA is reachable
+    paddingBottom: 40,
   },
 });

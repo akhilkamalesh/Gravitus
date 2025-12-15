@@ -1,19 +1,18 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import {useAuth} from "@/lib/authContext";
 
+import OnboardingLayout from "@/components/OnboardingLayout";
 import TextInputField from "@/components/ui/TextInputField";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import FormFieldStack from "@/components/ui/FormFieldStack";
 
 export default function EmailSignUpScreen() {
   const router = useRouter();
-  const signUp = useAuth();
 
   const [email, setEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState<{
     email?: string;
@@ -34,64 +33,52 @@ export default function EmailSignUpScreen() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!validate()) return;
 
-    // TODO: Auth logic
-    // signUp(email, password)
-    setIsLoading(false);
-
+    // TODO: auth service call
     router.push("/(onboarding)/basicInfo");
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create your account</Text>
+    <OnboardingLayout
+      step={1}
+      totalSteps={7}
+      title="Create your account"
+    >
+      <FormFieldStack>
+        <TextInputField
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          error={errors.email}
+        />
 
-      <TextInputField
-        label="Email"
-        value={email}
-        onChangeText={setEmail}
-        error={errors.email}
-      />
+        <TextInputField
+          label="Confirm Email"
+          value={confirmEmail}
+          onChangeText={setConfirmEmail}
+          error={errors.confirmEmail}
+        />
 
-      <TextInputField
-        label="Confirm Email"
-        value={confirmEmail}
-        onChangeText={setConfirmEmail}
-        error={errors.confirmEmail}
-      />
+        <TextInputField
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          error={errors.password}
+        />
+      </FormFieldStack>
 
-      <TextInputField
-        label="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        error={errors.password}
-      />
-
-      {/* Spacing before CTA */}
-      <View style={styles.ctaContainer}>
-        <PrimaryButton label="Continue" onPress={onSubmit} loading={isLoading}/>
+      <View style={styles.cta}>
+        <PrimaryButton label="Continue" onPress={onSubmit} />
       </View>
-    </View>
+    </OnboardingLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-    paddingHorizontal: 24,
-    paddingTop: 96, // ⬅ increased top padding
-  },
-  title: {
-    color: "#FFF",
-    fontSize: 28,
-    fontWeight: "700",
-    marginBottom: 32,
-  },
-  ctaContainer: {
-    marginTop: 24, // ⬅ space between password + button
+  cta: {
+    marginTop: 24,
   },
 });

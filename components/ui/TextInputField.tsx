@@ -35,7 +35,7 @@ export default function TextInputField({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    // marginBottom: 16,
   },
   label: {
     color: "#AAA",

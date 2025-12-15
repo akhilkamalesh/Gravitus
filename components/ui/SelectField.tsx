@@ -59,7 +59,7 @@ export default function SelectField({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+
   },
   label: {
     color: "#AAA",

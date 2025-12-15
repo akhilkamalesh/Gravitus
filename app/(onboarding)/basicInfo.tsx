@@ -8,6 +8,7 @@ import SelectField from "@/components/ui/SelectField";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import NumericInputField from "@/components/ui/NumericInputField";
 import NumericInputWithUnit from "@/components/ui/NumberInputWithUnit";
+import FormFieldStack from "@/components/ui/FormFieldStack";
 
 export default function BasicInfoScreen() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function BasicInfoScreen() {
     //     heightUnit,
     //   });
 
-    router.push("/onboarding/fitness-goals");
+    router.push("/(onboarding)/fitnessGoals");
   };
 
   return (
@@ -64,48 +65,51 @@ export default function BasicInfoScreen() {
       totalSteps={7}
       title="Tell us about yourself"
     >
+      <FormFieldStack>
         <TextInputField
-            label="Name"
-            value={name}
-            onChangeText={setName}
-            error={errors.name}
-        />
+              label="Name"
+              value={name}
+              onChangeText={setName}
+              error={errors.name}
+          />
 
-        <NumericInputField
-            label="Age"
-            value={age}
-            onChange={setAge}
-            error={errors.age}
-        />
+          <NumericInputField
+              label="Age"
+              value={age}
+              onChange={setAge}
+              error={errors.age}
+          />
 
-        <NumericInputWithUnit
-            label="Weight"
-            value={weight}
-            unit={weightUnit}
-            unitOptions={["lb", "kg"]}
-            onValueChange={setWeight}
-            onUnitChange={(u) => setWeightUnit(u as "lb" | "kg")}
-        />
+          <NumericInputWithUnit
+              label="Weight"
+              value={weight}
+              unit={weightUnit}
+              unitOptions={["lb", "kg"]}
+              onValueChange={setWeight}
+              onUnitChange={(u) => setWeightUnit(u as "lb" | "kg")}
+          />
 
-        <NumericInputWithUnit
-            label="Height"
-            value={height}
-            unit={heightUnit}
-            unitOptions={["in", "cm"]}
-            onValueChange={setHeight}
-            onUnitChange={(u) => setHeightUnit(u as "ft" | "cm")}
-        />
+          <NumericInputWithUnit
+              label="Height"
+              value={height}
+              unit={heightUnit}
+              unitOptions={["in", "cm"]}
+              onValueChange={setHeight}
+              onUnitChange={(u) => setHeightUnit(u as "ft" | "cm")}
+          />
 
-        <SelectField
-            label="Gender"
-            value={gender}
-            onChange={setGender}
-            options={[
-                { label: "Male", value: "male" },
-                { label: "Female", value: "female" },
-                { label: "Other", value: "other" },
-        ]}
-        />
+          <SelectField
+              label="Gender"
+              value={gender}
+              onChange={setGender}
+              options={[
+                  { label: "Male", value: "male" },
+                  { label: "Female", value: "female" },
+                  { label: "Other", value: "other" },
+          ]}
+          />
+        </FormFieldStack>
+        
 
       <View style={styles.cta}>
         <PrimaryButton label="Continue" onPress={onContinue} />
