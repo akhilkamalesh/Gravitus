@@ -37,6 +37,12 @@
           <string>com.googleusercontent.apps.552332204516-v6u5oq9ik1hfs12bpc2ll8l5j83ulfe1</string>
         </array>
       </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>exp+gravitus</string>
+        </array>
+      </dict>
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>

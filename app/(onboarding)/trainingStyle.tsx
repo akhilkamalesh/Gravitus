@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 
 import OnboardingLayout from "@/components/OnboardingLayout";
-import SelectableCard from "@/components/ui/SelectableCard";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import ExpandableTrainingStyleCard from "@/components/ExpandableTrainingCard";
 
 type TrainingStyle =
   | "bodybuilding"
@@ -12,51 +12,68 @@ type TrainingStyle =
   | "crossfit"
   | "running";
 
-const TRAINING_STYLES: {
-  value: TrainingStyle;
-  label: string;
-  description: string;
-}[] = [
+type ExperienceLevel =
+  | "beginner"
+  | "intermediate"
+  | "advanced"
+  | "unsure";
+
+const TRAINING_STYLES = [
   {
     value: "bodybuilding",
     label: "Bodybuilding",
-    description: "Focus on hypertrophy, aesthetics, and muscle growth.",
+    description: "Hypertrophy and muscle growth.",
   },
   {
     value: "powerlifting",
     label: "Powerlifting",
-    description: "Train the squat, bench, and deadlift for strength.",
+    description: "Squat, bench, and deadlift focus.",
   },
   {
     value: "crossfit",
     label: "CrossFit",
-    description: "High-intensity functional training and varied workouts.",
+    description: "High-intensity functional training.",
   },
   {
     value: "running",
     label: "Running",
-    description: "Distance, pace, and cardiovascular performance.",
+    description: "Distance and cardiovascular fitness.",
   },
-];
+] as const;
 
 export default function TrainingStyleScreen() {
   const router = useRouter();
-  const [selectedStyles, setSelectedStyles] = useState<TrainingStyle[]>([]);
 
-  const toggleStyle = (style: TrainingStyle) => {
-    setSelectedStyles((prev) =>
-      prev.includes(style)
-        ? prev.filter((s) => s !== style)
-        : [...prev, style]
+  const [expanded, setExpanded] =
+    useState<TrainingStyle | null>(null);
+
+  const [stylesState, setStylesState] =
+    useState<Partial<Record<TrainingStyle, ExperienceLevel>>>(
+      {}
     );
+
+  const onSelectExperience = (
+    style: TrainingStyle,
+    level: ExperienceLevel
+  ) => {
+    setStylesState((prev) => ({
+      ...prev,
+      [style]: level,
+    }));
   };
 
-  const onContinue = () => {
-    if (selectedStyles.length === 0) return;
+  const onClear = (style: TrainingStyle) => {
+    setStylesState((prev) => {
+      const next = { ...prev };
+      delete next[style];
+      return next;
+    });
 
-    // TODO: persist training styles to onboarding profile
-    router.push("/onboarding/experience-level");
+    if (expanded === style) setExpanded(null);
   };
+
+  const canContinue =
+    Object.keys(stylesState).length > 0;
 
   return (
     <OnboardingLayout
@@ -66,20 +83,29 @@ export default function TrainingStyleScreen() {
       onSkip={() => router.push("/(tabs)/index")}
     >
       {TRAINING_STYLES.map((style) => (
-        <SelectableCard
+        <ExpandableTrainingStyleCard
           key={style.value}
           label={style.label}
           description={style.description}
-          selected={selectedStyles.includes(style.value)}
-          onPress={() => toggleStyle(style.value)}
+          expanded={expanded === style.value}
+          experience={stylesState[style.value]}
+          onExpand={() => setExpanded(style.value)}
+          onCollapse={() => setExpanded(null)}
+          onSelectExperience={(level) =>
+            onSelectExperience(style.value, level)
+          }
+          onClear={() => onClear(style.value)}
         />
       ))}
 
       <View style={styles.cta}>
         <PrimaryButton
           label="Continue"
-          onPress={onContinue}
-          disabled={selectedStyles.length === 0}
+          onPress={() => {
+            // TODO: save stylesState into OnboardingContext
+            router.push("/(onboarding)/notifications");
+          }}
+          disabled={!canContinue}
         />
       </View>
     </OnboardingLayout>
