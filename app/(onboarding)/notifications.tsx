@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import { useOnboarding } from "@/lib/onboardingContext";
 import * as Notifications from "expo-notifications";
 
 import OnboardingLayout from "@/components/OnboardingLayout";
@@ -7,12 +8,15 @@ import PrimaryButton from "@/components/ui/PrimaryButton";
 
 export default function NotificationsScreen() {
   const router = useRouter();
+  const {update} = useOnboarding();
 
   const savePreferenceAndContinue = async (
     enabled: boolean
   ) => {
     // TODO: persist to user profile
-    router.push("/(onboarding)/welcome");
+    console.log("Notifications enabled?:", enabled);
+    update({ notificationsEnabled: enabled });
+    router.push("/(onboarding)/final");
   };
 
   const onEnable = async () => {

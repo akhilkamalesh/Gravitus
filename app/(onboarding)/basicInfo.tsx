@@ -1,6 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useOnboarding } from "@/lib/onboardingContext";
 
 import OnboardingLayout from "@/components/OnboardingLayout";
 import TextInputField from "@/components/ui/TextInputField";
@@ -12,6 +13,7 @@ import FormFieldStack from "@/components/ui/FormFieldStack";
 
 export default function BasicInfoScreen() {
   const router = useRouter();
+  const { update } = useOnboarding(); 
 
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
@@ -19,10 +21,12 @@ export default function BasicInfoScreen() {
   const [weightUnit, setWeightUnit] = useState<"lb" | "kg">("lb");
   const [weight, setWeight] = useState("");
 
-  const [heightUnit, setHeightUnit] = useState<"cm" | "ft">("ft");
+  const [heightUnit, setHeightUnit] = useState<"cm" | "in">("in");
   const [height, setHeight] = useState("");
 
-  const [gender, setGender] = useState("");
+  type Gender = "male" | "female" | "other";
+
+  const [gender, setGender] = useState<Gender | "">("");
 
   const [errors, setErrors] = useState<{
     name?: string;
@@ -44,17 +48,23 @@ export default function BasicInfoScreen() {
   const onContinue = () => {
     if (!validate()) return;
 
-    // TODO: Save profile info
-
-    // update({
-    //     name,
-    //     age: Number(age),
-    //     weight: weight ? Number(weight) : undefined,
-    //     height: height ? Number(height) : undefined,
-    //     gender,
-    //     weightUnit,
-    //     heightUnit,
-    //   });
+    update({
+      name,
+      age: Number(age),
+      weight: weight
+        ? {
+            value: Number(weight),
+            unit: weightUnit,
+          }
+        : undefined,
+      height: height
+        ? {
+            value: Number(height),
+            unit: heightUnit,
+          }
+        : undefined,
+      gender: gender ? gender : undefined,
+    });
 
     router.push("/(onboarding)/fitnessGoals");
   };
@@ -95,7 +105,7 @@ export default function BasicInfoScreen() {
               unit={heightUnit}
               unitOptions={["in", "cm"]}
               onValueChange={setHeight}
-              onUnitChange={(u) => setHeightUnit(u as "ft" | "cm")}
+              onUnitChange={(u) => setHeightUnit(u as "in" | "cm")}
           />
 
           <SelectField

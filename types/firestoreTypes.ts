@@ -3,12 +3,12 @@ import { Timestamp } from 'firebase/firestore';
 
 export type FirebaseUser = FirebaseAuthTypes.User | null;
 
-export type FirestoreUserData = {
-  name: string;
-  email: string;
-  currentSplitId: string;
-  currentDayIndex: number; //currentDayIndex
-} | null;
+// export type FirestoreUserData = {
+//   name: string;
+//   email: string;
+//   currentSplitId: string;
+//   currentDayIndex: number; //currentDayIndex
+// } | null;
 
 export interface Exercise {
     id: string;

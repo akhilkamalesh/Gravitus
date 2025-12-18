@@ -1,6 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useOnboarding } from "@/lib/onboardingContext";
 
 import OnboardingLayout from "@/components/OnboardingLayout";
 import PrimaryButton from "@/components/ui/PrimaryButton";
@@ -43,6 +44,7 @@ const TRAINING_STYLES = [
 
 export default function TrainingStyleScreen() {
   const router = useRouter();
+  const { update } = useOnboarding();
 
   const [expanded, setExpanded] =
     useState<TrainingStyle | null>(null);
@@ -75,12 +77,26 @@ export default function TrainingStyleScreen() {
   const canContinue =
     Object.keys(stylesState).length > 0;
 
+  const onContinue = async () => {
+    if(!canContinue) return;
+
+    console.log("Selected training styles:", stylesState);
+
+    update({
+      trainingStyles: stylesState,
+    });
+
+    router.push("/(onboarding)/notifications");
+  }
+
+
+
   return (
     <OnboardingLayout
       step={4}
       totalSteps={7}
       title="How do you like to train?"
-      onSkip={() => router.push("/(tabs)/index")}
+      onSkip={() => router.push("/(onboarding)/notifications")}
     >
       {TRAINING_STYLES.map((style) => (
         <ExpandableTrainingStyleCard
@@ -101,10 +117,7 @@ export default function TrainingStyleScreen() {
       <View style={styles.cta}>
         <PrimaryButton
           label="Continue"
-          onPress={() => {
-            // TODO: save stylesState into OnboardingContext
-            router.push("/(onboarding)/notifications");
-          }}
+          onPress={onContinue}
           disabled={!canContinue}
         />
       </View>

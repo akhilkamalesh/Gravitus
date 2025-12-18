@@ -1,6 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useOnboarding } from "@/lib/onboardingContext";
 
 import OnboardingLayout from "@/components/OnboardingLayout";
 import SelectableCard from "@/components/ui/SelectableCard";
@@ -47,11 +48,19 @@ const GOALS: {
 
 export default function FitnessGoalsScreen() {
   const router = useRouter();
+  const { update } = useOnboarding(); 
+
   const [selectedGoal, setSelectedGoal] =
     useState<FitnessGoal | null>(null);
 
   const onContinue = () => {
     if (!selectedGoal) return;
+
+    console.log("Selected fitness goal:", selectedGoal);
+
+    update({
+      fitnessGoal: selectedGoal,
+    })
 
     // TODO: persist goal to onboarding profile
     router.push("/(onboarding)/trainingStyle");

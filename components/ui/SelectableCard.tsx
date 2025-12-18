@@ -23,8 +23,7 @@ export default function SelectableCard({
     >
       <Text
         style={[
-          styles.label,
-          selected && styles.selectedLabel,
+          styles.label        
         ]}
       >
         {label}
@@ -33,8 +32,7 @@ export default function SelectableCard({
       {description && (
         <Text
           style={[
-            styles.description,
-            selected && styles.selectedDescription,
+            styles.description
           ]}
         >
           {description}
@@ -48,12 +46,11 @@ const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
     borderColor: "#333",
-    borderRadius: 10,
+    borderRadius: 12,
     padding: 16,
     marginBottom: 12,
   },
   selectedCard: {
-    backgroundColor: "#FFF",
     borderColor: "#FFF",
   },
   label: {
@@ -61,15 +58,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  selectedLabel: {
-    color: "#000",
-  },
   description: {
     marginTop: 6,
     color: "#AAA",
     fontSize: 13,
-  },
-  selectedDescription: {
-    color: "#333",
   },
 });

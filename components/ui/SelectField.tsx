@@ -1,24 +1,24 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useState } from "react";
 
-type Option = {
+type Option<T extends string> = {
   label: string;
-  value: string;
+  value: T;
 };
 
-type Props = {
+type Props<T extends string> = {
   label: string;
-  value: string;
-  options: Option[];
-  onChange: (value: string) => void;
+  value: T;
+  options: Option<T>[];
+  onChange: (value: T) => void;
 };
 
-export default function SelectField({
+export default function SelectField<T extends string>({
   label,
   value,
   options,
   onChange,
-}: Props) {
+}: Props<T>) {
   const [open, setOpen] = useState(false);
 
   const selectedLabel =
@@ -30,7 +30,7 @@ export default function SelectField({
 
       <Pressable
         style={styles.input}
-        onPress={() => setOpen(!open)}
+        onPress={() => setOpen((prev) => !prev)}
       >
         <Text style={styles.value}>{selectedLabel}</Text>
       </Pressable>

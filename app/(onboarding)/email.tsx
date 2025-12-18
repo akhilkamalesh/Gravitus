@@ -1,6 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/lib/authContext";
 
 import OnboardingLayout from "@/components/OnboardingLayout";
 import TextInputField from "@/components/ui/TextInputField";
@@ -9,6 +10,7 @@ import FormFieldStack from "@/components/ui/FormFieldStack";
 
 export default function EmailSignUpScreen() {
   const router = useRouter();
+  const auth = useAuth();
 
   const [email, setEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
@@ -35,8 +37,9 @@ export default function EmailSignUpScreen() {
 
   const onSubmit = async () => {
     if (!validate()) return;
+    console.log("Creating account with:", {email})
+    await auth.signUpWithEmail(email, password);
 
-    // TODO: auth service call
     router.push("/(onboarding)/basicInfo");
   };
 
