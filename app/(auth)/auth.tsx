@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Alert,
@@ -12,62 +11,69 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth } from '@/lib/authContext';
-import SignUpModal from './signUp';
+import BrandHeader from '@/components/BrandHeader';
+import TextInputField from '@/components/ui/TextInputField';
+import PrimaryButton from '@/components/ui/PrimaryButton';
+import FormFieldStack from '@/components/ui/FormFieldStack';
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showModal, setShowModal] = useState(false);
-
-  const { signIn } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { signInWithEmail } = useAuth();
 
   const handleLogin = async () => {
+    if (!email || !password) return;
+
+    setLoading(true);
     try {
-      await signIn(username, password);
+      await signInWithEmail(email, password);
       Alert.alert('Success', 'Signed in successfully');
       router.replace('/');
     } catch (error: any) {
       console.error(error);
       Alert.alert('Login Failed', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>Gravitus</Text>
+        <BrandHeader />
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Username</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter username"
-            placeholderTextColor="#888"
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-          />
+        <View style={styles.formSection}>
+          <FormFieldStack>
+            <TextInputField
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+            />
 
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter password"
-            placeholderTextColor="#888"
-            value={password}
-            secureTextEntry
-            onChangeText={setPassword}
-          />
+            <TextInputField
+              label="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+          </FormFieldStack>
+
+          <View style={styles.actions}>
+            <PrimaryButton
+              label="Log In"
+              onPress={handleLogin}
+              loading={loading}
+              disabled={!email || !password}
+            />
+
+            <TouchableOpacity onPress={() => router.push('/(onboarding)/welcomeScreen')}>
+              <Text style={styles.signupText}>
+                New here? <Text style={styles.signupLink}>Create an account</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <TouchableOpacity onPress={() => setShowModal(true)}>
-          <Text style={styles.signup}>New here? Sign Up</Text>
-        </TouchableOpacity>
-
-        <SignUpModal visible={showModal} onClose={() => setShowModal(false)} />
-
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Enter</Text>
-        </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -76,63 +82,29 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#121417',
+    backgroundColor: '#000',
   },
   container: {
     flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 30,
-    paddingVertical: 60,
+    paddingHorizontal: 24,
+    paddingTop: 60,
   },
-  title: {
-    fontSize: 42,
-    fontWeight: '700',
-    color: '#ffffff',
-    marginBottom: 48,
+  formSection: {
+    marginTop: 48,
+    gap: 32,
   },
-  inputContainer: {
-    width: '100%',
-    gap: 16,
-    marginBottom: 36,
+  actions: {
+    gap: 24,
+    marginTop: 16,
   },
-  label: {
-    fontSize: 16,
-    color: '#aaa',
-    marginBottom: 4,
-  },
-  input: {
-    backgroundColor: '#1c1f23',
-    borderWidth: 1,
-    borderColor: '#4FD6EA',
-    borderRadius: 6,
-    paddingHorizontal: 14,
-    paddingVertical: Platform.OS === 'ios' ? 12 : 8,
-    color: '#fff',
-    fontSize: 16,
-  },
-  signup: {
-    color: '#4FD6EA',
+  signupText: {
+    color: '#666',
     fontSize: 14,
-    marginBottom: 20,
+    textAlign: 'center',
+  },
+  signupLink: {
+    color: '#FFF',
     fontWeight: '600',
     textDecorationLine: 'underline',
-  },
-  button: {
-    backgroundColor: '#4FD6EA',
-    paddingVertical: 14,
-    paddingHorizontal: 60,
-    borderRadius: 6,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  buttonText: {
-    color: '#121417',
-    fontWeight: '700',
-    fontSize: 16,
   },
 });

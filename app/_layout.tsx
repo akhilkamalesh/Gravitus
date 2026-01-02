@@ -48,11 +48,14 @@ function AuthGate() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
         {user ? (
-          <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }}/>
+          <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
         ) : (
-          <Stack.Screen name="(auth)/auth" options={{ gestureEnabled: false }}/>
+          <>
+            <Stack.Screen name="(auth)/auth" options={{ gestureEnabled: false }} />
+            <Stack.Screen name="(onboarding)" options={{ gestureEnabled: false }} />
+          </>
         )}
       </Stack>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
