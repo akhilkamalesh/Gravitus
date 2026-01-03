@@ -8,15 +8,11 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#121417',
-          borderTopWidth: 2,
-          borderTopColor: '#4FD6EA',
-          height: 70,
-          elevation: 8,
-          shadowColor: '#4FD6EA',
-          shadowOffset: { width: 0, height: 0 },
-          shadowOpacity: 0.5,
-          shadowRadius: 10,
+          backgroundColor: '#000',
+          borderTopWidth: 1,
+          borderTopColor: '#333',
+          height: 80, // Slightly taller for modern look
+          paddingTop: 10,
         },
         tabBarIcon: ({ focused }) => {
           let iconName = 'home';
@@ -28,12 +24,9 @@ export default function TabLayout() {
             <Ionicons
               name={iconName as keyof typeof Ionicons.glyphMap}
               size={28}
-              color={focused ? '#4FD6EA' : '#888'}
+              color={focused ? '#FFF' : '#666'}
               style={{
-                shadowColor: focused ? '#4FD6EA' : 'transparent',
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.8,
-                shadowRadius: 6,
+                opacity: focused ? 1 : 0.8,
               }}
             />
           );
@@ -42,7 +35,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="index" />
       <Tabs.Screen name="two" />
-      <Tabs.Screen name="settings"/>
+      <Tabs.Screen name="settings" />
     </Tabs>
   );
 }

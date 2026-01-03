@@ -3,20 +3,13 @@ import { Timestamp } from 'firebase/firestore';
 
 export type FirebaseUser = FirebaseAuthTypes.User | null;
 
-// export type FirestoreUserData = {
-//   name: string;
-//   email: string;
-//   currentSplitId: string;
-//   currentDayIndex: number; //currentDayIndex
-// } | null;
-
 export interface Exercise {
-    id: string;
-    name: string;
-    primaryMuscleGroup: string;
-    secondaryMuscleGroup: string[];
-    motion: string;
-    // imageUrl?: string;
+  id: string;
+  name: string;
+  primaryMuscleGroup: string;
+  secondaryMuscleGroup: string[];
+  motion?: string;
+  // imageUrl?: string;
 }
 
 // Split type
@@ -41,7 +34,8 @@ export interface ExerciseLog {
   exercises: {
     instanceId?: string; // <-- added so log entries can be matched to workout instances
     exerciseId: string;
-    sets: {weight: number; reps: number}[];
+    brand?: string;
+    sets: { weight: number; reps: number }[];
   }[];
 }
 
@@ -66,5 +60,5 @@ export interface workoutExercise {
 // Could definitely be used to replace sub dictionary in Exercise Log
 export interface ExerciseStat {
   exerciseId: string;
-  sets: {weight: number; reps: number; date: string}[];
+  sets: { weight: number; reps: number; date: string }[];
 }

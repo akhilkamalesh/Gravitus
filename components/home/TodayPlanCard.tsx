@@ -56,8 +56,8 @@ export default function TodayPlanCard({ isDone, workoutMeta, onPress }: Props) {
           </View>
         )}
 
-        <Text style={{ marginTop: 12, color: '#00e0a1', fontSize: 13, fontWeight: '600' }}>
-          Tap to begin
+        <Text style={{ marginTop: 12, color: '#FFF', fontSize: 13, fontWeight: '600' }}>
+          Tap to begin &rarr;
         </Text>
       </View>
     </FloatingCard>
