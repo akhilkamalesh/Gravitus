@@ -1,5 +1,5 @@
 // components/splits/CreateSplitHeader.tsx
-import { TextInput } from 'react-native';
+import { TextInput, View, Text, StyleSheet } from 'react-native';
 
 /**
  * 
@@ -20,38 +20,67 @@ export default function CreateSplitHeader({
   weeksDurationStr: string; setWeeksDurationStr: (v: string) => void;
 }) {
   return (
-    <>
+    <View style={styles.container}>
+      <Text style={styles.label}>SPLIT NAME</Text>
       <TextInput
-        style={{
-          fontSize: 28, fontWeight: '600', color: 'white',
-          alignSelf: 'center', textAlign: 'center', margin: 12
-        }}
-        placeholder="Set Split Name"
-        placeholderTextColor="#aaa"
+        style={styles.inputLarge}
+        placeholder="e.g. Upper/Lower Split"
+        placeholderTextColor="#444"
         value={name}
         onChangeText={setName}
       />
+
+      <Text style={styles.label}>DESCRIPTION</Text>
       <TextInput
-        style={{
-          fontSize: 15, fontWeight: '600', color: 'white',
-          alignSelf: 'center', textAlign: 'center', marginVertical: 15
-        }}
-        placeholder="Enter Pseudo Description Here"
-        placeholderTextColor="#aaa"
+        style={styles.inputNormal}
+        placeholder="Brief description of goals"
+        placeholderTextColor="#444"
         value={description}
         onChangeText={setDescription}
+        multiline
       />
+
+      <Text style={styles.label}>DURATION (WEEKS)</Text>
       <TextInput
-        style={{
-          fontSize: 15, fontWeight: '600', color: 'white',
-          alignSelf: 'center', textAlign: 'center', marginBottom: 8
-        }}
-        placeholder="Weeks Duration"
-        placeholderTextColor="#aaa"
+        style={styles.inputNormal}
+        placeholder="Duration"
+        placeholderTextColor="#444"
         keyboardType="numeric"
         value={weeksDurationStr}
         onChangeText={(t) => setWeeksDurationStr(t.replace(/[^0-9]/g, ''))}
       />
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  label: {
+    color: '#888',
+    fontSize: 12,
+    marginBottom: 5,
+    fontWeight: '600',
+  },
+  inputLarge: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'left',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingBottom: 10,
+  },
+  inputNormal: {
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'left',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    paddingBottom: 10,
+  },
+});

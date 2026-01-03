@@ -1,0 +1,37 @@
+# Design System
+
+## Colors
+- **Background**: `#000000` (Pure Black)
+- **Primary Accent**: `#4FD6EA` (Cyan/Teal)
+- **Secondary Accent**: `#222222` (Dark Gray - Cards/Inputs)
+- **Text Primary**: `#FFFFFF` (White)
+- **Text Secondary**: `#888888` (Gray)
+- **Border/Divider**: `#333333`
+
+## Components
+
+### Buttons
+- **PrimaryButton**: 
+  - Height: 52px
+  - Radius: 10px
+  - Background: White (or Accent depending on context, usually White for primary actions on dark)
+  - Text: Black, 16px, SemiBold
+
+### Inputs
+- **Text Input**:
+  - Background: Transparent
+  - Border: Bottom Border (`#333`)
+  - Title/Label: Uppercase, `#888`, 12px, SemiBold
+  - Text: White, 16px (Normal) / 24px (Large Headers)
+
+### Dropdown
+- **Style**: Integrated, Dark Theme
+- **Behavior**: Dropdown list appears below selector.
+- **Background**: `#222`
+- **Border**: `#333`
+
+## Layout Patterns
+- **Screen Background**: Global `#000`
+- **Padding**: Horizontal 20px
+- **Alignment**: Text and Inputs Left-Aligned
+- **Header**: Standard "Back" arrow, "Step X of Y", Title Left-Aligned (content)

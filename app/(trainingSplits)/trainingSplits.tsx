@@ -1,11 +1,12 @@
 // app/(trainingSplits)/trainingSplits.tsx
 import GravitusHeader from '@/components/GravitusHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTrainingSplits } from '@/hooks/splits/useTrainingSplits';
 import SplitRowCard from '@/components/trainingSplits/SplitRowCard';
-import SectionTitle from '@/components/trainingSplits/SectionTitle';
+import SectionHeader from '@/components/SectionHeader';
+import { LinearGradient } from 'expo-linear-gradient';
 
 /**
  * TrainingSplitsScreen
@@ -16,17 +17,24 @@ export default function TrainingSplitsScreen() {
   const { loading, currentSplit, templates } = useTrainingSplits();
 
   return (
-    <SafeAreaView style={{ flex:1, backgroundColor:'#121417' }}>
+    <SafeAreaView style={styles.safeArea}>
+      <LinearGradient
+        colors={['rgba(79, 214, 234, 0.15)', 'transparent']}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.gradient}
+        pointerEvents="none"
+      />
       <GravitusHeader showBackButton />
-      <Text style={{
-        fontSize:28, fontWeight:'600', color:'white',
-        alignSelf:'center', textAlign:'center', marginVertical:12,
-      }}>
-        Training Splits
-      </Text>
 
-      <ScrollView contentContainerStyle={{ alignItems:'center', paddingBottom:40 }}>
-        {currentSplit && <SectionTitle>Current Split</SectionTitle>}
+      <View style={styles.headerContainer}>
+        <Text style={styles.screenTitle}>
+          Training Splits
+        </Text>
+      </View>
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {currentSplit && <SectionHeader title="Current Split" />}
         {currentSplit && (
           <SplitRowCard
             icon="calendar"
@@ -35,14 +43,14 @@ export default function TrainingSplitsScreen() {
           />
         )}
 
-        <SectionTitle>Create Your Own!</SectionTitle>
+        <SectionHeader title="Create Your Own!" />
         <SplitRowCard
           icon="edit"
           title="Create Your Own"
           onPress={() => router.push('/(trainingSplits)/create')}
         />
 
-        <SectionTitle>Explore Template Splits</SectionTitle>
+        <SectionHeader title="Explore Template Splits" />
         {!loading && templates.map(split => (
           <SplitRowCard
             key={split.id}
@@ -55,3 +63,33 @@ export default function TrainingSplitsScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
+  gradient: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: 300,
+    height: 300,
+    borderBottomLeftRadius: 300,
+  },
+  headerContainer: {
+    paddingHorizontal: '5%',
+  },
+  screenTitle: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: 'white',
+    textAlign: 'left',
+    marginTop: 12,
+    marginBottom: 12,
+  },
+  scrollContent: {
+    alignItems: 'center',
+    paddingBottom: 40,
+  },
+});

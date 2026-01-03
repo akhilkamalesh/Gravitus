@@ -1,5 +1,6 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { Timestamp } from 'firebase/firestore';
+import { TrainingStyle } from './onboarding';
 
 export type FirebaseUser = FirebaseAuthTypes.User | null;
 
@@ -12,13 +13,27 @@ export interface Exercise {
   // imageUrl?: string;
 }
 
+export interface TemplateSplit {
+  id: string;
+  name: string;
+  description: string;
+  trainingStyle: TrainingStyle;
+  weeksDuration: number;
+  daysPerCycle: number;
+  daysOfWeek?: string[]; // This can be adjusted
+  workouts: workout[];
+}
+
 // Split type
 export interface Split {
   id: string;
   name: string;
   description: string;
-  repeatDays: boolean;
+  trainingStyle: TrainingStyle;
+  // repeatDays: boolean;
   weeksDuration: number;
+  daysPerCycle: number;
+  daysOfWeek?: string[]; // This can be adjusted
   workouts: workout[];
   createdAt?: Timestamp; // ✅ optional if not always present
   createdFromTemplateId?: string; // ✅ tracks template source
@@ -42,6 +57,7 @@ export interface ExerciseLog {
 // Sub interfaces that will be used as a child interface
 export interface workout {
   dayName: string;
+  scheduledDate?: string;
   exercises: workoutExercise[];
 }
 
@@ -52,6 +68,7 @@ export interface workoutExercise {
     max: number;
   }
   sets: number;
+  rpe?: number; // Optional RPE value (0-10)
   exerciseData?: Exercise;
   instanceId?: string; // <-- added so log entries can be matched to workout instances
 }

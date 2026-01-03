@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ViewStyle, Pressable, GestureResponderEvent } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, Pressable, GestureResponderEvent, StyleProp } from 'react-native';
 
 type Dimension = number | `${number}%`; // Valid types for height/width
 
@@ -9,15 +9,17 @@ type FloatingCardProps = {
   width: Dimension;
   children: React.ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
+  style?: StyleProp<ViewStyle>;
 }
 
-export default function FloatingCard({ height, width, children, onPress }: FloatingCardProps) {
+export default function FloatingCard({ height, width, children, onPress, style }: FloatingCardProps) {
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
         { height, width },
+        style,
         pressed && styles.pressedCard,
       ]}
     >

@@ -1,5 +1,5 @@
 // components/splits/WorkoutDayEditor.tsx
-import { View, Text, Pressable, TextInput } from 'react-native';
+import { View, Text, Pressable, TextInput, StyleSheet } from 'react-native';
 
 /**
  * 
@@ -11,31 +11,70 @@ import { View, Text, Pressable, TextInput } from 'react-native';
  * - children: React nodes representing exercise rows
  * @returns A component for editing a workout day, including its name and exercises
  */
+
+
 export default function WorkoutDayEditor({
-  index, value, onChangeName, onAddExercise, children
+  index, value, onChangeName, onAddExercise, children, placeholder
 }: {
   index: number;
   value: string;
   onChangeName: (v: string) => void;
   onAddExercise: () => void;
-  children: React.ReactNode; // exercise rows
+  children: React.ReactNode;
+  placeholder?: string;
 }) {
   return (
-    <View style={{ marginBottom: 20 }}>
+    <View style={styles.container}>
+      <Text style={styles.label}>WORKOUT NAME</Text>
       <TextInput
-        style={{
-          fontSize: 25, fontWeight: '600', color: 'white',
-          alignSelf: 'center', textAlign: 'center', marginVertical: 10
-        }}
-        placeholder={`Workout Day ${index + 1}`}
+        style={styles.dayInput}
+        placeholder={placeholder || `Workout Day ${index + 1}`}
         placeholderTextColor="#aaa"
         value={value}
         onChangeText={onChangeName}
       />
       {children}
-      <Pressable onPress={onAddExercise} style={{ marginTop: 12 }}>
-        <Text style={{ color: '#4FD6EA', fontSize: 16, alignSelf: 'center' }}>+ Add Exercise</Text>
+      <Pressable onPress={onAddExercise} style={styles.addExerciseBtn}>
+        <Text style={styles.addExerciseText}>+ Add Exercise</Text>
       </Pressable>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 20,
+    marginHorizontal: 20,
+  },
+  dayInput: {
+    fontSize: 25,
+    fontWeight: '600',
+    color: 'white',
+    alignSelf: 'flex-start',
+    textAlign: 'left',
+    marginTop: 0,
+    marginBottom: 30,
+    width: '100%',
+  },
+  addExerciseBtn: {
+    marginTop: 15,
+    alignSelf: 'center',
+    padding: 10,
+    borderWidth: 1,
+    // borderColor: '#333',
+    // borderRadius: 8,
+    // backgroundColor: '#222',
+  },
+  addExerciseText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  label: {
+    color: '#888',
+    fontSize: 12,
+    marginBottom: 8,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+  }
+});
