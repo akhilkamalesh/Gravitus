@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView, Text, Alert, View, TouchableOpacity, BackHandler, StyleSheet } from 'react-native';
 import ExerciseSearchModal from '@/components/ExerciseSearchModal';
 import PrimaryButton from '@/components/ui/PrimaryButton';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useCreateSplit } from '@/hooks/splits/useCreateSplit';
@@ -14,7 +14,6 @@ import ExerciseRowEditor from '@/components/trainingSplits/ExerciseRowEditor';
 import SplitScheduleForm from '@/components/trainingSplits/SplitScheduleForm';
 import SplitReview from '@/components/trainingSplits/SplitReview';
 import Dropdown from '@/components/ui/Dropdown';
-import SelectField from '@/components/ui/SelectField';
 
 /**
  * CreateSplitScreen
@@ -22,6 +21,8 @@ import SelectField from '@/components/ui/SelectField';
  */
 export default function CreateSplitScreen() {
   const router = useRouter();
+  const { editSplitId } = useLocalSearchParams<{ editSplitId?: string }>();
+
   const {
     // form
     name, setName, description, setDescription,
@@ -41,7 +42,7 @@ export default function CreateSplitScreen() {
 
     // save
     saveSplit,
-  } = useCreateSplit();
+  } = useCreateSplit(editSplitId);
 
   const [step, setStep] = useState(1);
 
@@ -317,16 +318,16 @@ export default function CreateSplitScreen() {
       <View style={styles.footer}>
         {isReviewStep ? (
           <PrimaryButton
-            label="Save Split"
+            label={editSplitId ? "Update Split" : "Save Split"}
             onPress={async () => {
               // ... Save Logic ...
               try {
-                Alert.alert('Save Split', 'Are you sure you want to save this split?', [
+                Alert.alert(editSplitId ? 'Update Split' : 'Save Split', editSplitId ? 'Are you sure you want to edit this split?' : 'Are you sure you want to save this split?', [
                   { text: 'Cancel' },
                   {
                     text: 'Save', onPress: async () => {
                       const id = await saveSplit();
-                      Alert.alert('Success', `Split saved!`);
+                      Alert.alert('Success', editSplitId ? 'Split updated!' : 'Split saved!');
                       router.push('/');
                     }
                   }

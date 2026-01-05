@@ -1,11 +1,12 @@
 // app/(trainingSplits)/[id].tsx
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, Text, Alert, StyleSheet, View } from 'react-native';
+import { ScrollView, Text, Alert, StyleSheet, View, TouchableOpacity } from 'react-native';
 import GravitusHeader from '@/components/GravitusHeader';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSplitDetail } from '@/hooks/splits/useSplitDetail';
+import { Ionicons } from '@expo/vector-icons';
 
 /**
  * SplitDetailScreen to show current split
@@ -24,7 +25,17 @@ export default function SplitDetailScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <GravitusHeader showBackButton />
+      <View style={styles.headerContainer}>
+        <GravitusHeader showBackButton />
+        {isCurrent && (
+          <TouchableOpacity
+            style={styles.editIcon}
+            onPress={() => router.push(`/create?editSplitId=${id}`)}
+          >
+            <Ionicons name="create-outline" size={24} color="white" />
+          </TouchableOpacity>
+        )}
+      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {loading ? (
@@ -79,20 +90,23 @@ export default function SplitDetailScreen() {
         )}
 
         {isCurrent && (
-          <PrimaryButton
-            label="Clear Split"
-            onPress={() =>
-              confirm('Clear Current Split', 'Are you sure you want to clear current split?', async () => {
-                try {
-                  await clearSplit();
-                  router.back();
-                } catch (e) {
-                  console.error(e);
-                  Alert.alert('Error', 'Failed to clear split.');
-                }
-              })
-            }
-          />
+          <>
+            <View style={{ height: 12 }} />
+            <PrimaryButton
+              label="Clear Split"
+              onPress={() =>
+                confirm('Clear Current Split', 'Are you sure you want to clear current split?', async () => {
+                  try {
+                    await clearSplit();
+                    router.back();
+                  } catch (e) {
+                    console.error(e);
+                    Alert.alert('Error', 'Failed to clear split.');
+                  }
+                })
+              }
+            />
+          </>
         )}
       </View>
     </SafeAreaView>
@@ -103,6 +117,16 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#000', // Matches design system dark background
+  },
+  headerContainer: {
+    position: 'relative',
+  },
+  editIcon: {
+    position: 'absolute',
+    right: 20,
+    top: 24,
+    padding: 8,
+    zIndex: 10,
   },
   scrollContent: {
     paddingHorizontal: 20,

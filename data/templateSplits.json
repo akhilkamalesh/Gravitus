@@ -1,0 +1,1333 @@
+[
+    {
+        "id": "template_arnold_split",
+        "name": "Arnold Split",
+        "description": "A high-volume bodybuilding split popularized by Arnold Schwarzenegger. Focuses on antagonistic muscle groups: Chest & Back, Shoulders & Arms, and Legs.",
+        "trainingStyle": "bodybuilding",
+        "experienceLevel": "advanced",
+        "fitnessGoal": "gain_muscle",
+        "weeksDuration": 12,
+        "daysPerCycle": 6,
+        "daysOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Chest & Back",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 4,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "cableRow",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "barbellInclinePress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "latPulldown",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "chestFly",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Shoulders & Arms",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellLateralRaise",
+                        "sets": 4,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "rearDeltFly",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellStandingCurls",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "straightBarPushdown",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Legs",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 4,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "plateLoatedLegPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "seatedHamstringCurl",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "standingCalfRaises",
+                        "sets": 4,
+                        "reps": {
+                            "min": 15,
+                            "max": 20
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Chest & Back",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 4,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "inclineDumbbellPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "latPulldown",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Shoulders & Arms",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellLateralRaise",
+                        "sets": 4,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellStandingCurls",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "skullCrusher",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Legs",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 4,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "romaninaDeadlifts",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "standingCalfRaises",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_ppl",
+        "name": "Push Pull Legs",
+        "description": "A classic bodybuilding split. Day 1: Push (Chest/Shoulders/Triceps), Day 2: Pull (Back/Biceps), Day 3: Legs. Repeat or take a rest day.",
+        "trainingStyle": "bodybuilding",
+        "experienceLevel": "intermediate",
+        "fitnessGoal": "gain_muscle",
+        "weeksDuration": 8,
+        "daysPerCycle": 3,
+        "workouts": [
+            {
+                "dayName": "Push",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "inclineDumbbellPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "straightBarPushdown",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Pull",
+                "exercises": [
+                    {
+                        "exerciseId": "pullUp",
+                        "sets": 3,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "rearDeltFly",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellStandingCurls",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Legs",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "romaninaDeadlifts",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "plateLoatedLegPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "standingCalfRaises",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_upper_lower",
+        "name": "Upper Lower Split",
+        "description": "Splits training into Upper body and Lower body days. Typically performed 4 days a week (Upper, Lower, Rest, Upper, Lower, Rest, Rest).",
+        "trainingStyle": "powerlifting",
+        "experienceLevel": "intermediate",
+        "fitnessGoal": "get_stronger",
+        "weeksDuration": 12,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Thursday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Upper Power",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 3,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 3,
+                        "reps": {
+                            "min": 6,
+                            "max": 8
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 2,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Lower Power",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 3,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 2,
+                        "reps": {
+                            "min": 3,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "plateLoatedLegPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 6,
+                            "max": 10
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Upper Hypertrophy",
+                "exercises": [
+                    {
+                        "exerciseId": "inclineDumbbellPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "latPulldown",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellPreacherCurl",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Lower Hypertrophy",
+                "exercises": [
+                    {
+                        "exerciseId": "frontSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "romaninaDeadlifts",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "standingCalfRaises",
+                        "sets": 4,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_bro_split",
+        "name": "Bro Split",
+        "description": "Training one muscle group per day (Chest, Back, Shoulders, Legs, Arms). High volume per body part.",
+        "trainingStyle": "bodybuilding",
+        "experienceLevel": "intermediate",
+        "fitnessGoal": "gain_muscle",
+        "weeksDuration": 8,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Chest",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "inclineDumbbellPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "flys",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Back",
+                "exercises": [
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 8
+                        }
+                    },
+                    {
+                        "exerciseId": "pullUp",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Shoulders",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellLateralRaise",
+                        "sets": 4,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "rearDeltFly",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Legs",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 4,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "plateLoatedLegPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    },
+                    {
+                        "exerciseId": "seatedHamstringCurl",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Arms",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellStandingCurls",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "skullCrusher",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellHammerCurl",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "straightBarPushdown",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_full_body",
+        "name": "Full Body Routine",
+        "description": "Training the entire body in one session. Great for beginners or those with limited time. 3 days a week.",
+        "trainingStyle": "bodybuilding",
+        "experienceLevel": "beginner",
+        "fitnessGoal": "gain_muscle",
+        "weeksDuration": 8,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Full Body A",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Full Body B",
+                "exercises": [
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 3,
+                        "reps": {
+                            "min": 6,
+                            "max": 8
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "pullUp",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 8
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Full Body A",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_531",
+        "name": "5/3/1",
+        "description": "Wendler's 5/3/1. Focuses on the big four lifts with cycles of varying intensity.",
+        "trainingStyle": "powerlifting",
+        "experienceLevel": "advanced",
+        "fitnessGoal": "get_stronger",
+        "weeksDuration": 4,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Thursday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "barbellSquat Day",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 1,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "plateLoatedLegPress",
+                        "sets": 5,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Bench Day",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 1,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "flatDumbbellPress",
+                        "sets": 5,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Deadlift Day",
+                "exercises": [
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 3,
+                        "reps": {
+                            "min": 1,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "romanianDeadlifts",
+                        "sets": 5,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Press Day",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 1,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "dips",
+                        "sets": 5,
+                        "reps": {
+                            "min": 10,
+                            "max": 20
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_greyskull_lp",
+        "name": "Greyskull LP",
+        "description": "Linear periodization program. Great for beginners to build strength. Features AMRAP sets.",
+        "trainingStyle": "powerlifting",
+        "experienceLevel": "beginner",
+        "fitnessGoal": "get_stronger",
+        "weeksDuration": 12,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Day A",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 1,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Day B",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellStandingCurls",
+                        "sets": 2,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Day A",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 1,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_phul",
+        "name": "PHUL",
+        "description": "Power Hypertrophy Upper Lower. Blends strength and size training.",
+        "trainingStyle": "powerlifting",
+        "experienceLevel": "intermediate",
+        "fitnessGoal": "get_stronger",
+        "weeksDuration": 12,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Thursday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Upper Power",
+                "exercises": [
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 3,
+                        "reps": {
+                            "min": 3,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 3,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 5,
+                            "max": 8
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Lower Power",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 3,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 2,
+                        "reps": {
+                            "min": 3,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "plateLoatedLegPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 15
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Upper Hypertrophy",
+                "exercises": [
+                    {
+                        "exerciseId": "inclineDumbbellPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "chestFly",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "latPulldown",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Lower Hypertrophy",
+                "exercises": [
+                    {
+                        "exerciseId": "frontSquat",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "plateLoadedLegPress",
+                        "sets": 3,
+                        "reps": {
+                            "min": 8,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "standingCalfRaises",
+                        "sets": 3,
+                        "reps": {
+                            "min": 12,
+                            "max": 15
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_gvt",
+        "name": "German Volume Training",
+        "description": "10 sets of 10 reps. Extremely high volume for hypertrophy.",
+        "trainingStyle": "bodybuilding",
+        "experienceLevel": "advanced",
+        "fitnessGoal": "gain_muscle",
+        "weeksDuration": 6,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Chest & Back",
+                "exercises": [
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 10,
+                        "reps": {
+                            "min": 10,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 10,
+                        "reps": {
+                            "min": 10,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "chestFly",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Legs & Abs",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 10,
+                        "reps": {
+                            "min": 10,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "lyingHamstringCurl",
+                        "sets": 10,
+                        "reps": {
+                            "min": 10,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "machineAbCrunches",
+                        "sets": 3,
+                        "reps": {
+                            "min": 15,
+                            "max": 20
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Arms & Shoulders",
+                "exercises": [
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 10,
+                        "reps": {
+                            "min": 10,
+                            "max": 10
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellStandingCurls",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    },
+                    {
+                        "exerciseId": "dips",
+                        "sets": 3,
+                        "reps": {
+                            "min": 10,
+                            "max": 12
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "template_stronglifts",
+        "name": "StrongLifts 5x5",
+        "description": "Simple and effective strength program. 5 sets of 5 reps on compound lifts.",
+        "trainingStyle": "powerlifting",
+        "experienceLevel": "beginner",
+        "fitnessGoal": "get_stronger",
+        "weeksDuration": 12,
+        "daysPerCycle": 7,
+        "daysOfWeek": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+        ],
+        "workouts": [
+            {
+                "dayName": "Workout A",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Workout B",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "dumbbellShoulderPress",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "stiffLegDeadlifts",
+                        "sets": 1,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    }
+                ]
+            },
+            {
+                "dayName": "Workout A",
+                "exercises": [
+                    {
+                        "exerciseId": "barbellSquat",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "benchPress",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    },
+                    {
+                        "exerciseId": "tBarRow",
+                        "sets": 5,
+                        "reps": {
+                            "min": 5,
+                            "max": 5
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

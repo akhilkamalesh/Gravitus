@@ -6,19 +6,19 @@ import { Split } from "@/types/firestoreTypes";
 
 // Loads all exercises from the database
 export const getExercises = async (): Promise<Exercise[]> => {
-    try{
-        const snapshot = await getDocs(collection(firestoreInstance, 'exercises'));
-        const exercises: Exercise[] = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Exercise[];
+  try {
+    const snapshot = await getDocs(collection(firestoreInstance, 'exercises'));
+    const exercises: Exercise[] = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Exercise[];
 
-        return exercises;
-    }
-    catch (error) {
-        console.error('Error fetching exercises:', error);
-        return [];
-    }
+    return exercises;
+  }
+  catch (error) {
+    console.error('Error fetching exercises:', error);
+    return [];
+  }
 }
 
 // Gets Exercise Based off ID
@@ -34,7 +34,7 @@ export const getExerciseByID = async (id: string): Promise<Exercise> => {
     id: snapshot.id,
     ...snapshot.data(),
   } as Exercise;
-  
+
 }
 
 // Grabs all the exercise groups
@@ -48,30 +48,30 @@ export const getExerciseGroups = async (): Promise<string[]> => {
   }
 
   return Array.from(groupSet);
-} 
+}
 
 
 // Loads splits based off ID (only for splitTemplates)
 export const getSplit = async (splitId: string): Promise<Split | null> => {
-    try {
-        const docRef = doc(firestoreInstance, "splitTemplates", splitId);
-        // const docRef = firestoreInstance.collection('splitTemplates').doc(splitId);
-        const docSnap = await getDoc(docRef)
-    
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          return {
-            id: docSnap.id,
-            ...data,
-          } as Split;
-        } else {
-          console.warn('Split not found');
-        }
-      } catch (error) {
-        console.error('Error fetching split:', error);
-      }
+  try {
+    const docRef = doc(firestoreInstance, "splitTemplates", splitId);
+    // const docRef = firestoreInstance.collection('splitTemplates').doc(splitId);
+    const docSnap = await getDoc(docRef)
 
-    return null;
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return {
+        id: docSnap.id,
+        ...data,
+      } as Split;
+    } else {
+      // console.warn('Split not found');
+    }
+  } catch (error) {
+    console.error('Error fetching split:', error);
+  }
+
+  return null;
 };
 
 // Loads all splits
@@ -79,7 +79,7 @@ export const getSplits = async (): Promise<Split[] | null> => {
   const splitsRef = collection(firestoreInstance, "splitTemplates");
   const snapshot = await getDocs(splitsRef);
 
-  if(!snapshot){
+  if (!snapshot) {
     return null;
   }
 
@@ -92,7 +92,7 @@ export const getSplits = async (): Promise<Split[] | null> => {
 }
 
 // Function that loads full split information including exercises information
-export const getSplitInformation = async (split: Split): Promise <Split> => {
+export const getSplitInformation = async (split: Split): Promise<Split> => {
   const resolvedWorkouts = await Promise.all(
     split.workouts.map(async (workout) => {
       const enrichedExercises = await Promise.all(
@@ -122,7 +122,7 @@ export const getSplitInformation = async (split: Split): Promise <Split> => {
 // Save split to user
 export const saveSplitToUser = async (split: Split) => {
   const user = authInstance.currentUser;
-  if(!user) throw new Error("User not logged in") // This error should never happen
+  if (!user) throw new Error("User not logged in") // This error should never happen
 
   const { id, ...splitData } = split;
 
@@ -136,6 +136,35 @@ export const saveSplitToUser = async (split: Split) => {
   const docRef = await addDoc(userSplitsRef, newSplit);
 
   return docRef.id; // return new splitId
+};
+
+// Update existing split
+export const updateSplitById = async (splitId: string, splitData: Partial<Split>) => {
+
+  console.log('Updating split', splitId, splitData);
+
+  const user = authInstance.currentUser;
+  if (!user) throw new Error("User not logged in");
+
+  const { id, createdAt, createdFromTemplateId, ...updateData } = splitData as any;
+
+  // Filter out undefined values (Firestore doesn't accept undefined)
+  const cleanedData = Object.entries(updateData).reduce((acc, [key, value]) => {
+    if (value !== undefined) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as any);
+
+  const splitDocRef = doc(firestoreInstance, 'users', user.uid, 'splits', splitId);
+
+  try {
+    await updateDoc(splitDocRef, cleanedData);
+  } catch (error) {
+    console.log(error);
+    throw error; // Re-throw so caller knows update failed
+  }
+
 };
 
 // Save custom workout to a one-off split
@@ -239,7 +268,7 @@ export const incrementDayIndex = async () => {
   const userRef = doc(firestoreInstance, 'users', user.uid);
   const userSnap = await getDoc(userRef);
   const currentIndex = userSnap.data()?.currentDayIndex ?? 0;
-  
+
   const nextIndex = (currentIndex + 1);
   await updateDoc(userRef, { currentDayIndex: nextIndex });
 };
@@ -250,7 +279,7 @@ export const resetDayIndex = async () => {
   if (!user) throw new Error('User not authenticated');
 
   const userRef = doc(firestoreInstance, 'users', user.uid);
-  await updateDoc(userRef, {currentDayIndex: 0});
+  await updateDoc(userRef, { currentDayIndex: 0 });
 }
 
 // Log workout for the day
@@ -305,14 +334,14 @@ export const getLoggedWorkoutById = async (logId: string): Promise<ExerciseLog> 
 };
 
 // Gets split information based on SplitID
-export const getSplitBySplitId = async (splitId:string): Promise<Split | null> => {
+export const getSplitBySplitId = async (splitId: string): Promise<Split | null> => {
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const splitRef = doc(firestoreInstance, 'users', user.uid, 'splits', splitId);
   const splitSnap = await getDoc(splitRef);
 
-  if(!splitSnap){
+  if (!splitSnap) {
     console.error('Split does not exist')
     return null;
   }
@@ -323,14 +352,14 @@ export const getSplitBySplitId = async (splitId:string): Promise<Split | null> =
 }
 
 // Clear Current Split
-export const clearCurrentSplit = async() => {
+export const clearCurrentSplit = async () => {
 
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   const userRef = doc(firestoreInstance, 'users', user.uid)
 
-  await updateDoc(userRef, {currentSplitId: ""});
+  await updateDoc(userRef, { currentSplitId: "" });
 }
 
 // Generate random split ID
@@ -352,7 +381,7 @@ export const checkWorkoutStatus = async () => {
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
   const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
-  
+
   // This is where the issue is
   // Date with localeString is being compared on string ie (09/01 vs 9/1)
   const q = query(logsRef, orderBy('date', 'desc'), limit(1));
@@ -380,7 +409,7 @@ export const getPrevWorkoutStat = async (): Promise<ExerciseLog | null> => {
 
   const snapshot = await getDocs(q)
 
-  if(snapshot.empty){
+  if (snapshot.empty) {
     console.error('Split does not exist')
     return null;
   }
@@ -399,17 +428,17 @@ export const getLogsByExerciseId = async (exerciseId: string): Promise<ExerciseS
 
   const allExerciseLogs = await getLoggedWorkouts();
 
-  const sets: { weight: number; reps: number ; date: string}[] = [];
+  const sets: { weight: number; reps: number; date: string }[] = [];
 
   allExerciseLogs.forEach((log) => {
     const data = log.exercises;
     const logDate = log.date;
 
     data.forEach((ex) => {
-      if(ex.exerciseId === exerciseId){
-        for(const set of ex.sets ?? []){
-          if(set.weight !== undefined && set.reps !== undefined){
-            sets.push({weight: set.weight, reps: set.reps, date: logDate});
+      if (ex.exerciseId === exerciseId) {
+        for (const set of ex.sets ?? []) {
+          if (set.weight !== undefined && set.reps !== undefined) {
+            sets.push({ weight: set.weight, reps: set.reps, date: logDate });
           }
         }
       }
@@ -425,7 +454,7 @@ export const getLogsByExerciseId = async (exerciseId: string): Promise<ExerciseS
     exerciseId,
     sets
   }
-} 
+}
 
 // Calculate number of workouts per week (graph data)
 export const getWorkoutCountPerWeek = async (): Promise<
@@ -459,7 +488,7 @@ export const getWorkoutCountPerWeek = async (): Promise<
 
 
 // Changes User's Name
-export const changeUserName = async (name:string) => {
+export const changeUserName = async (name: string) => {
 
   // User Data
   const user = authInstance.currentUser;
@@ -472,7 +501,7 @@ export const changeUserName = async (name:string) => {
 }
 
 // Change User's Email
-export const changeUserEmail = async (email:string) => {
+export const changeUserEmail = async (email: string) => {
 
   // User Data
   const user = authInstance.currentUser;
@@ -484,11 +513,11 @@ export const changeUserEmail = async (email:string) => {
 
   await updateDoc(userDocRef, {
     email: email
-  }); 
+  });
 }
 
 // Change User's Password
-export const changeUserPassword = async (password:string) => {
+export const changeUserPassword = async (password: string) => {
 
   // User Data
   const user = authInstance.currentUser;
@@ -499,14 +528,14 @@ export const changeUserPassword = async (password:string) => {
 
 // Delete Account
 export const deleteAccount = async () => {
-  
+
   // User Data
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
 
   // Delete User Data
   // await firestoreInstance.collection('users').doc(user.uid).delete();
-  await deleteDoc(doc(firestoreInstance, 'users', user.uid));  
+  await deleteDoc(doc(firestoreInstance, 'users', user.uid));
 
   const logsCollectionRef = collection(firestoreInstance, 'users', user.uid, 'logs');
   const logsSnapshot = await getDocs(logsCollectionRef);
@@ -523,18 +552,18 @@ export const deleteAccount = async () => {
 }
 
 // Admin Functions - Add Exercise to Exercise List
-export const addExercisesToExerciseList = async (exerciseList:Exercise[]) => {
+export const addExercisesToExerciseList = async (exerciseList: Exercise[]) => {
 
-    const firestoreExercises = collection(firestoreInstance, "exercises");
+  const firestoreExercises = collection(firestoreInstance, "exercises");
 
-    for(const exercise of exerciseList){
-      try {
-        const exerciseRef = doc(firestoreExercises, exercise.id); // Use 'id' as document ID
-        await setDoc(exerciseRef, exercise); 
-      } catch (err) {
-        console.error('Error setting exercise:', err);
-      }
-    } 
+  for (const exercise of exerciseList) {
+    try {
+      const exerciseRef = doc(firestoreExercises, exercise.id); // Use 'id' as document ID
+      await setDoc(exerciseRef, exercise);
+    } catch (err) {
+      console.error('Error setting exercise:', err);
+    }
+  }
 }
 
 //Admin Function - Delete All Exercises in exercise list
@@ -557,15 +586,15 @@ export const deleteAllExercises = async () => {
 };
 
 // Add a split to the splitTemplates
-export const addSplitToTemplates = async (split:Split) => {
+export const addSplitToTemplates = async (split: Split) => {
 
   const splitTemplates = collection(firestoreInstance, "splitTemplates")
-  
+
   try {
     const { id, ...rest } = split;
     await setDoc(doc(splitTemplates, id), rest);
-    
-  }catch (err){
+
+  } catch (err) {
     console.error(err)
   }
 

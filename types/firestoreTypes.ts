@@ -1,6 +1,6 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { Timestamp } from 'firebase/firestore';
-import { TrainingStyle } from './onboarding';
+import { TrainingStyle, ExperienceLevel, FitnessGoal } from './onboarding';
 
 export type FirebaseUser = FirebaseAuthTypes.User | null;
 
@@ -18,6 +18,8 @@ export interface TemplateSplit {
   name: string;
   description: string;
   trainingStyle: TrainingStyle;
+  experienceLevel: ExperienceLevel;
+  fitnessGoal: FitnessGoal;
   weeksDuration: number;
   daysPerCycle: number;
   daysOfWeek?: string[]; // This can be adjusted

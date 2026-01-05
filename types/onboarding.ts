@@ -10,6 +10,13 @@ export type ExperienceLevel =
   | "advanced"
   | "unsure";
 
+export type FitnessGoal =
+  | "lose_weight"
+  | "gain_muscle"
+  | "get_stronger"
+  | "improve_cardio"
+  | "track_workouts";
+
 export type OnboardingState = {
   // Basic info (SCRUM-12)
   name?: string;
@@ -24,12 +31,7 @@ export type OnboardingState = {
   };
   gender?: "male" | "female" | "other";
 
-  fitnessGoal?:
-    | "lose_weight"
-    | "gain_muscle"
-    | "get_stronger"
-    | "improve_cardio"
-    | "track_workouts";
+  fitnessGoal?: FitnessGoal;
 
   // Training style & experience (SCRUM-14)
   trainingStyles?: Partial<

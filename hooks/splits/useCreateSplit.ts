@@ -5,10 +5,11 @@ import * as svc from '@/lib/orchestration/createSplitService';
 import { router } from 'expo-router';
 
 /**
- * Custom hook for handling state and logic for creating a training split.
- * @returns State and handlers for creating a training split
+ * Custom hook for handling state and logic for creating/editing a training split.
+ * @param editSplitId Optional split ID for editing existing split
+ * @returns State and handlers for creating/editing a training split
  */
-export function useCreateSplit() {
+export function useCreateSplit(editSplitId?: string) {
   // form state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -34,6 +35,24 @@ export function useCreateSplit() {
 
   // load exercise catalog
   useEffect(() => { svc.loadAllExercises().then(setExercises); }, []);
+
+  // load split data for editing
+  useEffect(() => {
+    if (!editSplitId) return;
+
+    svc.loadSplitForEdit(editSplitId).then(split => {
+      if (!split) return;
+
+      setName(split.name);
+      setDescription(split.description);
+      setTrainingStyle(split.trainingStyle);
+      setWeeksDurationStr(String(split.weeksDuration));
+      setDaysPerCycleStr(String(split.daysPerCycle));
+      setScheduledDays(split.daysOfWeek || []);
+      setWorkouts(split.workouts);
+    });
+  }, [editSplitId]);
+
 
   // day ops
   const addWorkoutDay = useCallback(() => {
@@ -151,11 +170,6 @@ export function useCreateSplit() {
 
   // save
   const saveSplit = useCallback(async () => {
-    // Construct payload matching Split (or strict subset used by service)
-    // Note: svc.saveSplitFlow implementation might need to be checked if it strictly defines the payload type
-    // Assuming it takes a Partial<Split> or similar input object.
-
-    // We need to pass the raw values. The service usually handles the ID generation etc.
     const payload: any = {
       name,
       description,
@@ -167,9 +181,16 @@ export function useCreateSplit() {
       workouts,
     };
 
-    const id = await svc.saveSplitFlow(payload);
-    return id;
-  }, [name, description, trainingStyle, repeatDays, weeksDuration, daysPerCycle, scheduledDays, workouts]);
+    if (editSplitId) {
+      // Update existing split
+      const id = await svc.updateSplitFlow(editSplitId, payload);
+      return id;
+    } else {
+      // Create new split
+      const id = await svc.saveSplitFlow(payload);
+      return id;
+    }
+  }, [editSplitId, name, description, trainingStyle, repeatDays, weeksDuration, daysPerCycle, scheduledDays, workouts]);
 
   return {
     // form
