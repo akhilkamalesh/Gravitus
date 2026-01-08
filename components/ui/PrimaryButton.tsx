@@ -1,10 +1,11 @@
-import { Pressable, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { Pressable, Text, StyleSheet, ActivityIndicator, ViewStyle, StyleProp } from "react-native";
 
 type Props = {
   label: string;
   onPress: () => void;
   disabled?: boolean;
   loading?: boolean;
+  style?: StyleProp<ViewStyle>;
 };
 
 export default function PrimaryButton({
@@ -12,6 +13,7 @@ export default function PrimaryButton({
   onPress,
   disabled,
   loading,
+  style,
 }: Props) {
   const isDisabled = disabled || loading;
 
@@ -21,6 +23,7 @@ export default function PrimaryButton({
       disabled={isDisabled}
       style={({ pressed }) => [
         styles.button,
+        style,
         pressed && !isDisabled && styles.pressed,
         isDisabled && styles.disabled,
       ]}

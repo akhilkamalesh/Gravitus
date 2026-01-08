@@ -77,6 +77,19 @@ export interface workoutExercise {
 
 // Used for exercise [id] graphing purposes as well as statistics
 // Could definitely be used to replace sub dictionary in Exercise Log
+export interface TemplateWorkout {
+  id: string;
+  name: string;
+  description: string;
+  trainingStyle: TrainingStyle;
+  experienceLevel: ExperienceLevel;
+  fitnessGoal: FitnessGoal;
+  exercises: workoutExercise[];
+  estimatedDuration: number; // in minutes
+}
+
+// Used for exercise [id] graphing purposes as well as statistics
+// Could definitely be used to replace sub dictionary in Exercise Log
 export interface ExerciseStat {
   exerciseId: string;
   sets: { weight: number; reps: number; date: string }[];

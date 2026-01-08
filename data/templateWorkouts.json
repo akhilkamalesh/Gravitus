@@ -1,0 +1,126 @@
+[
+    {
+        "id": "full_body_beginner",
+        "name": "Full Body - Beginner",
+        "description": "A great starting point for beginners. Hits all major muscle groups.",
+        "trainingStyle": "bodybuilding",
+        "experienceLevel": "beginner",
+        "fitnessGoal": "get_stronger",
+        "exercises": [
+            {
+                "exerciseId": "sq001",
+                "sets": 3,
+                "reps": {
+                    "min": 8,
+                    "max": 12
+                },
+                "rpe": 7,
+                "exerciseData": {
+                    "id": "sq001",
+                    "name": "Squat (Barbell)",
+                    "primaryMuscleGroup": "Legs",
+                    "secondaryMuscleGroup": [
+                        "Glutes"
+                    ]
+                }
+            },
+            {
+                "exerciseId": "bp001",
+                "sets": 3,
+                "reps": {
+                    "min": 8,
+                    "max": 12
+                },
+                "rpe": 7,
+                "exerciseData": {
+                    "id": "bp001",
+                    "name": "Bench Press (Barbell)",
+                    "primaryMuscleGroup": "Chest",
+                    "secondaryMuscleGroup": [
+                        "Triceps"
+                    ]
+                }
+            },
+            {
+                "exerciseId": "lat001",
+                "sets": 3,
+                "reps": {
+                    "min": 10,
+                    "max": 15
+                },
+                "rpe": 7,
+                "exerciseData": {
+                    "id": "lat001",
+                    "name": "Lat Pulldown (Cable)",
+                    "primaryMuscleGroup": "Back",
+                    "secondaryMuscleGroup": [
+                        "Biceps"
+                    ]
+                }
+            }
+        ],
+        "estimatedDuration": 45
+    },
+    {
+        "id": "upper_body_power",
+        "name": "Upper Body Power",
+        "description": "Focus on compound movements for upper body strength.",
+        "trainingStyle": "powerlifting",
+        "experienceLevel": "intermediate",
+        "fitnessGoal": "get_stronger",
+        "exercises": [
+            {
+                "exerciseId": "bp001",
+                "sets": 5,
+                "reps": {
+                    "min": 3,
+                    "max": 5
+                },
+                "rpe": 9,
+                "exerciseData": {
+                    "id": "bp001",
+                    "name": "Bench Press (Barbell)",
+                    "primaryMuscleGroup": "Chest",
+                    "secondaryMuscleGroup": [
+                        "Triceps"
+                    ]
+                }
+            },
+            {
+                "exerciseId": "ohp001",
+                "sets": 4,
+                "reps": {
+                    "min": 4,
+                    "max": 6
+                },
+                "rpe": 8,
+                "exerciseData": {
+                    "id": "ohp001",
+                    "name": "Overhead Press (Barbell)",
+                    "primaryMuscleGroup": "Shoulders",
+                    "secondaryMuscleGroup": [
+                        "Triceps"
+                    ]
+                }
+            },
+            {
+                "exerciseId": "br001",
+                "sets": 4,
+                "reps": {
+                    "min": 6,
+                    "max": 8
+                },
+                "rpe": 8,
+                "exerciseData": {
+                    "id": "br001",
+                    "name": "Bent Over Row (Barbell)",
+                    "primaryMuscleGroup": "Back",
+                    "secondaryMuscleGroup": [
+                        "Biceps"
+                    ]
+                }
+            }
+        ],
+        "estimatedDuration": 60
+    }
+]

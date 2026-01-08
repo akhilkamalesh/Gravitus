@@ -31,27 +31,8 @@ export async function loadInitialWorkout() {
     };
 
     if (!w) {
-        const split: Split = {
-            id: generateOneOffSplitId(),
-            name: 'One-Off',
-            description: 'A custom workout not tied to a plan',
-            repeatDays: false,
-            weeksDuration: 1,
-            workouts: [{ dayName: 'Custom', exercises: [] }],
-        };
-        await saveOneOffSplitToUser(split);
-        const workout = split.workouts[0];
-
-        const log: ExerciseLog = {
-            splitId: split.id,
-            workoutDay: workout.dayName,
-            date: new Date().toISOString(),
-            localDate: new Date().toLocaleDateString(),
-            exercises: []
-        };
-
-        if (await checkWorkoutStatus()) return { split, workout, log, isFresh: true, isDone: true } as const;
-        return { split, workout, log, isFresh: true } as const;
+        // Return null to indicate no active split/workout
+        return null;
     }
 
     const { split, workout } = w;
@@ -82,7 +63,7 @@ export async function loadInitialWorkout() {
 
     return { split, workout: normalizedWorkout, log, isFresh: false } as const;
 }
-  
+
 /** 
  * Returns exercises
  * @returns exercises {Excerise[]}

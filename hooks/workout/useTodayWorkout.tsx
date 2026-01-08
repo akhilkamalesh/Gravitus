@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Exercise, ExerciseLog, Split, workout } from '@/types/firestoreTypes';
+import { Exercise, ExerciseLog, Split, workout, TemplateWorkout } from '@/types/firestoreTypes';
 import * as svc from '@/lib/orchestration/workoutService';
 
 /**
@@ -18,9 +18,9 @@ import * as svc from '@/lib/orchestration/workoutService';
  * - saveWorkout
  */
 export function useTodayWorkout() {
-  const [split, setSplit] = useState<Split|null>(null);
-  const [workout, setWorkout] = useState<workout|null>(null);
-  const [log, setLog] = useState<ExerciseLog|null>(null);
+  const [split, setSplit] = useState<Split | null>(null);
+  const [workout, setWorkout] = useState<workout | null>(null);
+  const [log, setLog] = useState<ExerciseLog | null>(null);
   const [isFresh, setIsFresh] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -30,7 +30,11 @@ export function useTodayWorkout() {
   */
   const refresh = useCallback(async () => {
     const res = await svc.loadInitialWorkout();
-    if ('isDone' in res) { setIsDone(true)}
+    if (!res) {
+      setSplit(null); setWorkout(null); setLog(null); setIsFresh(false); setIsDone(false);
+      return;
+    }
+    if ('isDone' in res) { setIsDone(true) }
     setSplit(res.split); setWorkout(res.workout); setLog(res.log); setIsFresh(res.isFresh);
   }, []);
 
@@ -43,18 +47,48 @@ export function useTodayWorkout() {
    * Provides memoized callbacks to manage a user's current workout session
    * Dependencies: None because it only uses globals and React’s stable setters. 
   */
-  const tryNewWorkout = useCallback(async () => {
+  const tryNewWorkout = useCallback(async (template?: { name: string, exercises: Exercise[] } | any) => {
+    // Basic type check or casting could be done here if needed
+    const workoutName = template?.name || 'Custom';
+    const initialExercises = template?.exercises || [];
+
+    const generateId = () => {
+      if (typeof crypto !== 'undefined' && (crypto as any).randomUUID) return (crypto as any).randomUUID();
+      return Math.random().toString(36).slice(2) + Date.now().toString(36);
+    };
+
     const newSplit: Split = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       name: 'One-Off',
       description: 'A custom workout not tied to a plan',
-      repeatDays: false, weeksDuration: 1,
-      workouts: [{ dayName: 'Custom', exercises: [] }],
+      trainingStyle: 'bodybuilding',
+      daysPerCycle: 1,
+      weeksDuration: 1,
+      workouts: [{ dayName: workoutName, exercises: initialExercises }],
     };
-    await svc.startOneOff(newSplit);
+
+    try {
+      await svc.startOneOff(newSplit);
+    } catch (e: any) {
+      console.error(e);
+    }
+
+    console.log("here again")
     setSplit(newSplit);
     setWorkout(newSplit.workouts[0]);
-    setLog({ splitId: newSplit.id, workoutDay: 'Custom', date: new Date().toISOString(), exercises: [] });
+    // For logging, we need to map the exercises to log format if they exist
+    const logExercises = initialExercises.map((ex: any) => ({
+      exerciseId: ex.exerciseId,
+      sets: Array(ex.sets).fill({ weight: 0, reps: 0 }),
+      instanceId: ex.instanceId
+    }));
+
+    setLog({
+      splitId: newSplit.id,
+      workoutDay: workoutName,
+      date: new Date().toISOString(),
+      exercises: logExercises
+    });
     setIsFresh(true);
   }, []);
 
