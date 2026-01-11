@@ -53,6 +53,7 @@ export interface ExerciseLog {
     exerciseId: string;
     brand?: string;
     sets: { weight: number; reps: number }[];
+    notes?: string;
   }[];
 }
 

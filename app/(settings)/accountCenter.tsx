@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import GravitusHeader from "@/components/GravitusHeader";
 import AccountActionItem from "@/components/AccountActionItem";
 import AccountCenterModal from "@/components/AccountCenterModal";
@@ -21,7 +21,10 @@ export default function AccountCenterScreen() {
     return (
         <SafeAreaView style={styles.screen}>
             <GravitusHeader showBackButton />
-            <Text style={styles.title}>Account Center</Text>
+
+            <View style={{ paddingHorizontal: 20, marginTop: 12, marginBottom: 20 }}>
+                <Text style={styles.title}>Account Center</Text>
+            </View>
 
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -32,7 +35,7 @@ export default function AccountCenterScreen() {
 
 
                 <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-                <Text style={styles.signOutText}>Sign Out</Text>
+                    <Text style={styles.signOutText}>Sign Out</Text>
                 </TouchableOpacity>
             </ScrollView>
 
@@ -49,14 +52,13 @@ export default function AccountCenterScreen() {
 
 
 const styles = StyleSheet.create({
-    screen: { flex: 1, backgroundColor: "#121417" },
+    screen: { flex: 1, backgroundColor: "#000" },
     scrollContent: { alignItems: "center", paddingBottom: 48 },
     title: {
-        fontSize: 28,
-        fontWeight: "600",
+        fontSize: 32,
+        fontWeight: "700",
         color: "#ffffff",
-        textAlign: "center",
-        marginVertical: 12,
+        textAlign: "left",
     },
     signOutButton: {
         marginTop: 20,

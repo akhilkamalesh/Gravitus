@@ -1,7 +1,7 @@
 // app/(exercises)/[id].tsx
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import GravitusHeader from '@/components/GravitusHeader';
 import SectionHeader from '@/components/SectionHeader';
 import { useLocalSearchParams } from 'expo-router';
@@ -45,13 +45,19 @@ export default function ExerciseDetailScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex:1, backgroundColor:'#121417' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
       <GravitusHeader showBackButton />
-      <Text style={{ fontSize:28, fontWeight:'600', color:'white', textAlign:'center', marginVertical:12 }}>
-        {exercise.name}
-      </Text>
+      
+      <View style={{ paddingHorizontal: 20, marginTop: 12, marginBottom: 20 }}>
+        <Text style={{ fontSize: 32, fontWeight: '700', color: 'white' }}>
+          {exercise.name}
+        </Text>
+        <Text style={{ fontSize: 16, color: '#666', marginTop: 4 }}>
+            {exercise.primaryMuscleGroup}
+        </Text>
+      </View>
 
-      <ScrollView contentContainerStyle={{ alignItems:'center', paddingBottom:48 }}>
+      <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 48 }}>
         {oneRmSeries.length >= 5 && <SectionHeader title="Estimated One Rep Max Over Time" />}
         {oneRmSeries.length >= 5 && (
           <ExerciseLineCard
@@ -65,7 +71,7 @@ export default function ExerciseDetailScreen() {
           name={exercise.name}
           primary={exercise.primaryMuscleGroup}
           secondary={exercise.secondaryMuscleGroup}
-          motion={exercise.motion}
+          motion={exercise.motion ?? ''}
         />
 
         <SectionHeader title="Statistics" />

@@ -89,9 +89,11 @@ export function useWorkoutEdits(
     setLog(curr => {
       if (!curr) return curr;
       const ex = curr.exercises[exIndex];
-      const next = { ...curr, exercises: curr.exercises.map((e, i) =>
-        i === exIndex ? { ...e, sets: [...e.sets, { weight: 0, reps: 0 }] } : e
-      )};
+      const next = {
+        ...curr, exercises: curr.exercises.map((e, i) =>
+          i === exIndex ? { ...e, sets: [...e.sets, { weight: 0, reps: 0 }] } : e
+        )
+      };
       return next;
     });
   };
@@ -102,25 +104,43 @@ export function useWorkoutEdits(
       if (!curr) return curr;
       const sets = curr.exercises[exIndex].sets;
       if (sets.length <= 1) { Alert.alert('Cannot delete the only set'); return curr; }
-      const next = { ...curr, exercises: curr.exercises.map((e, i) =>
-        i === exIndex ? { ...e, sets: e.sets.slice(0, -1) } : e
-      )};
+      const next = {
+        ...curr, exercises: curr.exercises.map((e, i) =>
+          i === exIndex ? { ...e, sets: e.sets.slice(0, -1) } : e
+        )
+      };
       return next;
     });
   };
 
-  const updateSet = (exIndex: number, setIndex: number, field: 'weight'|'reps', value: number) => {
+  const updateSet = (exIndex: number, setIndex: number, field: 'weight' | 'reps', value: number) => {
     if (!log) return;
     setLog(curr => {
       if (!curr) return curr;
-      const next = { ...curr, exercises: curr.exercises.map((e, i) => {
-        if (i !== exIndex) return e;
-        const newSets = e.sets.map((s, si) => si === setIndex ? { ...s, [field]: value } : s);
-        return { ...e, sets: newSets };
-      })};
+      const next = {
+        ...curr, exercises: curr.exercises.map((e, i) => {
+          if (i !== exIndex) return e;
+          const newSets = e.sets.map((s, si) => si === setIndex ? { ...s, [field]: value } : s);
+          return { ...e, sets: newSets };
+        })
+      };
       return next;
     });
   };
 
-  return { addExercise, deleteExercise, addSet, removeSet, updateSet };
+  const updateNotes = (exIndex: number, notes: string) => {
+    if (!log) return;
+    setLog(curr => {
+      if (!curr) return curr;
+      const next = {
+        ...curr, exercises: curr.exercises.map((e, i) => {
+          if (i !== exIndex) return e;
+          return { ...e, notes };
+        })
+      };
+      return next;
+    });
+  };
+
+  return { addExercise, deleteExercise, addSet, removeSet, updateSet, updateNotes };
 }

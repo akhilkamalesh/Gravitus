@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import GravitusHeader from '@/components/GravitusHeader';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import ExerciseSearchModal from '@/components/ExerciseSearchModal';
-import WorkoutCompleteModal from '@/components/CompleteModal';
 import ExerciseCard from '@/components/ExerciseCard';
 import FloatingCard from '@/components/floatingbox';
 import SectionHeader from '@/components/SectionHeader';
@@ -26,8 +25,28 @@ export default function TodayWorkoutScreen() {
   } = useTodayWorkout();
 
   const placeholders = usePlaceholders(log);
-  const { addExercise, deleteExercise, addSet, removeSet, updateSet } =
+  const { addExercise, deleteExercise, addSet, removeSet, updateSet, updateNotes } =
     useWorkoutEdits(workout, log, setWorkout, setLog);
+
+  /* New State for Post-Workout View */
+  type ViewMode = 'active' | 'menu' | 'past' | 'next';
+  const [viewMode, setViewMode] = useState<ViewMode>('active');
+  const [pastLog, setPastLog] = useState<any>(null);
+
+  // Sync isDone to viewMode
+  useEffect(() => {
+    if (isDone && viewMode === 'active') {
+      setViewMode('menu');
+      // Load past log for "Today's Workout" view
+      import('@/lib/firestoreFunctions').then(mod => {
+        mod.getPrevWorkoutStat().then(log => {
+          setPastLog(log);
+        });
+      });
+    } else if (!isDone) {
+      setViewMode('active');
+    }
+  }, [isDone]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
@@ -54,9 +73,31 @@ export default function TodayWorkoutScreen() {
 
   const handleSave = async () => {
     if (!canEdit) return;
+
+    // Validation: Ensure all exercises have been logged
+    const allLogged = workout?.exercises.every((ex, index) => {
+      const logEntry = log?.exercises.find(e => e.instanceId === ex.instanceId) ?? log?.exercises[index];
+      if (!logEntry) return false;
+      // Check if at least one set is completed (weight > 0 && reps > 0)
+      // Or checking if the user has inputted anything at all. 
+      // Let's go with: has at least one set where reps > 0 (weight could be 0 for bodyweight?)
+      // Adjust validation stringency as needed.
+      return logEntry.sets.some(s => s.reps > 0 && s.weight >= 0);
+    });
+
+    if (!allLogged) {
+      alert("Not all exercises have been logged. Please complete all exercises before saving.");
+      return;
+    }
+
     try {
       setSaving(true);
       await saveWorkout();
+      // Success confirmation
+      // The requirement says: "When a user saves their workout -> Then the system should display a confirmation message"
+      // We can use Alert for native feel or a custom modal. Using Alert for now as per "message".
+      alert("Workout has been saved successfully!");
+
     } catch (e: any) {
       alert(e.message);
     } finally {
@@ -64,10 +105,7 @@ export default function TodayWorkoutScreen() {
     }
   };
 
-  // Open modal whenever the workout becomes done
-  useEffect(() => {
-    if (isDone) setShowCompleteModal(true);
-  }, [isDone]);
+
 
   // If no split is active, show "Try New Workout" screen
   if (!split) {
@@ -133,58 +171,180 @@ export default function TodayWorkoutScreen() {
     );
   }
 
+  // --- Render Functions for Completed State ---
+
+  const renderMenu = () => (
+    <View style={styles.menuContainer}>
+      <View style={{ alignItems: 'center', marginBottom: 40 }}>
+        <Ionicons name="checkmark-circle" size={80} color="#4FD6EA" style={{ marginBottom: 16 }} />
+        <Text style={styles.menuTitle}>Workout Completed!</Text>
+        <Text style={styles.menuSubtitle}>Good job. What's next?</Text>
+      </View>
+
+      <FloatingCard
+        width="100%"
+        onPress={() => setViewMode('past')}
+        style={{ marginBottom: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+      >
+        <View>
+          <Text style={styles.cardTitle}>View Today's Workout</Text>
+          <Text style={styles.cardDesc}>Review your performance</Text>
+        </View>
+        <Ionicons name="eye-outline" size={24} color="#4FD6EA" />
+      </FloatingCard>
+
+      <FloatingCard
+        width="100%"
+        onPress={() => setViewMode('next')}
+        style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+      >
+        <View>
+          <Text style={styles.cardTitle}>View Tomorrow's Workout</Text>
+          <Text style={styles.cardDesc}>Prepare for your next session</Text>
+        </View>
+        <Ionicons name="calendar-outline" size={24} color="#4FD6EA" />
+      </FloatingCard>
+    </View>
+  );
+
+  const renderWorkoutView = (isPast: boolean) => {
+    // If viewing past, we use pastLog and hydrating data from 'exercises'
+    // If viewing next (isDone + active/next), we use 'workout' and 'log' (which are freshly loaded for tomorrow)
+
+    // Determine which data to use
+    let displayExercises: any[] = [];
+    if (isPast) {
+      if (!pastLog) return <Text style={{ color: 'white', textAlign: 'center', marginTop: 20 }}>Loading past workout...</Text>;
+      displayExercises = pastLog.exercises.map((logEx: any, i: number) => {
+        const exData = exercises.find(e => e.id === logEx.exerciseId);
+        return {
+          instanceId: logEx.instanceId ?? `past-${i}`,
+          exerciseId: logEx.exerciseId,
+          exerciseData: exData,
+          sets: logEx.sets, // for rendering loop
+          notes: logEx.notes
+        };
+      });
+    } else {
+      // Future
+      displayExercises = workout?.exercises.map((ex, index) => {
+        const logEntry = log?.exercises.find(e => e.instanceId === ex.instanceId) ?? log?.exercises[index];
+        return {
+          ...ex,
+          sets: logEntry?.sets ?? [],
+          notes: logEntry?.notes
+        }
+      }) ?? [];
+    }
+
+    const title = isPast ? "Today's Workout" : "Tomorrow's Workout";
+    const sub = isPast ? "Completed" : split.name;
+
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerTitle}>{title}</Text>
+          <Text style={styles.headerSubtitle}>{sub}</Text>
+        </View>
+
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {displayExercises.map((ex, i) => (
+            <ExerciseCard
+              key={i}
+              exercise={isPast ? { ...ex, reps: { min: 0, max: 0 } /* dummy */ } : ex} // ExerciseCard needs workoutExercise type
+              exIndex={i}
+              sets={ex.sets}
+              notes={ex.notes}
+              // placeholders={placeholders[ex.exerciseId] ?? []} // Optional for view modes
+              readOnly={true}
+              onDelete={() => { }}
+              onAddSet={() => { }}
+              onRemoveSet={() => { }}
+              onUpdateSet={() => { }}
+              onUpdateNotes={() => { }}
+              onOpenHistory={() => { }}
+            />
+          ))}
+          {/* Back Button if in menu flow */}
+          <Pressable style={styles.backButton} onPress={() => setViewMode('menu')}>
+            <Text style={styles.backButtonText}>Back to Options</Text>
+          </Pressable>
+        </ScrollView>
+      </View>
+    );
+  };
+
+  // Main Render Helper
+  const renderContent = () => {
+    if (viewMode === 'menu') return renderMenu();
+    if (viewMode === 'past') return renderWorkoutView(true);
+    if (viewMode === 'next') return renderWorkoutView(false);
+
+    // Default Active Render
+    return (
+      <>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerTitle}>
+            Today’s Workout: {workout?.dayName}
+          </Text>
+          <Text style={styles.headerSubtitle}>{split?.name}</Text>
+        </View>
+
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {workout?.exercises.map((ex, exIndex) => {
+            const logEntry = log?.exercises.find(e => e.instanceId === ex.instanceId) ?? log?.exercises[exIndex];
+            return (
+              <ExerciseCard
+                key={ex.instanceId ?? `${ex.exerciseId}-${exIndex}`}
+                exercise={ex}
+                exIndex={exIndex}
+                sets={logEntry?.sets ?? []}
+                notes={logEntry?.notes}
+                placeholders={placeholders[ex.exerciseId] ?? []}
+                onDelete={() => { if (canEdit) deleteExercise(exIndex) }}
+                onAddSet={() => addSet(exIndex)}
+                onRemoveSet={() => removeSet(exIndex)}
+                onUpdateSet={(setIdx, field, val) => updateSet(exIndex, setIdx, field, Number(val))}
+                onUpdateNotes={(text) => updateNotes(exIndex, text)}
+                onOpenHistory={() => {
+                  setHistoryExercise({ id: ex.exerciseId, name: ex.exerciseData?.name ?? 'Exercise' });
+                  setHistoryVisible(true);
+                }}
+              />
+            );
+          })}
+
+          <Pressable
+            style={[styles.addExerciseButton, { opacity: canEdit ? 1 : 0.5 }]}
+            onPress={() => { if (canEdit) setModalVisible(true); }}
+          >
+            <Text style={styles.addExerciseText}>+ Add Exercise</Text>
+          </Pressable>
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <PrimaryButton
+            label="Save Workout"
+            onPress={handleSave}
+            loading={saving}
+            disabled={!canEdit}
+          />
+        </View>
+      </>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <GravitusHeader
-        showEditButton
+        showEditButton={!isDone}
         onTryNewWorkout={tryNewWorkout}
         onChangeSplit={() => router.push('../(trainingSplits)/trainingSplits')}
         onSkipWorkout={async () => { await skipWorkout(); }}
       />
-      <WorkoutCompleteModal visible={showCompleteModal} onClose={() => { setShowCompleteModal(false) }} />
+      {/* Complete Modal Removed in favor of viewMode */}
 
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>
-          Today’s Workout: {workout?.dayName}
-        </Text>
-        <Text style={styles.headerSubtitle}>{split?.name}</Text>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {workout?.exercises.map((ex, exIndex) => (
-          <ExerciseCard
-            key={ex.instanceId ?? `${ex.exerciseId}-${exIndex}`}
-            exercise={ex}
-            exIndex={exIndex}
-            sets={log?.exercises.find(e => e.instanceId === ex.instanceId)?.sets ?? log?.exercises[exIndex]?.sets ?? []}
-            placeholders={placeholders[ex.exerciseId] ?? []}
-            onDelete={() => { if (canEdit) deleteExercise(exIndex) }}
-            onAddSet={() => addSet(exIndex)}
-            onRemoveSet={() => removeSet(exIndex)}
-            onUpdateSet={(setIdx, field, val) => updateSet(exIndex, setIdx, field, Number(val))}
-            onOpenHistory={() => {
-              setHistoryExercise({ id: ex.exerciseId, name: ex.exerciseData?.name ?? 'Exercise' });
-              setHistoryVisible(true);
-            }}
-          />
-        ))}
-
-        <Pressable
-          style={[styles.addExerciseButton, { opacity: canEdit ? 1 : 0.5 }]}
-          onPress={() => { if (canEdit) setModalVisible(true); }}
-        >
-          <Text style={styles.addExerciseText}>+ Add Exercise</Text>
-        </Pressable>
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <PrimaryButton
-          label="Save Workout"
-          onPress={handleSave}
-          loading={saving}
-          disabled={!canEdit}
-        />
-      </View>
+      {renderContent()}
 
       <ExerciseSearchModal
         visible={modalVisible}
@@ -268,10 +428,39 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa',
   },
+  // ... existing styles
   linkText: {
     color: '#4FD6EA',
     fontSize: 16,
     marginTop: 10,
     textDecorationLine: 'underline',
+  },
+  menuContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: 'black', // Ensure black background
+  },
+  menuTitle: {
+    color: 'white',
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  menuSubtitle: {
+    color: '#aaa',
+    fontSize: 18,
+    marginBottom: 40,
+    textAlign: 'center',
+  },
+  backButton: {
+    alignSelf: 'center',
+    marginTop: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: '#4FD6EA',
+    fontSize: 16,
   },
 });

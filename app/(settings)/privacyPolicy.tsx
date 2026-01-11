@@ -6,7 +6,10 @@ export default function PrivacyPolicy() {
   return (
     <SafeAreaView style={styles.screen}>
       <GravitusHeader showBackButton={true} />
-      <Text style={styles.welcome}>Privacy Policy</Text>
+
+      <View style={{ paddingHorizontal: 20, marginTop: 12, marginBottom: 20 }}>
+        <Text style={styles.welcome}>Privacy Policy</Text>
+      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.paragraph}>
@@ -100,7 +103,7 @@ export default function PrivacyPolicy() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#121417',
+    backgroundColor: '#000',
   },
   scrollContent: {
     alignItems: 'flex-start',
@@ -108,11 +111,10 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   welcome: {
-    fontSize: 28,
-    fontWeight: '600',
+    fontSize: 32,
+    fontWeight: '700',
     color: '#ffffff',
-    textAlign: 'center',
-    marginVertical: 12,
+    textAlign: 'left',
   },
   heading: {
     fontSize: 18,

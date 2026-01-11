@@ -24,15 +24,15 @@ export default function ExerciseListItem({
 }) {
   return (
     <FloatingCard key={id} width="90%" height={95} onPress={() => onPress(id)}>
-      <View style={{ flex:1, justifyContent:'space-between', paddingVertical:8 }}>
-        <View style={{ flexDirection:'row', justifyContent:'space-between', marginBottom:6 }}>
-          <Text style={{ color:'white', fontSize:18, fontWeight:'600', flex:1 }} numberOfLines={2}>
+      <View style={{ flex: 1, justifyContent: 'center', paddingVertical: 4 }}>
+        <View style={{ marginBottom: 8 }}>
+          <Text style={{ color: 'white', fontSize: 18, fontWeight: '700' }} numberOfLines={1}>
             {name}
           </Text>
         </View>
-        <View style={{ flexDirection:'row', justifyContent:'space-between', gap:16 }}>
-          <Text style={{ color:'#bbb', fontSize:13 }}>Primary: {primary}</Text>
-          <Text style={{ color:'#bbb', fontSize:13 }}>Motion: {motion}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 16 }}>
+          <Text style={{ color: '#888', fontSize: 14 }}>Primary: <Text style={{ color: '#ccc' }}>{primary}</Text></Text>
+          <Text style={{ color: '#888', fontSize: 14 }}>Motion: <Text style={{ color: '#ccc' }}>{motion}</Text></Text>
         </View>
       </View>
     </FloatingCard>

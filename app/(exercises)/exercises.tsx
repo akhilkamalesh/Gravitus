@@ -39,11 +39,17 @@ export default function ExercisesScreen() {
   const [modalVisible, setModalVisible] = useState(false); // modals
 
   return (
-    <SafeAreaView style={{ flex:1, backgroundColor:'#121417' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
       <GravitusHeader showBackButton />
-      <Text style={{ fontSize:28, fontWeight:'600', color:'white', alignSelf:'center', marginVertical:12 }}>
-        Exercises
-      </Text>
+
+      <View style={{ paddingHorizontal: 20, marginTop: 12, marginBottom: 20 }}>
+        <Text style={{ fontSize: 32, fontWeight: '700', color: 'white' }}>
+          Exercises
+        </Text>
+        <Text style={{ fontSize: 16, color: '#666', marginTop: 4 }}>
+          Browse exercise library
+        </Text>
+      </View>
 
       <ExercisesTopBar
         search={search}
@@ -51,15 +57,15 @@ export default function ExercisesScreen() {
         onOpenFilter={() => setModalVisible(true)}
       />
 
-      <ScrollView>
-        <View style={{ alignItems:'center', paddingBottom:36 }}>
+      <ScrollView contentContainerStyle={{ paddingTop: 10 }}>
+        <View style={{ alignItems: 'center', paddingBottom: 36 }}>
           {!loading && filtered.map(ex => (
             <ExerciseListItem
               key={ex.id}
               id={ex.id}
               name={ex.name}
               primary={ex.primaryMuscleGroup}
-              motion={ex.motion}
+              motion={ex.motion ?? ''}
               onPress={(id) => router.push(`/(exercises)/${id}`)}
             />
           ))}

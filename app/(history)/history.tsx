@@ -24,23 +24,24 @@ export default function HistoryScreen() {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <SafeAreaView style={{ flex:1, backgroundColor:'#121417' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
       <GravitusHeader showBackButton />
-      <Text style={{ fontSize:28, fontWeight:'600', color:'white', alignSelf:'center', marginVertical:12 }}>
-        Logged Workouts
+      <Text style={{ fontSize: 32, fontWeight: '700', color: 'white', paddingHorizontal: 20, marginTop: 12 }}>
+        History
+      </Text>
+      <Text style={{ fontSize: 16, color: '#666', paddingHorizontal: 20, marginBottom: 20 }}>
+        Your completed workouts
       </Text>
 
-      {// Top bar with search and filter button
-      }
+      {/* Top bar with search and filter button */}
       <HistoryTopBar
         searchText={searchText}
         setSearchText={setSearchText}
         onOpenFilter={() => setModalVisible(true)}
       />
 
-      {// List of logged workouts depending on filter results
-      }
-      <ScrollView contentContainerStyle={{ alignItems:'center', paddingBottom:36 }}>
+      {/* List of logged workouts depending on filter results */}
+      <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 36, paddingTop: 10 }}>
         {!loading && filtered.map(w => (
           <HistoryItem
             key={w.id}
@@ -53,8 +54,7 @@ export default function HistoryScreen() {
         ))}
       </ScrollView>
 
-      {// Modal for selecting muscle groups to filter by
-      }
+      {/* Modal for selecting muscle groups to filter by */}
       <MuscleGroupModal
         visible={modalVisible}
         selected={selectedSplits}

@@ -1,7 +1,7 @@
 // app/(history)/[id].tsx
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import GravitusHeader from '@/components/GravitusHeader';
 import SectionHeader from '@/components/SectionHeader';
 import { useLocalSearchParams } from 'expo-router';
@@ -19,14 +19,17 @@ export default function HistoryDetailScreen() {
   const { loading, log, split, enrichedExercises, pieData, totalVolume } = useHistoryDetail(id); // getting hook information here
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#121417' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
       <GravitusHeader showBackButton />
-      <Text style={{ fontSize: 26, fontWeight: '600', color: 'white', alignSelf: 'center', marginVertical: 12 }}>
-        {log ? `${log.workoutDay}: ${log.date.substring(0, 9)}` : 'Workout'}
-      </Text>
-      <Text style={{ color: '#4FD6EA', fontSize: 14, marginBottom: 16, alignSelf: 'center' }}>
-        {split?.name ?? ''}
-      </Text>
+
+      <View style={{ paddingHorizontal: 20, marginTop: 12, marginBottom: 20 }}>
+        <Text style={{ fontSize: 32, fontWeight: '700', color: 'white' }}>
+          {log ? `${log.workoutDay}` : 'Workout'}
+        </Text>
+        <Text style={{ fontSize: 16, color: '#666', marginTop: 4 }}>
+          {log ? log.date.substring(0, 10) : ''} • {split?.name ?? 'One-Off'}
+        </Text>
+      </View>
 
       <ScrollView contentContainerStyle={{ alignItems: 'center', paddingBottom: 48 }}>
         <SectionHeader title="Statistics" />
@@ -38,7 +41,8 @@ export default function HistoryDetailScreen() {
           <HistoryExerciseLogCard
             key={`${ex.exerciseId}-${idx}`}
             name={ex.name}
-            sets={log?.exercises[idx]?.sets ?? []}
+            sets={ex.sets ?? []}
+            notes={ex.notes}
           />
         ))}
       </ScrollView>

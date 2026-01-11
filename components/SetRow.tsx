@@ -8,20 +8,34 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
  * - onChange [function with params: weight|reps]
  * @returns row within exerciseCard
  */
-export default function SetRow({ index, placeholder, onChange }: {
+export default function SetRow({ index, placeholder, values, onChange, disabled }: {
   index: number;
   placeholder?: { weight: number; reps: number };
+  values?: { weight: number; reps: number };
   onChange: (field: 'weight' | 'reps', value: string) => void;
+  disabled?: boolean;
 }) {
   return (
     <View style={styles.row}>
       <Text style={styles.col}>{index + 1}</Text>
-      <TextInput style={styles.input} keyboardType="numeric"
-        placeholder={String(placeholder?.weight ?? 0)} placeholderTextColor="#555"
-        onChangeText={(v) => onChange('weight', v)} />
-      <TextInput style={styles.input} keyboardType="numeric"
-        placeholder={String(placeholder?.reps ?? 0)} placeholderTextColor="#555"
-        onChangeText={(v) => onChange('reps', v)} />
+      <TextInput
+        style={[styles.input, disabled && styles.disabledInput]}
+        keyboardType="numeric"
+        placeholder={String(placeholder?.weight ?? 0)}
+        placeholderTextColor="#555"
+        value={values ? String(values.weight) : undefined}
+        editable={!disabled}
+        onChangeText={(v) => onChange('weight', v)}
+      />
+      <TextInput
+        style={[styles.input, disabled && styles.disabledInput]}
+        keyboardType="numeric"
+        placeholder={String(placeholder?.reps ?? 0)}
+        placeholderTextColor="#555"
+        value={values ? String(values.reps) : undefined}
+        editable={!disabled}
+        onChangeText={(v) => onChange('reps', v)}
+      />
     </View>
   );
 }
@@ -39,5 +53,9 @@ const styles = StyleSheet.create({
     borderColor: '#333',
     paddingVertical: 8,
     fontSize: 14,
+  },
+  disabledInput: {
+    opacity: 0.5,
+    backgroundColor: '#111',
   },
 });

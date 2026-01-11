@@ -371,26 +371,21 @@ export const generateOneOffSplitId = () => {
 };
 
 // Check if workout is complete based of date
-// TODO: Fix date comparison
 export const checkWorkoutStatus = async () => {
-
-  // const todayISO = new Date().toLocaleString().split(',')[0]; // '2025-06-15'
   const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
-  const todayLocal = new Date().toLocaleDateString();
 
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
   const logsRef = collection(firestoreInstance, "users", user.uid, "logs");
 
-  // This is where the issue is
-  // Date with localeString is being compared on string ie (09/01 vs 9/1)
   const q = query(logsRef, orderBy('date', 'desc'), limit(1));
 
   const snapshot = await getDocs(q)
+  if (snapshot.empty) return false;
 
-  const snapshotDate = snapshot.docs[0].data().localDate?.split(',')[0];
+  const snapshotDate = snapshot.docs[0].data().date?.split('T')[0];
 
-  return (snapshotDate === todayLocal)
+  return (snapshotDate === todayISO);
 }
 
 // Gets previous workout statistics (used in getTodayWorkout function)
