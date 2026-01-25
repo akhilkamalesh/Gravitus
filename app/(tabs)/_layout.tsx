@@ -18,6 +18,7 @@ export default function TabLayout() {
           let iconName = 'home';
           if (route.name === 'index') iconName = 'home';
           else if (route.name === 'two') iconName = 'barbell';
+          else if (route.name === 'calendar') iconName = 'calendar';
           else if (route.name === 'settings') iconName = 'settings';
 
           return (
@@ -35,6 +36,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="index" />
       <Tabs.Screen name="two" />
+      <Tabs.Screen name="calendar" />
       <Tabs.Screen name="settings" />
     </Tabs>
   );
