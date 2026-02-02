@@ -48,7 +48,7 @@ export function useCreateSplit(editSplitId?: string) {
       setTrainingStyle(split.trainingStyle);
       setWeeksDurationStr(String(split.weeksDuration));
       setDaysPerCycleStr(String(split.daysPerCycle));
-      setScheduledDays(split.daysOfWeek || []);
+      setScheduledDays(split.scheduledDays || []);
       setWorkouts(split.workouts);
     });
   }, [editSplitId]);

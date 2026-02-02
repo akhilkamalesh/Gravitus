@@ -46,7 +46,7 @@ export default function HistoryScreen() {
           <HistoryItem
             key={w.id}
             logId={w.id ?? ''}
-            date={w.date}
+            date={w.localDate ?? ''}
             dayName={w.workoutDay}
             splitName={splitNames[w.splitId] ?? 'One-Off'}
             onPress={(id) => router.push(`/(history)/${id}`)}

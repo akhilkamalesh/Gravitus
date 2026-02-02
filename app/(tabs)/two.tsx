@@ -21,7 +21,7 @@ export default function TodayWorkoutScreen() {
   const router = useRouter();
   const {
     split, workout, setWorkout, log, setLog, exercises,
-    isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout
+    isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout, isRestDay
   } = useTodayWorkout();
 
   const placeholders = usePlaceholders(log);
@@ -279,6 +279,45 @@ export default function TodayWorkoutScreen() {
     if (viewMode === 'menu') return renderMenu();
     if (viewMode === 'past') return renderWorkoutView(true);
     if (viewMode === 'next') return renderWorkoutView(false);
+
+    // Rest Day View
+    if (isRestDay) {
+      return (
+        <View style={styles.menuContainer}>
+          <View style={{ alignItems: 'center', marginBottom: 40 }}>
+            <Ionicons name="moon" size={80} color="#4FD6EA" style={{ marginBottom: 16 }} />
+            <Text style={styles.menuTitle}>Rest Day</Text>
+            <Text style={styles.menuSubtitle}>No workout scheduled for today.</Text>
+          </View>
+
+          {/* View Next Workout */}
+          <FloatingCard
+            width="100%"
+            onPress={() => setViewMode('next')}
+            style={{ marginBottom: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+          >
+            <View>
+              <Text style={styles.cardTitle}>View Next Workout</Text>
+              <Text style={styles.cardDesc}>See what's coming up</Text>
+            </View>
+            <Ionicons name="calendar-outline" size={24} color="#4FD6EA" />
+          </FloatingCard>
+
+          {/* Start Empty */}
+          <FloatingCard
+            width="100%"
+            onPress={() => tryNewWorkout()}
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+          >
+            <View>
+              <Text style={styles.cardTitle}>Start Empty Workout</Text>
+              <Text style={styles.cardDesc}>Log a session anyway</Text>
+            </View>
+            <Ionicons name="add-circle-outline" size={24} color="#4FD6EA" />
+          </FloatingCard>
+        </View>
+      )
+    }
 
     // Default Active Render
     return (

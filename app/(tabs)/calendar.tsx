@@ -17,7 +17,6 @@ export default function CalendarScreen() {
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [loading, setLoading] = useState<boolean>(true);
     const [refreshing, setRefreshing] = useState<boolean>(false);
-    const [viewMode, setViewMode] = useState<'week' | 'month'>('month');
 
     const fetchData = async () => {
         try {
@@ -62,21 +61,6 @@ export default function CalendarScreen() {
         <SafeAreaView style={styles.container} edges={['top']}>
             <View style={styles.header}>
                 <Text style={styles.title}>Training Calendar</Text>
-                {/* Toggle View Mode Button - For now visual only as we mainly use Month view */}
-                <View style={styles.toggleContainer}>
-                    <TouchableOpacity
-                        style={[styles.toggleBtn, viewMode === 'week' && styles.toggleBtnActive]}
-                        onPress={() => setViewMode('week')}
-                    >
-                        <Text style={[styles.toggleText, viewMode === 'week' && styles.toggleTextActive]}>Week</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.toggleBtn, viewMode === 'month' && styles.toggleBtnActive]}
-                        onPress={() => setViewMode('month')}
-                    >
-                        <Text style={[styles.toggleText, viewMode === 'month' && styles.toggleTextActive]}>Month</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
 
             <ScrollView
@@ -87,12 +71,16 @@ export default function CalendarScreen() {
                     markings={markings}
                     onDayPress={handleDayPress}
                     selectedDate={selectedDate}
-                    viewMode={viewMode}
                 />
 
                 <View style={styles.detailsContainer}>
                     <Text style={styles.dateHeader}>
-                        {new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                        {(() => {
+                            const [year, month, day] = selectedDate.split('-').map(Number);
+                            // Create date in local time (months are 0-indexed)
+                            const localDate = new Date(year, month - 1, day);
+                            return localDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+                        })()}
                     </Text>
 
                     {loading ? (

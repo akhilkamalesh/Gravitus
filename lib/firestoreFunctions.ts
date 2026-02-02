@@ -13,6 +13,7 @@ export const getExercises = async (): Promise<Exercise[]> => {
       ...doc.data(),
     })) as Exercise[];
 
+    // console.log(exercises);
     return exercises;
   }
   catch (error) {
@@ -223,7 +224,7 @@ export const getCurrentSplit = async (): Promise<Split | null> => {
 };
 
 // Gets todays workout
-export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } | null> => {
+export const getTodayWorkout = async (): Promise<{ split: Split; workout: any; isRestDay?: boolean } | null> => {
   const user = authInstance.currentUser;;
   if (!user) throw new Error('User not authenticated');
 
@@ -250,13 +251,19 @@ export const getTodayWorkout = async (): Promise<{ split: Split; workout: any } 
 
   const split = { id: currentSplitSnap.id, ...currentSplitSnap.data() } as Split;
 
-  // Removed checkWorkoutStatus() checker since this is accounted for in workoutService.tsx
   const workout = split.workouts[currentDayIndex % split.workouts.length];
 
-  // console.log(workout)
-  // console.log(currentDayIndex)
+  // Rest Day Logic
+  let isRestDay = false;
+  if (split.scheduledDays && split.scheduledDays.length > 0) {
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const todayName = dayNames[new Date().getDay()];
+    if (!split.scheduledDays.includes(todayName)) {
+      isRestDay = true;
+    }
+  }
 
-  return { split, workout };
+  return { split, workout, isRestDay };
 };
 
 
@@ -372,7 +379,14 @@ export const generateOneOffSplitId = () => {
 
 // Check if workout is complete based of date
 export const checkWorkoutStatus = async () => {
-  const todayISO = new Date().toISOString().split('T')[0]; // '2025-06-15'
+  // Get current local date in YYYY-MM-DD format
+  const now = new Date();
+  const localDateStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
+    .toISOString()
+    .split('T')[0];
+
+
+  // console.log("Checking status for date:", localDateStr);
 
   const user = authInstance.currentUser;
   if (!user) throw new Error('User not authenticated');
@@ -383,9 +397,11 @@ export const checkWorkoutStatus = async () => {
   const snapshot = await getDocs(q)
   if (snapshot.empty) return false;
 
-  const snapshotDate = snapshot.docs[0].data().date?.split('T')[0];
+  // Prefer localDate from log if available, otherwise fallback to date (UTC)
+  const logData = snapshot.docs[0].data();
+  const logDateStr = (logData.localDate || logData.date)?.split('T')[0];
 
-  return (snapshotDate === todayISO);
+  return (logDateStr === localDateStr);
 }
 
 // Gets previous workout statistics (used in getTodayWorkout function)

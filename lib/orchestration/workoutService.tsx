@@ -47,7 +47,7 @@ export async function loadInitialWorkout() {
         splitId: split.id,
         workoutDay: workout.dayName,
         date: new Date().toISOString(),
-        localDate: new Date().toLocaleDateString(),
+        localDate: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0],
         exercises: normalizedExercises.map((e: workoutExercise) => ({
             instanceId: e.instanceId,
             exerciseId: e.exerciseId,
@@ -57,11 +57,9 @@ export async function loadInitialWorkout() {
 
     const normalizedWorkout: workout = { ...workout, exercises: normalizedExercises };
 
-    if (await checkWorkoutStatus()) return { split, workout: normalizedWorkout, log, isFresh: false, isDone: true } as const;
+    if (await checkWorkoutStatus()) return { split, workout: normalizedWorkout, log, isFresh: false, isDone: true, isRestDay: w.isRestDay } as const;
 
-    console.log(log)
-
-    return { split, workout: normalizedWorkout, log, isFresh: false } as const;
+    return { split, workout: normalizedWorkout, log, isFresh: false, isRestDay: w.isRestDay } as const;
 }
 
 /** 

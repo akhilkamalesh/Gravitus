@@ -22,7 +22,7 @@ export interface TemplateSplit {
   fitnessGoal: FitnessGoal;
   weeksDuration: number;
   daysPerCycle: number;
-  daysOfWeek?: string[]; // This can be adjusted
+  scheduledDays?: string[]; // This can be adjusted
   workouts: workout[];
 }
 
@@ -35,7 +35,7 @@ export interface Split {
   // repeatDays: boolean;
   weeksDuration: number;
   daysPerCycle: number;
-  daysOfWeek?: string[]; // This can be adjusted
+  scheduledDays?: string[]; // This can be adjusted
   workouts: workout[];
   createdAt?: Timestamp; // ✅ optional if not always present
   createdFromTemplateId?: string; // ✅ tracks template source

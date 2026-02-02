@@ -29,17 +29,19 @@ export const projectFutureWorkouts = (
     startDate: Date = new Date(),
     monthsToProject: number = 3
 ): Record<string, CalendarMarking> => {
-    if (!split || !split.daysOfWeek || split.daysOfWeek.length === 0) {
+
+    if (!split || !split.scheduledDays || split.scheduledDays.length === 0) {
         return {};
     }
 
     const markings: Record<string, CalendarMarking> = {};
     const daysMap: Record<string, number> = {
+        "Sun": 0, "Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6,
         "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6
     };
 
     // Filter valid days and sort them
-    const validDays = split.daysOfWeek
+    const validDays = split.scheduledDays
         .map(d => daysMap[d])
         .filter(d => d !== undefined)
         .sort((a, b) => a - b);
@@ -56,21 +58,23 @@ export const projectFutureWorkouts = (
 
         if (validDays.includes(currentDayOfWeek)) {
             const dateStr = currentDate.toISOString().split('T')[0];
-
             // Find which workout corresponds to this day
-            // Note: This logic assumes workouts array aligns with daysOfWeek array 
+            // Note: This logic assumes workouts array aligns with scheduledDays array 
             // OR we just cycle through them. 
-            // For simplicty in V1, if daysOfWeek is used, we assume strict mapping if length matches,
+            // For simplicty in V1, if scheduledDays is used, we assume strict mapping if length matches,
             // otherwise we just mark it as a "Workout" day.
 
             let workoutName = "Scheduled Workout";
 
             // Try to find specific workout name if array lengths match
-            if (split.workouts.length === split.daysOfWeek.length) {
-                // split.daysOfWeek is array of strings e.g. ["Monday", "Wednesday"]
+            if (split.workouts.length === split.scheduledDays.length) {
+                // split.scheduledDays is array of strings e.g. ["Monday", "Wednesday"]
                 // We need to match the current day string to the index
                 const dayName = Object.keys(daysMap).find(key => daysMap[key] === currentDayOfWeek);
-                const index = split.daysOfWeek.indexOf(dayName || "");
+                // We need to handle finding the *exact* string used in scheduledDays.
+                const matchingDayString = split.scheduledDays.find(d => daysMap[d] === currentDayOfWeek);
+
+                const index = split.scheduledDays.indexOf(matchingDayString || "");
                 if (index !== -1 && split.workouts[index]) {
                     workoutName = split.workouts[index].dayName;
                 }
@@ -104,10 +108,15 @@ export const formatLogsForCalendar = (logs: ExerciseLog[]): Record<string, Calen
     const markings: Record<string, CalendarMarking> = {};
 
     logs.forEach(log => {
-        const dateStr = log.date.split('T')[0];
+        // Use localDate if available, otherwise date. 
+        // Ensure we only take the YYYY-MM-DD part.
+        let dateStr = (log.localDate || log.date);
 
-        // If multiple logs on same day, we just keep marking it.
-        // potentially could count them or show different color.
+        if (dateStr.includes("/")) {
+            dateStr = convertDateString(dateStr);
+        } else {
+            dateStr = dateStr.split("T")[0];
+        }
 
         markings[dateStr] = {
             marked: true,
@@ -134,4 +143,18 @@ export const getCalendarMarkings = (
 
     // Merge: Past marks overwrite future ones (e.g. if I did today's workout, show it as done)
     return { ...futureMarkings, ...pastMarkings };
+};
+
+export const convertDateString = (dateString: string): string => {
+    // 1/31/2026 
+    // 2026-01-31 
+    const dateValues = dateString.split("/");
+
+    if (dateValues[0].length == 1) {
+        dateValues[0] = "0" + dateValues[0];
+    }
+    if (dateValues[1].length == 1) {
+        dateValues[1] = "0" + dateValues[1];
+    }
+    return `${dateValues[2]}-${dateValues[0]}-${dateValues[1]}`;
 };

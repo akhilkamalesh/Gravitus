@@ -23,6 +23,7 @@ export function useTodayWorkout() {
   const [log, setLog] = useState<ExerciseLog | null>(null);
   const [isFresh, setIsFresh] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const [isRestDay, setIsRestDay] = useState(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
   /*
@@ -36,6 +37,7 @@ export function useTodayWorkout() {
     }
     if ('isDone' in res) { setIsDone(true) }
     setSplit(res.split); setWorkout(res.workout); setLog(res.log); setIsFresh(res.isFresh);
+    if ('isRestDay' in res) setIsRestDay(!!res.isRestDay);
   }, []);
 
   /*
@@ -73,7 +75,6 @@ export function useTodayWorkout() {
       console.error(e);
     }
 
-    console.log("here again")
     setSplit(newSplit);
     setWorkout(newSplit.workouts[0]);
     // For logging, we need to map the exercises to log format if they exist
@@ -110,5 +111,5 @@ export function useTodayWorkout() {
     await refresh(); // Loads in the following workout, however, will not be able to edit or save
   }, [log, isFresh, refresh]);
 
-  return { split, setWorkout, workout, log, setLog, exercises, isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout };
+  return { split, setWorkout, workout, log, setLog, exercises, isDone, setIsDone, tryNewWorkout, skipWorkout, saveWorkout, isRestDay };
 }
